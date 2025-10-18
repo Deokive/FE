@@ -25,7 +25,6 @@
 ### 📌 폴더구조
 
 ```text
-/Users/jungmin/DEPth/Deokive-FE/
 ├─ dist/
 │  └─ assets/
 ├─ node_modules/
