@@ -1,4 +1,4 @@
-import { logout } from "@/hooks/auth";
+import { logout } from "@/apis/auth";
 import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
 

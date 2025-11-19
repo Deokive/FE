@@ -1,13 +1,13 @@
 import axios, { AxiosError } from "axios";
-import {
-  setNextAtkExp,
-  scheduleLocalRefreshIfNeeded,
-} from "../token/refreshToken.ts";
-import { refreshTokens } from "../../hooks/auth.ts";
-import { useAuthStore } from "../../store/authStore.ts";
+// import {
+//   setNextAtkExp,
+//   scheduleLocalRefreshIfNeeded,
+// } from "../token/refreshToken.ts";
+import { refreshTokens } from "../../apis/auth.ts";
+// import { useAuthStore } from "../../store/authStore.ts";
 import type {
   CustomInternalAxiosRequestConfig,
-  TokenExpiresInfo,
+  // TokenExpiresInfo,
   RefreshingPromise,
 } from "../../types/auth"; // 위에서 정의한 타입들을 import
 
@@ -46,13 +46,13 @@ axiosInstance.interceptors.response.use(
         }
 
         // 갱신이 완료될 때까지 대기
-        const tokenInfo: TokenExpiresInfo = await refreshing;
-        refreshing = null; // 갱신 완료 후 초기화
+        // const tokenInfo: TokenExpiresInfo = await refreshing;
+        // refreshing = null; // 갱신 완료 후 초기화
 
         // 새 만료 정보 설정 및 타이머 재설정 유틸리티 함수 호출
-        useAuthStore.getState().setTokenExpiresInfo(tokenInfo);
-        setNextAtkExp(tokenInfo.accessTokenExpiresAt);
-        scheduleLocalRefreshIfNeeded();
+        // useAuthStore.getState().setTokenExpiresInfo(tokenInfo);
+        // setNextAtkExp(tokenInfo.accessTokenExpiresAt);
+        // scheduleLocalRefreshIfNeeded();
 
         // 재시도 플래그 설정 후, 원래 요청을 새 토큰(쿠키)으로 재시도
         cfg._retry = true;
