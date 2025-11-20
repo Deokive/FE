@@ -47,6 +47,18 @@ const MainNavbar = () => {
             </NavLink>
           </li>
         </ul>
+
+        {/* 오른쪽 단독(My Page) */}
+        <div className="text-sm font-medium">
+          <NavLink
+            to="/me"
+            className={({ isActive }) =>
+              isActive ? "text-black font-bold" : "text-gray-500"
+            }
+          >
+            My Page
+          </NavLink>
+        </div>
       </div>
     </div>
   );
