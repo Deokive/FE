@@ -6,11 +6,14 @@ import router from "./router/router";
 
 const queryClient = new QueryClient();
 
-export default function App() {
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
+
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
+
+export default App;

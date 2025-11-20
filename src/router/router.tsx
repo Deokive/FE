@@ -1,5 +1,5 @@
 import { createBrowserRouter, type RouteObject } from "react-router-dom";
-import Home from "@/pages/Home.tsx";
+import Home from "@/pages/Home/Home.tsx";
 import NotFound from "@/pages/NotFound.tsx";
 import HomeLayout from "@/layouts/HomeLayout.tsx";
 import Archive from "@/pages/Archive/Archive.tsx";
