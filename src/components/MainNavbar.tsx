@@ -4,8 +4,9 @@ const MainNavbar = () => {
   return (
     // 홈, 아카이브, 커뮤니티, 피드 네비게이션 바
     <div className="h-16 fixed top-0 left-0 right-0 bg-gray-100">
-      <div className="flex items-center justify-between">
-        <ul className="flex items-center gap-4">
+      <div className="mx-auto max-w-6xl flex items-center justify-between px-4">
+        {/* 왼쪽 그룹 */}
+        <ul className="flex items-center gap-6">
           <li className="text-sm font-medium">
             <NavLink
               to="/"
@@ -18,7 +19,7 @@ const MainNavbar = () => {
           </li>
           <li className="text-sm font-medium">
             <NavLink
-              to="/archive"
+              to="/Archive"
               className={({ isActive }) =>
                 isActive ? "text-black font-bold" : "text-gray-500"
               }
@@ -28,22 +29,22 @@ const MainNavbar = () => {
           </li>
           <li className="text-sm font-medium">
             <NavLink
-              to="/community"
-              className={({ isActive }) =>
-                isActive ? "text-black font-bold" : "text-gray-500"
-              }
-            >
-              Community
-            </NavLink>
-          </li>
-          <li className="text-sm font-medium">
-            <NavLink
-              to="/feed"
+              to="/Feed"
               className={({ isActive }) =>
                 isActive ? "text-black font-bold" : "text-gray-500"
               }
             >
               Feed
+            </NavLink>
+          </li>
+          <li className="text-sm font-medium">
+            <NavLink
+              to="/Community"
+              className={({ isActive }) =>
+                isActive ? "text-black font-bold" : "text-gray-500"
+              }
+            >
+              Community
             </NavLink>
           </li>
         </ul>
