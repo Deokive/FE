@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const MainNavbar = () => {
   return (
@@ -7,16 +7,44 @@ const MainNavbar = () => {
       <div className="flex items-center justify-between">
         <ul className="flex items-center gap-4">
           <li className="text-sm font-medium">
-            <Link to="/">Home</Link>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive ? "text-black font-bold" : "text-gray-500"
+              }
+            >
+              Home
+            </NavLink>
           </li>
           <li className="text-sm font-medium">
-            <Link to="/archive">Archive</Link>
+            <NavLink
+              to="/archive"
+              className={({ isActive }) =>
+                isActive ? "text-black font-bold" : "text-gray-500"
+              }
+            >
+              Archive
+            </NavLink>
           </li>
           <li className="text-sm font-medium">
-            <Link to="/community">Community</Link>
+            <NavLink
+              to="/community"
+              className={({ isActive }) =>
+                isActive ? "text-black font-bold" : "text-gray-500"
+              }
+            >
+              Community
+            </NavLink>
           </li>
           <li className="text-sm font-medium">
-            <Link to="/feed">Feed</Link>
+            <NavLink
+              to="/feed"
+              className={({ isActive }) =>
+                isActive ? "text-black font-bold" : "text-gray-500"
+              }
+            >
+              Feed
+            </NavLink>
           </li>
         </ul>
       </div>
