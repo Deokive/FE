@@ -1,15 +1,16 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./App.css";
-import { Outlet, Link } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import router from "./router/router";
+
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <div>
-      <header style={{ display: "flex", gap: 12 }}>
-        <Link to="/">Home</Link>
-      </header>
-      <main>
-        <Outlet />
-      </main>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
