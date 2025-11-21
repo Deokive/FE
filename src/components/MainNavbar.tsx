@@ -1,9 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-interface MainNavbarProps {
-  isLoggedIn: boolean;
-}
-const MainNavbar = ({ isLoggedIn }: MainNavbarProps) => {
+const MainNavbar = () => {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     isActive ? "text-black font-bold" : "text-gray-500";
 
@@ -34,23 +31,19 @@ const MainNavbar = ({ isLoggedIn }: MainNavbarProps) => {
             </NavLink>
           </li>
         </ul>
-
         {/* 오른쪽 단독(My Page) */}
-        {isLoggedIn ? (
-          // 로그인 한 사용자만 접근 가능한 네비게이션 바
-          <div className="text-sm font-medium">
-            <NavLink to="/me" className={linkClass}>
-              My Page
-            </NavLink>
-          </div>
-        ) : (
-          // 로그인 하지 않은 사용자만 접근 가능한 네비게이션 바
-          <div className="text-sm font-medium">
-            <NavLink to="/login" className={linkClass}>
-              Login
-            </NavLink>
-          </div>
-        )}
+
+        <div className="text-sm font-medium">
+          <NavLink to="/me" className={linkClass}>
+            My Page
+          </NavLink>
+        </div>
+
+        <div className="text-sm font-medium">
+          <NavLink to="/login" className={linkClass}>
+            Login
+          </NavLink>
+        </div>
       </div>
     </div>
   );

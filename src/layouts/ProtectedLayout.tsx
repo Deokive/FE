@@ -6,7 +6,7 @@ const ProtectedLayout = () => {
   return (
     <div>
       <div>
-        <MainNavbar isLoggedIn={true} />
+        <MainNavbar />
         <Outlet />
         <Footbar />
       </div>

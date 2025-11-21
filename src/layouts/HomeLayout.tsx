@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 const HomeLayout = () => {
   return (
     <div>
-      <MainNavbar isLoggedIn={false} />
+      <MainNavbar />
       <Outlet />
       <Footbar />
     </div>
