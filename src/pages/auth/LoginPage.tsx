@@ -12,8 +12,13 @@ const LoginPage = () => {
     });
 
   const handleSubmit = () => {
-    console.log("submit");
+    console.log(values);
   };
+
+  //오류가 있거나 비어있으면 버튼 비활성화
+  const isDisabled: boolean =
+    Object.values(errors).some((error) => error !== "") ||
+    Object.values(values).some((value) => value === "");
 
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-4">
@@ -38,11 +43,12 @@ const LoginPage = () => {
         {errors.password && touched?.password && (
           <p className="text-red-500 text-sm">{errors.password}</p>
         )}
+
         <button
           type="button"
           onClick={handleSubmit}
-          disabled={false}
-          className={`w-full bg-[#807bff] text-white hover:bg-[#6666ff] h-[40px] rounded-sm cursor-pointer`}
+          disabled={isDisabled}
+          className={`w-full bg-[#807bff] text-white hover:bg-[#6666ff] h-[40px] rounded-sm cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed`}
         >
           Login
         </button>
