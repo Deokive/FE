@@ -1,4 +1,16 @@
+import { validateSignIn, type UserSignInInformation } from "@/utils/validate";
+import useForm from "@/hooks/useForm";
+
 const LoginPage = () => {
+  const { values, errors, touched, getInputProps } =
+    useForm<UserSignInInformation>({
+      initialValues: {
+        email: "",
+        password: "",
+      },
+      validate: validateSignIn,
+    });
+
   const handleSubmit = () => {
     console.log("submit");
   };
@@ -7,15 +19,25 @@ const LoginPage = () => {
     <div className="flex flex-col items-center justify-center h-screen gap-4">
       <div className="flex flex-col gap-3 w-[300px]">
         <input
+          {...getInputProps("email")}
+          name="email"
           type={"email"}
           className={`border bprder-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm`}
           placeholder="이메일"
         />
+        {errors.email && touched?.email && (
+          <p className="text-red-500 text-sm">{errors.email}</p>
+        )}
         <input
+          {...getInputProps("password")}
+          name="password"
           type={"password"}
           className={`border bprder-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm`}
           placeholder="비밀번호"
         />
+        {errors.password && touched?.password && (
+          <p className="text-red-500 text-sm">{errors.password}</p>
+        )}
         <button
           type="button"
           onClick={handleSubmit}
