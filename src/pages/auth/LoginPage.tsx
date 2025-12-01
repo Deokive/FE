@@ -47,7 +47,7 @@ const LoginPage = () => {
         {errors.password && touched?.password && (
           <p className="text-red-500 text-sm">{errors.password}</p>
         )}
-        {/* //엔터 눌러도 버튼 클릭되게 하기 */}
+
         <button
           type="button"
           onClick={handleSubmit}
