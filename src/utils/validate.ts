@@ -3,7 +3,7 @@ export type UserSignInInformation = {
   password: string;
 };
 
-function validateUser(values: UserSignInInformation) {
+function validateSignInUser(values: UserSignInInformation) {
   const errors = {
     email: "",
     password: "",
@@ -16,16 +16,17 @@ function validateUser(values: UserSignInInformation) {
   ) {
     errors.email = "이메일 형식이 올바르지 않습니다.";
   }
-  // 비밀번호 8자 20자 사이
-  if (values.password.length < 8 || values.password.length > 20) {
-    errors.password = "비밀번호는 8자 이상 20자 이하이어야 합니다.";
+  // 비밀번호 8자 16자 사이
+  if (values.password.length < 8 || values.password.length > 16) {
+    errors.password = "비밀번호는 8자 이상 16자 이하이어야 합니다.";
   }
 
   return errors;
 }
+
 //로그인 유효성 검사
 function validateSignIn(values: UserSignInInformation) {
-  return validateUser(values);
+  return validateSignInUser(values);
 }
 
 export { validateSignIn };

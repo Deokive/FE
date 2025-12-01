@@ -11,8 +11,12 @@ const LoginPage = () => {
       validate: validateSignIn,
     });
 
+  //엔터 눌러도 버튼 클릭되게 하기
   const handleSubmit = () => {
     console.log(values);
+    //이런식으로 api 요청하면 로그인 처리 완료됨.
+    // await axios.post("/api/auth/login", values);
+    // window.location.href = "/";
   };
 
   //오류가 있거나 비어있으면 버튼 비활성화
@@ -43,7 +47,7 @@ const LoginPage = () => {
         {errors.password && touched?.password && (
           <p className="text-red-500 text-sm">{errors.password}</p>
         )}
-
+        {/* //엔터 눌러도 버튼 클릭되게 하기 */}
         <button
           type="button"
           onClick={handleSubmit}

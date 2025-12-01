@@ -1,14 +1,14 @@
 import { createBrowserRouter, type RouteObject } from "react-router-dom";
-import Home from "@/pages/home/Home.tsx";
+import Home from "@/pages/Home/Home";
 import NotFound from "@/pages/NotFound.tsx";
 import HomeLayout from "@/layouts/HomeLayout.tsx";
-import Archive from "@/pages/archive/Archive";
-import Community from "@/pages/community/Community";
-import Feed from "@/pages/feed/Feed";
-import MyPage from "@/pages/myPage/MyPage";
+import Archive from "@/pages/Archive/Archive.tsx";
+import Community from "@/pages/Community/Community";
+import Feed from "@/pages/Feed/Feed";
+import MyPage from "@/pages/MyPage/MyPage";
 import ProtectedLayout from "@/layouts/ProtectedLayout";
-import LoginPage from "@/pages/auth/LoginPage";
-import SignupPage from "@/pages/auth/SignupPage";
+import LoginPage from "@/pages/Auth/LoginPage";
+import SignupPage from "@/pages/Auth/SignupPage";
 
 // 로그인 하지 않은 사용자만 접근 가능한 라우트 (메인 홈, 커뮤니티 열람, 피드 열람)
 const publicRoutes: RouteObject[] = [
