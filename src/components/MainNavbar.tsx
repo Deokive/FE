@@ -44,6 +44,11 @@ const MainNavbar = () => {
             Login
           </NavLink>
         </div>
+        <div className="text-sm font-medium">
+          <NavLink to="/signup" className={linkClass}>
+            Signup
+          </NavLink>
+        </div>
       </div>
     </div>
   );
