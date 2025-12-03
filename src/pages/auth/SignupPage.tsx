@@ -63,7 +63,7 @@ const SignupPage = () => {
         <input
           {...register("email")}
           name="email"
-          type={"email"}
+          type={"text"}
           className={`border border-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm
             ${errors.email ? "border-red-500 bg-red-200" : "border-gray-300"}`}
           placeholder="이메일"
