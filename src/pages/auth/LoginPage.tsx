@@ -1,63 +1,73 @@
-import { validateSignIn, type UserSignInInformation } from "@/utils/validate";
-import useForm from "@/hooks/useForm";
+import { z } from "zod";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  email: z.email({ message: "이메일 형식이 올바르지 않습니다." }),
+  password: z
+    .string()
+    .min(8, { message: "비밀번호는 8자 이상이어야 합니다." })
+    .max(16, { message: "비밀번호는 16자 이하이어야 합니다." }),
+});
+
+type FormFields = z.infer<typeof schema>;
 
 const LoginPage = () => {
-  const { values, errors, touched, getInputProps } =
-    useForm<UserSignInInformation>({
-      initialValues: {
-        email: "",
-        password: "",
-      },
-      validate: validateSignIn,
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormFields>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: zodResolver(schema),
+    mode: "onBlur", //touched 되었는지 여부 확인
+  });
 
-  //엔터 눌러도 버튼 클릭되게 하기
-  const handleSubmit = () => {
-    console.log(values);
-    //이런식으로 api 요청하면 로그인 처리 완료됨.
-    // await axios.post("/api/auth/login", values);
-    // window.location.href = "/";
+  const onSubmit: SubmitHandler<FormFields> = (data) => {
+    console.log(data);
   };
 
-  //오류가 있거나 비어있으면 버튼 비활성화
-  const isDisabled: boolean =
-    Object.values(errors).some((error) => error !== "") ||
-    Object.values(values).some((value) => value === "");
-
   return (
-    <div className="flex flex-col items-center justify-center h-screen gap-4">
+    <form
+      onSubmit={(e) => void handleSubmit(onSubmit)(e)}
+      className="flex flex-col items-center justify-center h-screen gap-4"
+    >
       <div className="flex flex-col gap-3 w-[300px]">
         <input
-          {...getInputProps("email")}
+          {...register("email")}
           name="email"
-          type={"email"}
-          className={`border bprder-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm`}
+          type={"text"}
+          className={`border border-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm
+            ${errors.email ? "border-red-500 bg-red-200" : "border-gray-300"}`}
           placeholder="이메일"
         />
-        {errors.email && touched?.email && (
-          <p className="text-red-500 text-sm">{errors.email}</p>
+
+        {errors.email && (
+          <div className="text-red-500 text-sm">{errors.email.message}</div>
         )}
         <input
-          {...getInputProps("password")}
+          {...register("password")}
           name="password"
           type={"password"}
-          className={`border bprder-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm`}
+          className={`border border-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm
+          ${errors.password ? "border-red-500 bg-red-200" : "border-gray-300"}`}
           placeholder="비밀번호"
         />
-        {errors.password && touched?.password && (
-          <p className="text-red-500 text-sm">{errors.password}</p>
+        {errors.password && (
+          <div className="text-red-500 text-sm">{errors.password.message}</div>
         )}
-
         <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={isDisabled}
+          type="submit"
+          disabled={isSubmitting}
           className={`w-full bg-[#807bff] text-white hover:bg-[#6666ff] h-[40px] rounded-sm cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed`}
         >
           Login
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 
