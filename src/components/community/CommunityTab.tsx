@@ -1,5 +1,4 @@
-// src/components/community/CommunityTab.tsx
-import React from "react";
+import Chip from "../common/Chip";
 
 type Option = { label: string; value: string };
 
@@ -20,31 +19,6 @@ const DEFAULT_OPTIONS: Option[] = [
   { label: "애니메이션", value: "animation" },
   { label: "기타", value: "etc" },
 ];
-
-function Chip({
-  active,
-  children,
-  onClick,
-}: {
-  active: boolean;
-  children: React.ReactNode;
-  onClick: () => void;
-}) {
-  const base = "h-[44px] px-[20px] py-[10px] rounded-[34px] cursor-pointer";
-  const activeStyle = `bg-brand-blue-400 text-text-lowest typo-body2-semibold`;
-  const inactiveStyle = "bg-brand-blue-100 text-text-mid typo-body2";
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={[base, active ? activeStyle : inactiveStyle].join(" ")}
-    >
-      {children}
-    </button>
-  );
-}
 
 export default function CommunityTab({
   value,
