@@ -6,7 +6,7 @@ const MainNavbar = () => {
 
   return (
     // 홈, 아카이브, 커뮤니티, 피드 네비게이션 바
-    <div className="typo-h3-semibold bg-brand-blue-400 flex h-[88px] px-[80px] py-[22px] justify-between items-center stretch">
+    <div className="typo-h3-semibold bg-brand-blue-400 flex h-[80px] px-[80px] py-[28px] justify-between items-center stretch">
       <div className="flex items-center gap-10">
         {/* 왼쪽 그룹 */}
         <ul className="flex items-center gap-10">
