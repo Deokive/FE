@@ -1,1 +1,177 @@
 @import "tailwindcss";
+
+@theme {
+  /* Font family */
+  --font-pretendard: "Pretendard", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple SD Gothic Neo",
+    "Malgun Gothic", "Noto Sans KR", "Noto Sans", sans-serif;
+  /* Use Pretendard as default sans */
+  --font-sans: var(--font-pretendard);
+
+  /* Figma Typography tokens */
+  --text-h2: 24px;
+  --leading-h2: 1; /* 100% */
+  --tracking-h2: 0;
+
+  --text-h3: 20px;
+  --leading-h3: 1; /* 100% */
+  --tracking-h3: 0;
+
+  --text-body1: 18px;
+  --leading-body1: 1; /* 100% */
+  --tracking-body1: 0;
+
+  --text-body2: 16px;
+  --leading-body2: 1; /* 100% */
+  --tracking-body2: 0;
+
+  --text-caption: 14px;
+  --leading-caption: 1; /* 100% */
+  --tracking-caption: 0;
+
+  /* Weights (tailwind utilities: font-normal=400, font-medium=500, font-semibold=600) */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* Color tokens (mapped from Figma) */
+  /* Brand / Primary (Blue) */
+  --color-brand-blue-100: #eef7fc; /* surface/brand/primary/blue100 */
+  --color-brand-blue-200: #d5e8f9; /* surface/brand/primary/blue200 */
+  --color-brand-blue-300: #99ccff; /* surface/brand/primary/blue300 */
+  --color-brand-blue-400: #82bef5; /* surface/brand/primary/blue400 */
+
+  /* Surface / Normal */
+  --color-surface-bg: #ffffff; /* surface/normal/bg */
+  --color-surface-container-10: #f4f5f9; /* surface/normal/container10 */
+  --color-surface-container-20: #e9ecf1; /* surface/normal/container20 */
+  --color-surface-container-30: #cbd5df; /* surface/normal/container30 */
+  --color-surface-container-40: #a6bbce; /* surface/normal/container40 */
+  --color-surface-container-50: #001f33; /* surface/normal/container50 */
+
+  /* TextIcon emphasis */
+  --color-text-lowest: #ffffff; /* texticon/lowestemp */
+  --color-text-highest: #001f33; /* texticon/highestemp */
+  --color-text-high: #7d9ab2; /* texticon/highemp */
+  --color-text-mid: #a6bbce; /* texticon/midemp */
+  --color-text-low: #cbd5df; /* texticon/lowemp */
+  --color-text-primary: #82bef5; /* texticon/primary */
+  --color-text-accent: #ff0000; /* texticon/secondary */
+
+  /* Border */
+  --color-border-low: #e9ecf1; /* border/lowemp */
+  --color-border-mid: #cbd5df; /* border/midemp */
+  --color-border-high: #7d9ab2; /* border/highemp */
+  --color-border-accent: #ff0000; /* border/secondary */
+  --color-border-primary: #82bef5; /* border/primary */
+}
+
+@layer utilities {
+  /* Heading */
+  .typo-h2 {
+    @apply font-sans text-h2 leading-h2 font-normal;
+  }
+  .typo-h3 {
+    @apply font-sans text-h3 leading-h3 font-normal;
+  }
+  .typo-h3-semibold {
+    @apply font-sans text-h3 leading-h3 font-semibold;
+  }
+
+  /* Body */
+  .typo-body1 {
+    @apply font-sans text-body1 leading-body1 font-normal;
+  }
+  .typo-body1-semibold {
+    @apply font-sans text-body1 leading-body1 font-semibold;
+  }
+
+  .typo-body2 {
+    @apply font-sans text-body2 leading-body2 font-normal;
+  }
+  .typo-body2-medium {
+    @apply font-sans text-body2 leading-body2 font-medium;
+  }
+  .typo-body2-semibold {
+    @apply font-sans text-body2 leading-body2 font-semibold;
+  }
+
+  /* Caption */
+  .typo-caption {
+    @apply font-sans text-caption leading-caption font-normal;
+  }
+
+  /* Color-bg */
+  .bg-normal-bg {
+    @apply bg-surface-bg;
+  }
+  .bg-normal-container-10 {
+    @apply bg-surface-container-10;
+  }
+  .bg-normal-container-20 {
+    @apply bg-surface-container-20;
+  }
+  .bg-normal-container-30 {
+    @apply bg-surface-container-30;
+  }
+  .bg-normal-container-40 {
+    @apply bg-surface-container-40;
+  }
+  .bg-normal-container-50 {
+    @apply bg-surface-container-50;
+  }
+
+  /* Color-brand */
+  .bg-brand-blue-100 {
+    @apply bg-brand-blue-100;
+  }
+  .bg-brand-blue-200 {
+    @apply bg-brand-blue-200;
+  }
+  .bg-brand-blue-300 {
+    @apply bg-brand-blue-300;
+  }
+  .bg-brand-blue-400 {
+    @apply bg-brand-blue-400;
+  }
+
+  /* Color-text */
+  .text-color-lowest {
+    @apply text-text-lowest;
+  }
+  .text-color-highest {
+    @apply text-text-highest;
+  }
+  .text-color-high {
+    @apply text-text-high;
+  }
+  .text-color-mid {
+    @apply text-text-mid;
+  }
+  .text-color-low {
+    @apply text-text-low;
+  }
+  .text-color-primary {
+    @apply text-text-primary;
+  }
+  .text-color-accent {
+    @apply text-text-accent;
+  }
+
+  /* Color-border */
+  .border-color-low {
+    @apply border-border-low;
+  }
+  .border-color-mid {
+    @apply border-border-mid;
+  }
+  .border-color-high {
+    @apply border-border-high;
+  }
+  .border-color-accent {
+    @apply border-border-accent;
+  }
+  .border-color-primary {
+    @apply border-border-primary;
+  }
+}
