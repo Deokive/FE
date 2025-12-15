@@ -33,7 +33,7 @@ export default function Chip({
         base,
         selected ? selectedCls : enabled,
         !selected ? hoverActive : "",
-        className
+        className // 사용자 커스텀 우선
       )}
     >
       {children}
