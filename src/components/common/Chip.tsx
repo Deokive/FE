@@ -1,14 +1,18 @@
-// src/components/common/Chip.tsx
+import { twMerge } from "tailwind-merge";
+
 type ChipProps = {
   selected?: boolean;
   onClick: () => void;
   children: React.ReactNode;
+  // 버튼 사이즈가 달라지면 커스텀하기 위한 옵션
+  className?: string;
 };
 
 export default function Chip({
   selected = false,
   onClick,
   children,
+  className,
 }: ChipProps) {
   const base =
     "h-[44px] px-[20px] py-[10px] rounded-[34px] cursor-pointer typo-body2 transition-colors";
@@ -24,11 +28,13 @@ export default function Chip({
       type="button"
       aria-pressed={selected}
       onClick={onClick}
-      className={[
+      // tailwind-merge를 사용하여 클래스 병합
+      className={twMerge(
         base,
         selected ? selectedCls : enabled,
         !selected ? hoverActive : "",
-      ].join(" ")}
+        className
+      )}
     >
       {children}
     </button>
