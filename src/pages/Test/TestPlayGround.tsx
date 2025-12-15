@@ -1,9 +1,10 @@
 import { useState } from "react";
 
-import BtnGray from "@/components/common/Btn";
+import { BtnGray, BtnBlue } from "@/components/common/Btn";
 
 export default function ButtonsPlayground() {
-  const [cnt, setCnt] = useState(0);
+  const [cntGray, setCntGray] = useState(0);
+  const [cntBlue, setCntBlue] = useState(0);
 
   return (
     <div className="px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
@@ -11,9 +12,14 @@ export default function ButtonsPlayground() {
 
       <section className="space-y-3">
         <h3 className="typo-body2-semibold">1) 기본</h3>
-        <BtnGray onClick={() => setCnt((c) => c + 1)}>
-          기본 버튼 ({cnt})
-        </BtnGray>
+        <div className="flex gap-3 items-center">
+          <BtnGray onClick={() => setCntGray((c) => c + 1)}>
+            기본 버튼 ({cntGray})
+          </BtnGray>
+          <BtnBlue onClick={() => setCntBlue((c) => c + 1)}>
+            기본 버튼 ({cntBlue})
+          </BtnBlue>
+        </div>
       </section>
 
       <section className="space-y-3">
@@ -28,9 +34,19 @@ export default function ButtonsPlayground() {
           >
             큰 버튼
           </BtnGray>
+          <BtnBlue onClick={() => {}}>기본 버튼</BtnBlue>
+          <BtnBlue
+            onClick={() => {}}
+            className="h-[56px] px-[40px] py-[14px] rounded-[10px]"
+          >
+            큰 버튼
+          </BtnBlue>
           <BtnGray onClick={() => {}} disabled>
-            비활성화 버튼
+            기본 비활성화 버튼
           </BtnGray>
+          <BtnBlue onClick={() => {}} disabled>
+            블루 비활성화 버튼
+          </BtnBlue>
         </div>
       </section>
 
@@ -39,7 +55,7 @@ export default function ButtonsPlayground() {
         <div className="flex gap-3 items-center">
           <BtnGray
             onClick={() => {}}
-            className="bg-brand-blue-400 text-text-lowest hover:bg-brand-blue-300"
+            className="bg-red-400 text-text-lowest hover:bg-red-300 active:bg-red-200"
           >
             Primary
           </BtnGray>

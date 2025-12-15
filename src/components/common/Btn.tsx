@@ -28,7 +28,8 @@ const BtnGray = ({
       onClick={disabled ? undefined : onClick}
       className={twMerge(
         base,
-        disabled ? disabledCls : enabled + hoverActive,
+        disabled ? disabledCls : enabled,
+        disabled ? "" : hoverActive,
         className
       )}
     >
@@ -37,4 +38,35 @@ const BtnGray = ({
   );
 };
 
-export default BtnGray;
+const BtnBlue = ({
+  children,
+  onClick,
+  className,
+  disabled = false,
+}: BtnProps) => {
+  const base =
+    "w-[180px] h-[48px] px-[30px] py-[10px] rounded-[8px] cursor-pointer typo-body3-semibold transition-colors transition-colors";
+  const enabled = "bg-brand-blue-400 text-color-lowest";
+  const hoverActive =
+    "hover:bg-brand-blue-300 hover:text-color-lowest active:bg-brand-blue-200  active:text-color-lowest";
+  const disabledCls =
+    "bg-surface-container-30 text-color-highest cursor-not-allowed";
+  return (
+    <button
+      type="button"
+      aria-disabled={disabled}
+      disabled={disabled}
+      onClick={disabled ? undefined : onClick}
+      className={twMerge(
+        base,
+        disabled ? disabledCls : enabled,
+        disabled ? "" : hoverActive,
+        className
+      )}
+    >
+      {children}
+    </button>
+  );
+};
+
+export { BtnGray, BtnBlue };
