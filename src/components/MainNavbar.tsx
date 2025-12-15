@@ -9,7 +9,10 @@ const MainNavbar = () => {
     <div className="typo-h3-semibold bg-brand-blue-400 flex h-[80px] px-[80px] py-[28px] justify-between items-center stretch">
       <div className="flex items-center gap-10">
         {/* 왼쪽 그룹 */}
-        <ul className="flex items-center gap-10">
+        <ul className="flex h-10 items-center gap-10">
+          <div className="w-[100px] py-[10px] bg-white text-center typo-body2">
+            Logo
+          </div>
           <li>
             <NavLink to="/" className={linkClass}>
               Home
