@@ -50,13 +50,13 @@
   --color-surface-container-50: #001f33; /* surface/normal/container50 */
 
   /* TextIcon emphasis */
-  --color-text-lowest: #ffffff; /* texticon/lowestemp */
-  --color-text-highest: #001f33; /* texticon/highestemp */
-  --color-text-high: #7d9ab2; /* texticon/highemp */
-  --color-text-mid: #a6bbce; /* texticon/midemp */
-  --color-text-low: #cbd5df; /* texticon/lowemp */
-  --color-text-primary: #82bef5; /* texticon/primary */
-  --color-text-accent: #ff0000; /* texticon/secondary */
+  --color-lowest: #ffffff; /* texticon/lowestemp */
+  --color-highest: #001f33; /* texticon/highestemp */
+  --color-high: #7d9ab2; /* texticon/highemp */
+  --color-mid: #a6bbce; /* texticon/midemp */
+  --color-low: #cbd5df; /* texticon/lowemp */
+  --color-primary: #82bef5; /* texticon/primary */
+  --color-accent: #ff0000; /* texticon/secondary */
 
   /* Border */
   --color-border-low: #e9ecf1; /* border/lowemp */
@@ -102,22 +102,22 @@
   }
 
   /* Color-bg */
-  .bg-normal-bg {
+  .bg-surface-normal {
     @apply bg-surface-bg;
   }
-  .bg-normal-container-10 {
+  .bg-surface-container-10 {
     @apply bg-surface-container-10;
   }
-  .bg-normal-container-20 {
+  .bg-surface-container-20 {
     @apply bg-surface-container-20;
   }
-  .bg-normal-container-30 {
+  .bg-surface-container-30 {
     @apply bg-surface-container-30;
   }
-  .bg-normal-container-40 {
+  .bg-surface-container-40 {
     @apply bg-surface-container-40;
   }
-  .bg-normal-container-50 {
+  .bg-surface-container-50 {
     @apply bg-surface-container-50;
   }
 
@@ -137,25 +137,25 @@
 
   /* Color-text */
   .text-color-lowest {
-    @apply text-text-lowest;
+    @apply text-lowest;
   }
   .text-color-highest {
-    @apply text-text-highest;
+    @apply text-highest;
   }
   .text-color-high {
-    @apply text-text-high;
+    @apply text-high;
   }
   .text-color-mid {
-    @apply text-text-mid;
+    @apply text-mid;
   }
   .text-color-low {
-    @apply text-text-low;
+    @apply text-low;
   }
   .text-color-primary {
-    @apply text-text-primary;
+    @apply text-primary;
   }
   .text-color-accent {
-    @apply text-text-accent;
+    @apply text-accent;
   }
 
   /* Color-border */

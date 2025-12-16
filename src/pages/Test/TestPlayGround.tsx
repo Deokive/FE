@@ -1,10 +1,11 @@
 import { useState } from "react";
-
-import { BtnGray, BtnBlue } from "@/components/common/Btn";
+import { Pencil, ChevronDown, ChevronUp } from "lucide-react";
+import { BtnGray, BtnBlue, BtnIcon } from "@/components/common/Btn";
 
 export default function ButtonsPlayground() {
   const [cntGray, setCntGray] = useState(0);
   const [cntBlue, setCntBlue] = useState(0);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
@@ -65,6 +66,32 @@ export default function ButtonsPlayground() {
           >
             Neutral
           </BtnGray>
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="typo-body2-semibold">4) 아이콘 추가</h3>
+        <div className="flex gap-3 items-center">
+          <BtnIcon
+            onClick={() => {}}
+            startIcon={<Pencil className="w-[16.5px] h-[17.5px]" />}
+          >
+            버튼명
+          </BtnIcon>
+          <BtnIcon
+            // selected={isSelected}
+            onClick={() => setOpen((v) => !v)}
+            endIcon={
+              open ? (
+                <ChevronUp className="w-[24px] h-[24px] text-color-primary" />
+              ) : (
+                <ChevronDown className="w-[24px] h-[24px]" />
+              )
+            }
+            className={open ? "border-color-primary border-[2px]" : ""}
+          >
+            버튼명
+          </BtnIcon>
         </div>
       </section>
     </div>
