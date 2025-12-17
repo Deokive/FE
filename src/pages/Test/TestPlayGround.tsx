@@ -99,6 +99,13 @@ export default function ButtonsPlayground() {
           >
             버튼명
           </BtnIcon>
+          <BtnIcon
+            disabled={true}
+            onClick={() => {}}
+            startIcon={<Pencil className="w-[16.5px] h-[17.5px]" />}
+          >
+            버튼명
+          </BtnIcon>
         </div>
       </section>
     </div>

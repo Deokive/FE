@@ -77,7 +77,7 @@ const BtnIcon = ({
         disabled ? disabledCls : enabled,
         disabled ? "" : hoverActive,
         selected ? selectedCls : "",
-        !selected ? hoverActive : "",
+
         className
       )}
     >
