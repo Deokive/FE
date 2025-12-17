@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Pencil, ChevronDown, ChevronUp } from "lucide-react";
-import { BtnGray, BtnBlue, BtnIcon } from "@/components/common/Button/Btn";
+import { BtnBasic, BtnIcon } from "@/components/common/Button/Btn";
 
 export default function ButtonsPlayground() {
   const [cntGray, setCntGray] = useState(0);
@@ -14,12 +14,12 @@ export default function ButtonsPlayground() {
       <section className="space-y-3">
         <h3 className="typo-body2-semibold">1) 기본</h3>
         <div className="flex gap-3 items-center">
-          <BtnGray onClick={() => setCntGray((c) => c + 1)}>
+          <BtnBasic variant="gray" onClick={() => setCntGray((c) => c + 1)}>
             기본 버튼 ({cntGray})
-          </BtnGray>
-          <BtnBlue onClick={() => setCntBlue((c) => c + 1)}>
+          </BtnBasic>
+          <BtnBasic variant="blue" onClick={() => setCntBlue((c) => c + 1)}>
             기본 버튼 ({cntBlue})
-          </BtnBlue>
+          </BtnBasic>
         </div>
       </section>
 
@@ -28,45 +28,51 @@ export default function ButtonsPlayground() {
           2) 사이즈/패딩 커스텀 (twMerge 동작 확인)
         </h3>
         <div className="flex gap-3 items-center">
-          <BtnGray onClick={() => {}}>기본 버튼</BtnGray>
+          <BtnBasic variant="gray" onClick={() => {}}>
+            기본 버튼
+          </BtnBasic>
 
-          <BtnGray
+          <BtnBasic
+            variant="gray"
             onClick={() => {}}
             className="h-[56px] px-[40px] py-[14px] rounded-[10px]"
           >
             큰 버튼
-          </BtnGray>
-          <BtnBlue onClick={() => {}}>기본 버튼</BtnBlue>
-          <BtnBlue
+          </BtnBasic>
+          <BtnBasic variant="blue" onClick={() => {}}>
+            기본 버튼
+          </BtnBasic>
+          <BtnBasic
+            variant="blue"
             onClick={() => {}}
             className="h-[56px] px-[40px] py-[14px] rounded-[10px]"
           >
             큰 버튼
-          </BtnBlue>
-          <BtnGray onClick={() => {}} disabled>
+          </BtnBasic>
+          <BtnBasic onClick={() => {}} disabled>
             기본 비활성화 버튼
-          </BtnGray>
-          <BtnBlue onClick={() => {}} disabled>
+          </BtnBasic>
+          <BtnBasic onClick={() => {}} disabled>
             블루 비활성화 버튼
-          </BtnBlue>
+          </BtnBasic>
         </div>
       </section>
 
       <section className="space-y-3">
         <h3 className="typo-body2-semibold">3) 색상 커스텀 (토큰 활용)</h3>
         <div className="flex gap-3 items-center">
-          <BtnGray
+          <BtnBasic
             onClick={() => {}}
             className="bg-red-400 text-text-lowest hover:bg-red-300 active:bg-red-200"
           >
             Primary
-          </BtnGray>
-          <BtnGray
+          </BtnBasic>
+          <BtnBasic
             onClick={() => {}}
             className="bg-surface-container-20 text-text-highest hover:bg-surface-container-30"
           >
             Neutral
-          </BtnGray>
+          </BtnBasic>
         </div>
       </section>
 

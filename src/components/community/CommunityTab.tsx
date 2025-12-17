@@ -1,4 +1,4 @@
-import Chip from "../common/Chip";
+import Chip from "../common/Button/Chip";
 
 type Option = { label: string; value: string };
 

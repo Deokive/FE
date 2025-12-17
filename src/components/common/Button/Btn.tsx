@@ -2,6 +2,7 @@ import { twMerge } from "tailwind-merge";
 
 type BtnProps = {
   children: React.ReactNode;
+  variant?: "gray" | "blue";
   onClick: () => void;
   className?: string;
   disabled?: boolean;
@@ -11,47 +12,20 @@ type BtnProps = {
   selectable?: boolean; // 기본 true, false면 토글/선택 개념 없음
 };
 
-const BtnGray = ({
+const BtnBasic = ({
   children,
+  variant = "gray",
   onClick,
   className,
   disabled = false,
 }: BtnProps) => {
   const base =
     "w-[180px] h-[48px] px-[30px] py-[10px] rounded-[8px] cursor-pointer typo-body3-semibold transition-colors transition-colors";
-  const enabled = "bg-surface-container-20 text-color-highest";
-  const hoverActive =
+  const enabledGray = "bg-surface-container-20 text-color-highest";
+  const enabledBlue = "bg-brand-blue-400 text-color-lowest";
+  const hoverActiveGray =
     "hover:bg-surface-container-30 hover:text-color-highest active:bg-surface-container-40 active:text-color-highest";
-  const disabledCls =
-    "bg-surface-container-30 text-color-highest cursor-not-allowed";
-  return (
-    <button
-      type="button"
-      aria-disabled={disabled}
-      disabled={disabled}
-      onClick={disabled ? undefined : onClick}
-      className={twMerge(
-        base,
-        disabled ? disabledCls : enabled,
-        disabled ? "" : hoverActive,
-        className
-      )}
-    >
-      {children}
-    </button>
-  );
-};
-
-const BtnBlue = ({
-  children,
-  onClick,
-  className,
-  disabled = false,
-}: BtnProps) => {
-  const base =
-    "w-[180px] h-[48px] px-[30px] py-[10px] rounded-[8px] cursor-pointer typo-body3-semibold transition-colors transition-colors";
-  const enabled = "bg-brand-blue-400 text-color-lowest";
-  const hoverActive =
+  const hoverActiveBlue =
     "hover:bg-brand-blue-300 hover:text-color-lowest active:bg-brand-blue-200  active:text-color-lowest";
   const disabledCls =
     "bg-surface-container-30 text-color-highest cursor-not-allowed";
@@ -63,8 +37,8 @@ const BtnBlue = ({
       onClick={disabled ? undefined : onClick}
       className={twMerge(
         base,
-        disabled ? disabledCls : enabled,
-        disabled ? "" : hoverActive,
+        disabled ? disabledCls : variant === "gray" ? enabledGray : enabledBlue,
+        disabled ? "" : variant === "gray" ? hoverActiveGray : hoverActiveBlue,
         className
       )}
     >
@@ -122,4 +96,4 @@ const BtnIcon = ({
   );
 };
 
-export { BtnGray, BtnBlue, BtnIcon };
+export { BtnBasic, BtnIcon };
