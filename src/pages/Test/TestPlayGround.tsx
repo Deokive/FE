@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Pencil, ChevronDown, ChevronUp } from "lucide-react";
-import { BtnGray, BtnBlue, BtnIcon } from "@/components/common/Btn";
+import { BtnGray, BtnBlue, BtnIcon } from "@/components/common/Button/Btn";
 
 export default function ButtonsPlayground() {
   const [cntGray, setCntGray] = useState(0);
@@ -29,6 +29,7 @@ export default function ButtonsPlayground() {
         </h3>
         <div className="flex gap-3 items-center">
           <BtnGray onClick={() => {}}>기본 버튼</BtnGray>
+
           <BtnGray
             onClick={() => {}}
             className="h-[56px] px-[40px] py-[14px] rounded-[10px]"
