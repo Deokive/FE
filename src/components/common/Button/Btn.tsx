@@ -9,7 +9,6 @@ type BtnProps = {
   startIcon?: React.ReactNode; // 왼쪽 아이콘
   endIcon?: React.ReactNode; // 오른쪽 아이콘
   selected?: boolean; // 선택된 상태인지 여부
-  selectable?: boolean; // 기본 true, false면 토글/선택 개념 없음
 };
 
 const BtnBasic = ({
@@ -76,8 +75,7 @@ const BtnIcon = ({
         base,
         disabled ? disabledCls : enabled,
         disabled ? "" : hoverActive,
-        selected ? selectedCls : "",
-
+        selected ? selectedCls : enabled,
         className
       )}
     >

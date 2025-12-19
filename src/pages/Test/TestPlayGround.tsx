@@ -1,11 +1,21 @@
 import { useState } from "react";
 import { Pencil, ChevronDown, ChevronUp } from "lucide-react";
 import { BtnBasic, BtnIcon } from "@/components/common/Button/Btn";
+import SelectBox from "@/components/common/Button/SelectBox";
+
+type ListOption = { label: string; value: string };
+
+const LIST_OPTIONS: ListOption[] = [
+  { label: "전체", value: "all" },
+  { label: "좋아요 순", value: "like" },
+  { label: "조회수 순", value: "popular" },
+];
 
 export default function ButtonsPlayground() {
   const [cntGray, setCntGray] = useState(0);
   const [cntBlue, setCntBlue] = useState(0);
   const [open, setOpen] = useState(false);
+  const [sortBy, setSortBy] = useState("all");
 
   return (
     <div className="px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
@@ -106,6 +116,16 @@ export default function ButtonsPlayground() {
           >
             버튼명
           </BtnIcon>
+        </div>
+      </section>
+      <section className="space-y-3">
+        <h3 className="typo-body2-semibold">5) List</h3>
+        <div className="flex gap-3 items-center">
+          <SelectBox
+            options={LIST_OPTIONS}
+            value={sortBy}
+            onChange={setSortBy}
+          />
         </div>
       </section>
     </div>
