@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Pencil, ChevronDown, ChevronUp } from "lucide-react";
 import { BtnBasic, BtnIcon } from "@/components/common/Button/Btn";
 import SelectBox from "@/components/common/Button/SelectBox";
+import ImgUpLoadCard from "@/components/common/Card/ImgUpLoadCard";
+import ImgCard from "@/components/common/Card/ImgCard";
+import CommunityCard from "@/components/community/CommunityCard";
 import BackNavigator from "@/components/common/BackNavigator";
 
 type ListOption = { label: string; value: string };
@@ -17,14 +20,16 @@ export default function ButtonsPlayground() {
   const [cntBlue, setCntBlue] = useState(0);
   const [open, setOpen] = useState(false);
   const [sortBy, setSortBy] = useState("all");
+  const [selectedImg1, setSelectedImg1] = useState<boolean>(false);
+  const [selectedImg2, setSelectedImg2] = useState<boolean>(false);
 
   return (
     <div className="px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
+      <h2 className="typo-h3-semibold">공용 컴포넌트 테스트</h2>
+      <h3 className="typo-body2-semibold">0) 백네브바</h3>
       <div>
         <BackNavigator label="커뮤니티 보기" onClick={() => history.back()} />
       </div>
-      <h2 className="typo-h3-semibold">Btn 공용 컴포넌트 테스트</h2>
-
       <section className="space-y-3">
         <h3 className="typo-body2-semibold">1) 기본</h3>
         <div className="flex gap-3 items-center">
@@ -129,6 +134,56 @@ export default function ButtonsPlayground() {
             options={LIST_OPTIONS}
             value={sortBy}
             onChange={setSortBy}
+          />
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="typo-body2-semibold">6) Card컴포넌트</h3>
+        <div className="flex gap-3 items-center">
+          <ImgUpLoadCard onClick={() => {}} />
+          <div>
+            <p className="typo-body3-semibold">대표이미지카드</p>
+            <ImgCard
+              selected={selectedImg1}
+              onDelete={() => console.log("대표이미지 삭제")}
+              onClick={() => setSelectedImg1((v) => !v)}
+              type="representative"
+            />
+          </div>
+          <div>
+            <p className="typo-body3-semibold">이미지카드</p>
+            <ImgCard
+              selected={selectedImg2}
+              onClick={() => setSelectedImg2((v) => !v)}
+              type="normal"
+            />
+          </div>
+        </div>
+      </section>
+      <section className="space-y-3">
+        <h3 className="typo-body2-semibold">7) CommunityCard</h3>
+        <div className="flex gap-3 items-center pb-20">
+          <CommunityCard
+            title="첫번째 게시물"
+            category="카테고리"
+            content="게시글 내용"
+            onClick={() => console.log("첫번째 게시물 클릭")}
+            onClickShare={() => console.log("첫번째 게시물 공유")}
+          />
+          <CommunityCard
+            title="두번째 게시물"
+            category="카테고리"
+            content="게시글 내용"
+            onClick={() => console.log("두번째 게시물 클릭")}
+            onClickShare={() => console.log("두번째 게시물 공유")}
+          />
+          <CommunityCard
+            title="세번째 게시물"
+            category="카테고리"
+            content="게시글 내용"
+            onClick={() => console.log("세번째 게시물 클릭")}
+            onClickShare={() => console.log("세번째 게시물 공유")}
           />
         </div>
       </section>
