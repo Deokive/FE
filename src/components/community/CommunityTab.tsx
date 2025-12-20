@@ -1,4 +1,4 @@
-import Chip from "../common/Chip";
+import Chip from "../common/Button/Chip";
 
 type Option = { label: string; value: string };
 
@@ -6,7 +6,6 @@ type CommunityTabProps = {
   value: string;
   onChange: (value: string) => void;
   options?: Option[];
-  className?: string;
 };
 
 const DEFAULT_OPTIONS: Option[] = [
@@ -24,29 +23,21 @@ export default function CommunityTab({
   value,
   onChange,
   options = DEFAULT_OPTIONS,
-  className = "",
 }: CommunityTabProps) {
   return (
     <div
       role="tablist"
-      className={[
-        "w-full flex items-center justify-center gap-[23px]",
-        className,
-      ].join(" ")}
+      className="w-full flex items-center justify-center gap-[23px]"
     >
-      {options.map((opt) => {
-        const active = opt.value === value;
-
-        return (
-          <Chip
-            key={opt.value}
-            active={active}
-            onClick={() => onChange(opt.value)}
-          >
-            {opt.label}
-          </Chip>
-        );
-      })}
+      {options.map((opt) => (
+        <Chip
+          key={opt.value}
+          selected={opt.value === value}
+          onClick={() => onChange(opt.value)}
+        >
+          {opt.label}
+        </Chip>
+      ))}
     </div>
   );
 }
