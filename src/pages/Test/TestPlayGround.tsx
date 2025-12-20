@@ -5,6 +5,7 @@ import SelectBox from "@/components/common/Button/SelectBox";
 import ImgUpLoadCard from "@/components/common/Card/ImgUpLoadCard";
 import ImgCard from "@/components/common/Card/ImgCard";
 import CommunityCard from "@/components/community/CommunityCard";
+import BackNavigator from "@/components/common/BackNavigator";
 
 type ListOption = { label: string; value: string };
 
@@ -23,8 +24,12 @@ export default function ButtonsPlayground() {
   const [selectedImg2, setSelectedImg2] = useState<boolean>(false);
 
   return (
-    <div className="h-[1080px]  px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
+    <div className="px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
       <h2 className="typo-h3-semibold">공용 컴포넌트 테스트</h2>
+      <h3 className="typo-body2-semibold">0) 백네브바</h3>
+      <div>
+        <BackNavigator label="커뮤니티 보기" onClick={() => history.back()} />
+      </div>
       <section className="space-y-3">
         <h3 className="typo-body2-semibold">1) 기본</h3>
         <div className="flex gap-3 items-center">
