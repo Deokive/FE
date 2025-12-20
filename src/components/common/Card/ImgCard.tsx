@@ -64,7 +64,8 @@ const ImgCard = ({
             e.stopPropagation(); // 카드 클릭 이벤트 전파 방지
             onDelete();
           }}
-          className="absolute flex flex-col items-center justify-center top-[12px] right-[19px] w-[30px] h-[30px] rounded-[20px] opacity-50 bg-[#7D9AB2] z-20 hover:opacity-70"
+          className="absolute flex flex-col items-center justify-center top-[12px] right-[19px] w-[30px] h-[30px] 
+          rounded-[20px] opacity-50 bg-[#7D9AB2] z-20 hover:opacity-70"
           aria-label="삭제"
         >
           <X className="w-4 h-4 text-white" />
