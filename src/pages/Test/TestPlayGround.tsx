@@ -5,7 +5,6 @@ import SelectBox from "@/components/common/Button/SelectBox";
 import ImgUpLoadCard from "@/components/common/Card/ImgUpLoadCard";
 import ImgCard from "@/components/common/Card/ImgCard";
 import CommunityCard from "@/components/community/CommunityCard";
-import CommunityTab from "@/components/community/CommunityTab";
 
 type ListOption = { label: string; value: string };
 
@@ -20,8 +19,9 @@ export default function ButtonsPlayground() {
   const [cntBlue, setCntBlue] = useState(0);
   const [open, setOpen] = useState(false);
   const [sortBy, setSortBy] = useState("all");
-  const [selectedImg, setSelectedImg] = useState<boolean>(false);
-  const [category, setCategory] = useState<string>("all");
+  const [selectedImg1, setSelectedImg1] = useState<boolean>(false);
+  const [selectedImg2, setSelectedImg2] = useState<boolean>(false);
+
   return (
     <div className="h-[1080px]  px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
       <h2 className="typo-h3-semibold">공용 컴포넌트 테스트</h2>
@@ -140,17 +140,17 @@ export default function ButtonsPlayground() {
           <div>
             <p className="typo-body3-semibold">대표이미지카드</p>
             <ImgCard
-              selected={selectedImg}
+              selected={selectedImg1}
               onDelete={() => console.log("대표이미지 삭제")}
-              onClick={() => setSelectedImg((v) => !v)}
+              onClick={() => setSelectedImg1((v) => !v)}
               type="representative"
             />
           </div>
           <div>
             <p className="typo-body3-semibold">이미지카드</p>
             <ImgCard
-              selected={selectedImg}
-              onClick={() => setSelectedImg((v) => !v)}
+              selected={selectedImg2}
+              onClick={() => setSelectedImg2((v) => !v)}
               type="normal"
             />
           </div>
@@ -158,7 +158,7 @@ export default function ButtonsPlayground() {
       </section>
       <section className="space-y-3">
         <h3 className="typo-body2-semibold">7) CommunityCard</h3>
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center pb-20">
           <CommunityCard
             title="첫번째 게시물"
             category="카테고리"
@@ -180,12 +180,6 @@ export default function ButtonsPlayground() {
             onClick={() => console.log("세번째 게시물 클릭")}
             onClickShare={() => console.log("세번째 게시물 공유")}
           />
-        </div>
-      </section>
-      <section className="space-y-3">
-        <h3 className="typo-body2-semibold">8) CommunityTab</h3>
-        <div className="flex gap-3 items-center py-20">
-          <CommunityTab value={category} onChange={setCategory} />
         </div>
       </section>
     </div>
