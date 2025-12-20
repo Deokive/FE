@@ -133,7 +133,7 @@ export default function ButtonsPlayground() {
       <section className="space-y-3">
         <h3 className="typo-body2-semibold">6) Card컴포넌트</h3>
         <div className="flex gap-3 items-center">
-          <ImgUpLoadCard onClick={() => {}}></ImgUpLoadCard>
+          <ImgUpLoadCard onClick={() => {}} />
         </div>
       </section>
     </div>

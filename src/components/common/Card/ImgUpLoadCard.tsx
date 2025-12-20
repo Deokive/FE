@@ -18,7 +18,10 @@ const ImgUpLoadCard = ({
   const hoverActive =
     "hover:bg-surface-container-30 active:bg-surface-container-40";
   return (
-    <div onClick={onClick} className={twMerge(base, enabled, hoverActive)}>
+    <div
+      onClick={onClick}
+      className={twMerge(base, enabled, hoverActive, className)}
+    >
       <Plus className="w-[47px] h-[40px]" />
     </div>
   );
