@@ -3,6 +3,7 @@ import { Pencil, ChevronDown, ChevronUp } from "lucide-react";
 import { BtnBasic, BtnIcon } from "@/components/common/Button/Btn";
 import SelectBox from "@/components/common/Button/SelectBox";
 import ImgUpLoadCard from "@/components/common/Card/ImgUpLoadCard";
+import ImgCard from "@/components/common/Card/ImgCard";
 
 type ListOption = { label: string; value: string };
 
@@ -17,6 +18,7 @@ export default function ButtonsPlayground() {
   const [cntBlue, setCntBlue] = useState(0);
   const [open, setOpen] = useState(false);
   const [sortBy, setSortBy] = useState("all");
+  const [selectedImg, setSelectedImg] = useState<boolean>(false);
 
   return (
     <div className="h-screen px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
@@ -134,6 +136,23 @@ export default function ButtonsPlayground() {
         <h3 className="typo-body2-semibold">6) Card컴포넌트</h3>
         <div className="flex gap-3 items-center">
           <ImgUpLoadCard onClick={() => {}} />
+          <div>
+            <p className="typo-body3-semibold">대표이미지카드</p>
+            <ImgCard
+              selected={selectedImg}
+              onDelete={() => console.log("대표이미지 삭제")}
+              onClick={() => setSelectedImg((v) => !v)}
+              type="representative"
+            />
+          </div>
+          <div>
+            <p className="typo-body3-semibold">이미지카드</p>
+            <ImgCard
+              selected={selectedImg}
+              onClick={() => setSelectedImg((v) => !v)}
+              type="normal"
+            />
+          </div>
         </div>
       </section>
     </div>
