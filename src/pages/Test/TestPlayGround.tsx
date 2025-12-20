@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Pencil, ChevronDown, ChevronUp } from "lucide-react";
 import { BtnBasic, BtnIcon } from "@/components/common/Button/Btn";
 import SelectBox from "@/components/common/Button/SelectBox";
+import BackNavigator from "@/components/common/BackNavigator";
 
 type ListOption = { label: string; value: string };
 
@@ -19,6 +20,9 @@ export default function ButtonsPlayground() {
 
   return (
     <div className="px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
+      <div>
+        <BackNavigator label="커뮤니티 보기" onClick={() => history.back()} />
+      </div>
       <h2 className="typo-h3-semibold">Btn 공용 컴포넌트 테스트</h2>
 
       <section className="space-y-3">
