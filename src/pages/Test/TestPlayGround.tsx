@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Pencil, ChevronDown, ChevronUp } from "lucide-react";
 import { BtnBasic, BtnIcon } from "@/components/common/Button/Btn";
 import SelectBox from "@/components/common/Button/SelectBox";
+import ImgUpLoadCard from "@/components/common/Card/ImgUpLoadCard";
 
 type ListOption = { label: string; value: string };
 
@@ -18,8 +19,8 @@ export default function ButtonsPlayground() {
   const [sortBy, setSortBy] = useState("all");
 
   return (
-    <div className="px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
-      <h2 className="typo-h3-semibold">Btn 공용 컴포넌트 테스트</h2>
+    <div className="h-screen px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
+      <h2 className="typo-h3-semibold">공용 컴포넌트 테스트</h2>
 
       <section className="space-y-3">
         <h3 className="typo-body2-semibold">1) 기본</h3>
@@ -126,6 +127,13 @@ export default function ButtonsPlayground() {
             value={sortBy}
             onChange={setSortBy}
           />
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="typo-body2-semibold">6) Card컴포넌트</h3>
+        <div className="flex gap-3 items-center">
+          <ImgUpLoadCard onClick={() => {}}></ImgUpLoadCard>
         </div>
       </section>
     </div>
