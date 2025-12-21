@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Pencil, ChevronDown, ChevronUp } from "lucide-react";
 import { BtnBasic, BtnIcon } from "@/components/common/Button/Btn";
 import SelectBox from "@/components/common/Button/SelectBox";
@@ -6,6 +6,7 @@ import ImgUpLoadCard from "@/components/common/Card/ImgUpLoadCard";
 import ImgCard from "@/components/common/Card/ImgCard";
 import CommunityCard from "@/components/community/CommunityCard";
 import BackNavigator from "@/components/common/BackNavigator";
+import Pagination from "@/components/common/Pagination";
 
 type ListOption = { label: string; value: string };
 
@@ -22,6 +23,9 @@ export default function ButtonsPlayground() {
   const [sortBy, setSortBy] = useState("all");
   const [selectedImg1, setSelectedImg1] = useState<boolean>(false);
   const [selectedImg2, setSelectedImg2] = useState<boolean>(false);
+
+  const totalItems = 356;
+  const [page, setPage] = useState(1);
 
   return (
     <div className="px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
@@ -187,6 +191,18 @@ export default function ButtonsPlayground() {
           />
         </div>
       </section>
+      <div>
+        <h3 className="typo-body2-semibold">6) 페이지네이션</h3>
+        <Pagination
+          totalItems={totalItems}
+          pageSize={1}
+          visiblePages={5}
+          currentPage={page}
+          onChange={(p) => setPage(p)}
+          className="mt-5"
+        />
+        <div className="mt-4">현재 페이지: {page}</div>
+      </div>
     </div>
   );
 }
