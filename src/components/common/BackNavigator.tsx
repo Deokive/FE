@@ -1,5 +1,5 @@
 import React, { KeyboardEvent } from "react";
-import BackIcon from "../../assets/icons/BackIcon";
+import BackIcon from "../../assets/Icon/BackIcon";
 
 type Props = {
   label?: string;
