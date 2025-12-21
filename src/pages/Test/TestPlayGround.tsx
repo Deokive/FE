@@ -7,6 +7,7 @@ import ImgCard from "@/components/common/Card/ImgCard";
 import CommunityCard from "@/components/community/CommunityCard";
 import BackNavigator from "@/components/common/BackNavigator";
 import Pagination from "@/components/common/Pagination";
+import DeleteCommentModal from "@/components/community/DeleteCommentModal";
 
 type ListOption = { label: string; value: string };
 
@@ -26,6 +27,11 @@ export default function ButtonsPlayground() {
 
   const totalItems = 356;
   const [page, setPage] = useState(1);
+
+  const handleDelete = () => {
+    // 실제 삭제 로직(서버 호출 등)
+    console.log("댓글 삭제 처리");
+  };
 
   return (
     <div className="px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
@@ -192,7 +198,7 @@ export default function ButtonsPlayground() {
         </div>
       </section>
       <div>
-        <h3 className="typo-body2-semibold">6) 페이지네이션</h3>
+        <h3 className="typo-body2-semibold">8) 페이지네이션</h3>
         <Pagination
           totalItems={totalItems}
           pageSize={1}
@@ -202,6 +208,11 @@ export default function ButtonsPlayground() {
           className="mt-5"
         />
         <div className="mt-4">현재 페이지: {page}</div>
+      </div>
+      <div>
+        <h3 className="typo-body2-semibold mb-2">9) 댓글 삭제 모달</h3>
+        {/* 댓글 아이템 우측에 배치 */}
+        <DeleteCommentModal onConfirm={handleDelete} />
       </div>
     </div>
   );
