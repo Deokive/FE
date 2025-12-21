@@ -7,6 +7,9 @@ import ImgCard from "@/components/common/Card/ImgCard";
 import CommunityCard from "@/components/community/CommunityCard";
 import BackNavigator from "@/components/common/BackNavigator";
 import Pagination from "@/components/common/Pagination";
+import TrashIcon from "../../assets/Icon/TrashIcon";
+import ExclamationIcon from "../../assets/Icon/ExclamationIcon";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 type ListOption = { label: string; value: string };
 
@@ -26,6 +29,16 @@ export default function ButtonsPlayground() {
 
   const totalItems = 356;
   const [page, setPage] = useState(1);
+
+  const handleDeleteComment = () => {
+    // 댓글 삭제 로직
+    console.log("댓글 삭제");
+  };
+
+  const handleDeleteDiary = () => {
+    // 일기 삭제 로직
+    console.log("일기 삭제");
+  };
 
   return (
     <div className="px-10 py-8 space-y-8 bg-surface-bg text-text-highest">
@@ -192,7 +205,7 @@ export default function ButtonsPlayground() {
         </div>
       </section>
       <div>
-        <h3 className="typo-body2-semibold">6) 페이지네이션</h3>
+        <h3 className="typo-body2-semibold">8) 페이지네이션</h3>
         <Pagination
           totalItems={totalItems}
           pageSize={1}
@@ -203,6 +216,35 @@ export default function ButtonsPlayground() {
         />
         <div className="mt-4">현재 페이지: {page}</div>
       </div>
+      <div>
+        <h3 className="typo-body2-semibold mb-2">9) 삭제 모달</h3>
+        {/* 댓글 아이템 우측에 배치 */}
+        <ConfirmModal
+          trigger={
+            <button aria-label="댓글 삭제" className="cursor-pointer">
+              <TrashIcon size={20} />
+            </button>
+          }
+          icon={<ExclamationIcon size={60} />}
+          title="해당 댓글을 삭제하시겠어요?"
+          confirmLabel="확인"
+          cancelLabel="취소"
+          onConfirm={handleDeleteComment}
+        />
+      </div>
+
+      <ConfirmModal
+        trigger={
+          <button className="px-4 py-2 rounded bg-surface-container-20">
+            삭제
+          </button>
+        }
+        icon={<ExclamationIcon size={60} />}
+        title="해당 일기장을 삭제하시겠어요?"
+        confirmLabel="확인"
+        cancelLabel="취소"
+        onConfirm={handleDeleteDiary}
+      />
     </div>
   );
 }
