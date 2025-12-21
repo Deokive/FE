@@ -7,7 +7,9 @@ import ImgCard from "@/components/common/Card/ImgCard";
 import CommunityCard from "@/components/community/CommunityCard";
 import BackNavigator from "@/components/common/BackNavigator";
 import Pagination from "@/components/common/Pagination";
-import DeleteCommentModal from "@/components/community/DeleteCommentModal";
+import TrashIcon from "../../assets/Icon/TrashIcon";
+import ExclamationIcon from "../../assets/Icon/ExclamationIcon";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 type ListOption = { label: string; value: string };
 
@@ -28,9 +30,14 @@ export default function ButtonsPlayground() {
   const totalItems = 356;
   const [page, setPage] = useState(1);
 
-  const handleDelete = () => {
-    // 실제 삭제 로직(서버 호출 등)
-    console.log("댓글 삭제 처리");
+  const handleDeleteComment = () => {
+    // 댓글 삭제 로직
+    console.log("댓글 삭제");
+  };
+
+  const handleDeleteDiary = () => {
+    // 일기 삭제 로직
+    console.log("일기 삭제");
   };
 
   return (
@@ -210,10 +217,34 @@ export default function ButtonsPlayground() {
         <div className="mt-4">현재 페이지: {page}</div>
       </div>
       <div>
-        <h3 className="typo-body2-semibold mb-2">9) 댓글 삭제 모달</h3>
+        <h3 className="typo-body2-semibold mb-2">9) 삭제 모달</h3>
         {/* 댓글 아이템 우측에 배치 */}
-        <DeleteCommentModal onConfirm={handleDelete} />
+        <ConfirmModal
+          trigger={
+            <button aria-label="댓글 삭제" className="cursor-pointer">
+              <TrashIcon size={20} />
+            </button>
+          }
+          icon={<ExclamationIcon size={60} />}
+          title="해당 댓글을 삭제하시겠어요?"
+          confirmLabel="확인"
+          cancelLabel="취소"
+          onConfirm={handleDeleteComment}
+        />
       </div>
+
+      <ConfirmModal
+        trigger={
+          <button className="px-4 py-2 rounded bg-surface-container-20">
+            삭제
+          </button>
+        }
+        icon={<ExclamationIcon size={60} />}
+        title="해당 일기장을 삭제하시겠어요?"
+        confirmLabel="확인"
+        cancelLabel="취소"
+        onConfirm={handleDeleteDiary}
+      />
     </div>
   );
 }
