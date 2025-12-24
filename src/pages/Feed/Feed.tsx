@@ -1,5 +1,13 @@
+import type { SelectBoxOption } from "@/components/common/Button/SelectBox";
+import SelectBox from "@/components/common/Button/SelectBox";
 import Pagination from "@/components/common/Pagination";
 import FeedCard from "@/components/feed/FeedCard";
+import { useState } from "react";
+
+const FEED_OPTIONS: SelectBoxOption[] = [
+  { label: "좋아요 순", value: "like" },
+  { label: "조회수 순", value: "popular" },
+];
 
 const Feed = () => {
   // 샘플 데이터 (실제로는 API에서 가져올 데이터)
@@ -31,20 +39,28 @@ const Feed = () => {
     { id: 9, image: "", title: "빈 이미지 5" },
     { id: 10, image: "", title: "빈 이미지 6" },
   ];
+
+  const [option, setOption] = useState<string>("popular");
   return (
-    <div className="mb-[60px]">
+    <div className="my-[60px]">
       <div className="h-full w-full px-[340px] my-[60px] flex flex-col items-start justify-center">
-        {/* 3열 격자 레이아웃 */}
-        <div className="grid grid-cols-3 gap-[50px] w-[1240px]">
+        {/* SelectBox를 오른쪽으로 정렬 */}
+        <div className="flex items-center justify-end w-full mb-[40px]">
+          <SelectBox
+            options={FEED_OPTIONS}
+            value={option}
+            onChange={setOption}
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-x-[80px] gap-y-[60px] w-[1240px]">
           {feedData.map((feed) => (
-            <div className="w-[360px] flex gap-auto justify-between items-start">
-              <FeedCard
-                key={feed.id}
-                image={feed.image}
-                title={feed.title}
-                onClick={() => console.log("클릭:", feed.id)}
-              />
-            </div>
+            <FeedCard
+              key={feed.id}
+              image={feed.image}
+              title={feed.title}
+              onClick={() => console.log("클릭:", feed.id)}
+            />
           ))}
         </div>
       </div>
