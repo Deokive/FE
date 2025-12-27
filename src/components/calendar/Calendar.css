@@ -8,6 +8,9 @@ src/components/calendar/Calendar.css .calendar-container {
   background: white;
   border: none;
   font-family: Pretendard;
+
+  /* 달력 전체의 바깥 테두리 (상, 하, 좌, 우) */
+  border: 2px solid var(--color-border-high, #7d9ab2);
 }
 
 .react-calendar__navigation {
@@ -18,7 +21,11 @@ src/components/calendar/Calendar.css .calendar-container {
 .react-calendar__month-view__weekdays {
   display: grid !important; /* flex 대신 grid 사용 */
   grid-template-columns: repeat(7, 1fr); /* 날짜와 똑같은 7분할 */
-  padding: 0;
+  /* [핵심] 틈새 없애기 */
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
   text-align: center;
   border-bottom: 2px solid var(--color-border-high, #7d9ab2);
 }
@@ -34,29 +41,59 @@ src/components/calendar/Calendar.css .calendar-container {
   font-weight: 400;
   line-height: normal;
   color: var(--color-text-high, #7d9ab2);
+
+  /* 요일끼리의 세로선 (오른쪽만) */
+  border-right: 2px solid var(--color-border-high, #7d9ab2);
+}
+/* 마지막 요일(토요일)은 오른쪽 선 제거 (바깥 테두리와 겹침 방지) */
+.react-calendar__month-view__weekdays__weekday:nth-child(7) {
+  border-right: none !important;
 }
 
 .react-calendar__month-view__weekdays__weekday abbr {
   text-decoration: none;
+  cursor: default;
 }
 
 /* 날짜 그리드 */
 .react-calendar__month-view__days {
   display: grid;
   grid-template-columns: repeat(7, 1fr); /* 7개의 열을 균등하게 분할 */
+  /* [핵심] 틈새(gap)를 0으로 해야 선이 이어집니다 */
+  gap: 0 !important;
+  padding: 0 !important;
 }
 
 .react-calendar__tile {
   max-height: 282px;
   min-height: 200px;
+  width: 100% !important; /* flex-basis 대신 width 100% 강제 */
+
+  cursor: default;
+
   display: flex;
-  width: 201px;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* 상단 정렬 */
+  align-items: flex-start; /* 좌측 정렬 */
   padding: 8px;
-  border: 2px solid var(--color-border-high, #7d9ab2);
-  flex: 1 0 0;
+
+  /* [핵심] 테두리 전략: 오른쪽과 아래쪽만 그립니다 */
+  border: none !important; /* 기존 스타일 리셋 */
+  border-right: 2px solid var(--color-border-high, #7d9ab2) !important;
+  border-bottom: 2px solid var(--color-border-high, #7d9ab2) !important;
+
+  margin: 0 !important;
+  outline: none !important;
+}
+/* [테두리 정리] */
+/* (1) 각 행의 마지막 열(토요일)은 오른쪽 선 제거 */
+.react-calendar__tile:nth-child(7n) {
+  border-right: none !important;
+}
+
+/* (2) 달력의 맨 마지막 줄(마지막 주)은 아래쪽 선 제거 */
+.react-calendar__tile:nth-last-child(-n + 7) {
+  border-bottom: none !important;
 }
 
 /* react-calendar의 기본 날짜 텍스트가 보이도록 */
@@ -67,28 +104,29 @@ src/components/calendar/Calendar.css .calendar-container {
   color: inherit !important;
 }
 
-.react-calendar__tile:hover {
+/* .react-calendar__tile:hover {
   background-color: var(--color-brand-blue-100, #eef7fc);
   border-color: var(--color-border-mid, #cbd5df);
-}
+} */
 
 /* 선택된 날짜 스타일 (피그마 디자인) */
-.react-calendar__tile--active {
+/* .react-calendar__tile--active {
   background-color: var(--color-brand-blue-400, #82bef5);
   border-color: var(--color-brand-blue-400, #82bef5);
   color: white;
   font-weight: 600;
-}
+} */
 
-.react-calendar__tile--active:hover {
+/* .react-calendar__tile--active:hover {
   background-color: var(--color-brand-blue-300, #99ccff);
   border-color: var(--color-brand-blue-300, #99ccff);
-}
+} */
 
-.react-calendar__tile--now {
+/* .react-calendar__tile--now {
   background-color: var(--color-surface-container-20, #e9ecf1);
   border-color: var(--color-border-mid, #cbd5df);
-}
+} */
+
 /* 날짜 텍스트가 확실히 보이도록 */
 .calendar-date-text {
   display: block;
@@ -115,18 +153,40 @@ src/components/calendar/Calendar.css .calendar-container {
 .calendar-day-other-month {
   color: var(--color-text-low, #cbd5df);
   opacity: 0.5;
-  border-color: var(--color-border-low, #e9ecf1);
+  /* ▼ 아래 두 줄을 추가하세요 */
+  pointer-events: none; /* 마우스 이벤트를 아예 무시 (클릭 불가) */
+  cursor: default; /* 마우스 커서 모양 기본으로 변경 */
+  /* border-color: var(--color-border-low, #e9ecf1); */
 }
 
 /* 선택된 날짜 - 요일 색상 무시하고 흰색으로 */
-.react-calendar__tile--active.calendar-day-sunday,
+/* .react-calendar__tile--active.calendar-day-sunday,
 .react-calendar__tile--active.calendar-day-saturday,
 .react-calendar__tile--active.calendar-day-weekday {
   color: white;
-}
+} */
 
 /* 선택된 날짜가 다른 달인 경우 */
-.react-calendar__tile--active.calendar-day-other-month {
+/* .react-calendar__tile--active.calendar-day-other-month {
   opacity: 1;
   color: white;
+} */
+
+/* 모든 상태(Hover, Active, Focus, Today)에서 스타일 초기화 */
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus,
+.react-calendar__tile--active,
+.react-calendar__tile--now {
+  /* 배경 흰색 고정 */
+  background: white !important;
+  /* 테두리 유지 */
+  border-right: 2px solid var(--color-border-high, #7d9ab2) !important;
+  border-bottom: 2px solid var(--color-border-high, #7d9ab2) !important;
+  /* 글자색 원래대로 유지 (요일별 색상 따름) */
+  /* color: inherit !important; */
+}
+
+/* 선택된 날짜라도 투명도 유지 (지난달/다음달 날짜) */
+.calendar-day-other-month {
+  opacity: 1 !important;
 }

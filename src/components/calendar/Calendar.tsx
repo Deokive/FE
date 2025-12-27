@@ -71,7 +71,7 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
       const labels = labelData?.[dateString] || [];
       const sticker = stickerData?.[dateString] || "";
       return (
-        <div className="flex flex-col items-start justify-start w-full h-full">
+        <div className="flex flex-col items-start justify-start w-full h-full ">
           {/* 1. 커스텀 날짜 숫자 (우측 상단 배치 등 CSS로 제어) */}
           <div className="custom-date-number w-full h-[44px] px-[16px] text-right typo-h2">
             {date.getDate()}
@@ -136,7 +136,7 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
       </div>
 
       {/* 달력 */}
-      <div className="calendar-container w-[1240px] border-[2px] border-color-high">
+      <div className="calendar-container w-[1240px]">
         <ReactCalendar
           onChange={onChange}
           value={value}
@@ -147,7 +147,7 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
             }
           }}
           calendarType="gregory" // [중요] 일요일부터 시작하도록 강제 설정
-          showNeighboringMonth={false}
+          showNeighboringMonth={true}
           showNavigation={false}
           tileClassName={tileClassName}
           // ▼ [중요] 커스텀 컨텐츠 활성화

@@ -16,7 +16,7 @@ const FeedDetail = () => {
     <div>
       <Banner />
       {/* 배너 밑부분 */}
-      <div className="w-full flex flex-col items-start mt-[60px] gap-[60px] px-[340px]">
+      <div className="w-full flex flex-col items-start mt-[60px] pb-[100px] gap-[60px] px-[340px]">
         {/* 아카이브 헤더 */}
         <ArchiveHeader
           title={feed.title}
