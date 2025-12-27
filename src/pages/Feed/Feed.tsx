@@ -4,6 +4,7 @@ import Pagination from "@/components/common/Pagination";
 import FeedCard from "@/components/feed/FeedCard";
 import { feedDataMock } from "@/mockData/feedData";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const FEED_OPTIONS: SelectBoxOption[] = [
   { label: "조회수 순", value: "popular" },
@@ -13,6 +14,8 @@ const FEED_OPTIONS: SelectBoxOption[] = [
 const Feed = () => {
   // 샘플 데이터 (실제로는 API에서 가져올 데이터)
   const feedData = feedDataMock;
+
+  const navigate = useNavigate();
 
   const [option, setOption] = useState<string>("popular");
   return (
@@ -33,7 +36,7 @@ const Feed = () => {
               key={feed.id}
               image={feed.image}
               title={feed.title}
-              onClick={() => console.log("클릭:", feed.id)}
+              onClick={() => navigate(`/feed/${feed.id}`)}
             />
           ))}
         </div>
