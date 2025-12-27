@@ -11,7 +11,7 @@ export const feedDataMock = [
     viewCount: 150,
     likeCount: 42,
     ownerNickname: "홍길동",
-    createdAt: "2025-12-27 10:00:00",
+    createdAt: "2025-12-23 10:00:00",
     owner: true,
     liked: true,
   },
