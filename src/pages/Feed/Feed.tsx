@@ -2,43 +2,17 @@ import type { SelectBoxOption } from "@/components/common/Button/SelectBox";
 import SelectBox from "@/components/common/Button/SelectBox";
 import Pagination from "@/components/common/Pagination";
 import FeedCard from "@/components/feed/FeedCard";
+import { feedDataMock } from "@/mockData/feedData";
 import { useState } from "react";
 
 const FEED_OPTIONS: SelectBoxOption[] = [
-  { label: "좋아요 순", value: "like" },
   { label: "조회수 순", value: "popular" },
+  { label: "좋아요 순", value: "like" },
 ];
 
 const Feed = () => {
   // 샘플 데이터 (실제로는 API에서 가져올 데이터)
-  const feedData = [
-    {
-      id: 1,
-      image: "https://picsum.photos/201/300",
-      title: "랜덤 이미지 1",
-    },
-    { id: 2, image: "", title: "빈 이미지 1" },
-    {
-      id: 3,
-      image: "https://picsum.photos/202/300",
-      title: "랜덤 이미지 2",
-    },
-    {
-      id: 4,
-      image: "https://picsum.photos/203/300",
-      title: "랜덤 이미지 3",
-    },
-    { id: 5, image: "", title: "빈 이미지 2" },
-    {
-      id: 6,
-      image: "https://picsum.photos/204/300",
-      title: "랜덤 이미지 4",
-    },
-    { id: 7, image: "", title: "빈 이미지 3" },
-    { id: 8, image: "", title: "빈 이미지 4" },
-    { id: 9, image: "", title: "빈 이미지 5" },
-    { id: 10, image: "", title: "빈 이미지 6" },
-  ];
+  const feedData = feedDataMock;
 
   const [option, setOption] = useState<string>("popular");
   return (
@@ -65,8 +39,8 @@ const Feed = () => {
         </div>
       </div>
       <Pagination
-        className="px-[340px] w-full flex justify-center items-center"
-        totalItems={10}
+        className="px-[340px] w-full flex justify-center items-center mb-[70px]"
+        totalItems={feedData.length}
         pageSize={10}
         visiblePages={5}
         currentPage={1}
