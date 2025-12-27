@@ -9,6 +9,10 @@
   --font-sans: var(--font-pretendard);
 
   /* Figma Typography tokens */
+  --text-h1: 36px;
+  --leading-h1: 1; /* 100% */
+  --tracking-h1: 0;
+
   --text-h2: 24px;
   --leading-h2: 1; /* 100% */
   --tracking-h2: 0;
@@ -68,6 +72,9 @@
 
 @layer utilities {
   /* Heading */
+  .typo-h1 {
+    @apply font-sans text-h1 leading-h1 font-bold;
+  }
   .typo-h2 {
     @apply font-sans text-h2 leading-h2 font-normal;
   }

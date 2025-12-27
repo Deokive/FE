@@ -1,8 +1,19 @@
+import banner from "@/assets/images/banner.png";
+
 export const feedDataMock = [
   {
     id: 1,
+    title: "나의 첫 아카이브",
+    visibility: "PUBLIC",
+    badge: "NEWBIE",
+    bannerUrl: banner,
     image: "https://picsum.photos/201/300",
-    title: "랜덤 이미지 1",
+    viewCount: 150,
+    likeCount: 42,
+    ownerNickname: "홍길동",
+    createdAt: "2025-12-27 10:00:00",
+    owner: true,
+    liked: true,
   },
   { id: 2, image: "", title: "빈 이미지 1" },
   {
