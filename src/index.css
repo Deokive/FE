@@ -78,6 +78,9 @@
   .typo-h2 {
     @apply font-sans text-h2 leading-h2 font-normal;
   }
+  .typo-h2-semibold {
+    @apply font-sans text-h2 leading-h2 font-semibold;
+  }
   .typo-h3 {
     @apply font-sans text-h3 leading-h3 font-normal;
   }

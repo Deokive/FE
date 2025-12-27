@@ -1,7 +1,9 @@
 import Banner from "@/components/community/Banner";
 import { feedDataMock } from "@/mockData/feedData";
 import { useParams } from "react-router-dom";
-import ArchiveHeader from "@/components/common/Archive.tsx/ArchiveHeader";
+import ArchiveHeader from "@/components/archive/ArchiveHeader";
+import Calendar from "@/components/calendar/Calendar";
+import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
 
 const FeedDetail = () => {
   const urlParams = useParams();
@@ -23,6 +25,7 @@ const FeedDetail = () => {
           createdAt={feed.createdAt}
         />
         {/* 아카이브 달력 */}
+        <Calendar labelData={labelDataMock} stickerData={stickerDataMock} />
         {/* 덕질 일기 */}
         {/* 덕질 갤러리 */}
         {/* 티켓북 */}

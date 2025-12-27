@@ -1,6 +1,5 @@
 import getDPlusDay from "@/utils/dPlusDay";
 import UserIcon from "@/assets/icon/S.svg";
-import { Navigate } from "react-router-dom";
 
 interface ArchiveHeaderProps {
   title?: string;
