@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import ArchiveHeader from "@/components/archive/ArchiveHeader";
 import Calendar from "@/components/calendar/Calendar";
 import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
+import DiaryCard from "@/components/diary/DiaryCard";
 
 const FeedDetail = () => {
   const urlParams = useParams();
@@ -27,6 +28,32 @@ const FeedDetail = () => {
         {/* 아카이브 달력 */}
         <Calendar labelData={labelDataMock} stickerData={stickerDataMock} />
         {/* 덕질 일기 */}
+        <div className="w-full flex flex-col items-start gap-[60px]">
+          {/* 덕질일기 헤더부분 */}
+          <div className="w-full flex gap-[10px]">
+            <p className="flex-1 typo-h1 text-color-highest">덕질 일기</p>
+            <button
+              onClick={() => {
+                console.log("더보기 클릭");
+              }}
+              className="w-[84px] h-[29px] flex items-start justify-end typo-h2-semibold text-color-high cursor-pointer"
+            >
+              + 더보기
+            </button>
+          </div>
+          {/* 덕질일기 리스트부분 */}
+          <div className="w-full flex items-start justify-between gap-[80px]">
+            <DiaryCard
+              key={feed.id}
+              title={feed.title}
+              image={feed.image}
+              date={feed.createdAt}
+              onClick={() => {
+                console.log("덕질일기 클릭");
+              }}
+            />
+          </div>
+        </div>
         {/* 덕질 갤러리 */}
         {/* 티켓북 */}
         {/* 덕질 리포스트 */}
