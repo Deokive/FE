@@ -9,8 +9,11 @@ type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface CalendarProps {
+  /** 날짜별 라벨 데이터 (키: "YYYY-MM-DD" 형식, 값: 라벨 텍스트 배열) */
   labelData?: Record<string, string[]>;
-  stickerData?: Record<string, string>;
+  /** 날짜별 스티커 데이터 (키: "YYYY-MM-DD" 형식, 값: 스티커 ID 또는 식별자) */
+  stickerData?: Record<string, string>; //스티커는 날짜당 한개로 생각해서 string으로 처리
+  /** 스티커 이미지 URL (스티커 영역에 표시할 이미지) */
   stickerImage?: string;
 }
 
@@ -113,6 +116,16 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
     }
     return null;
   };
+  const handleClickDate = (date: Date) => {
+    console.log(
+      String(date.getFullYear()) +
+        "년 " +
+        String(date.getMonth() + 1).padStart(2, "0") +
+        "월 " +
+        String(date.getDate()).padStart(2, "0") +
+        "일에 일정 추가 api 호출"
+    );
+  };
 
   return (
     <div className="flex flex-col items-start">
@@ -138,22 +151,33 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
       {/* 달력 */}
       <div className="calendar-container w-[1240px]">
         <ReactCalendar
+          /** 날짜 클릭 시 실행되는 콜백 함수 */
+          onClickDay={handleClickDate}
+          /** 선택된 날짜가 변경될 때 호출되는 콜백 함수 */
           onChange={onChange}
+          /** 현재 선택된 날짜 값 */
           value={value}
+          /** 달력이 표시할 시작 날짜 (현재 보여지는 월의 기준 날짜) */
           activeStartDate={activeDate}
+          /** activeStartDate가 변경될 때 호출되는 콜백 (월 변경 시) */
           onActiveStartDateChange={({ activeStartDate }) => {
             if (activeStartDate) {
               setActiveDate(activeStartDate);
             }
           }}
-          calendarType="gregory" // [중요] 일요일부터 시작하도록 강제 설정
+          /** 달력 타입 설정 ("gregory": 일요일부터 시작하는 그레고리안 달력) */
+          calendarType="gregory"
+          /** 이전/다음 달의 날짜도 표시할지 여부 */
           showNeighboringMonth={true}
+          /** 기본 네비게이션 헤더 표시 여부 (false: 커스텀 헤더 사용) */
           showNavigation={false}
+          /** 각 날짜 타일에 적용할 CSS 클래스를 반환하는 함수 (요일별 색상 등) */
           tileClassName={tileClassName}
-          // ▼ [중요] 커스텀 컨텐츠 활성화
+          /** 각 날짜 타일 내부에 렌더링할 커스텀 컨텐츠를 반환하는 함수 (라벨, 스티커 등) */
           tileContent={tileContent}
+          /** 날짜 숫자 포맷팅 함수 (빈 문자열 반환: 기본 날짜 숫자 숨김, tileContent에서 커스텀 렌더링) */
           formatDay={() => ""}
-          // tileContent={tileContent} // 날짜 내용 명시적 렌더링
+          /** 요일 약어 포맷팅 함수 (Sun, Mon, Tue 등) */
           formatShortWeekday={(locale, date) => {
             const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
             return days[date.getDay()];
