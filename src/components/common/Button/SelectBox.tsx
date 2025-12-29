@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import List from "./List";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-type SelectBoxOption = {
+export type SelectBoxOption = {
   label: string;
   value: string;
 };
