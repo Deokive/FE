@@ -16,7 +16,7 @@ const TicketList = ({ ticket }: TicketListProps) => {
     <div className="w-full flex flex-col items-start gap-[60px]">
       {/* 갤러리 헤더부분 */}
       <div className="w-full flex gap-[10px]">
-        <p className="flex-1 typo-h1 text-color-highest">티켓 북</p>
+        <p className="flex-1 typo-h1 text-color-highest">티켓북</p>
         <button
           onClick={() => {
             console.log("더보기 클릭");
