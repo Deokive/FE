@@ -6,6 +6,8 @@ import Calendar from "@/components/calendar/Calendar";
 import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
 import { diaryDataMock } from "@/mockData/diaryData";
 import DiaryList from "@/components/archive/DiaryList";
+import GalleryList from "@/components/archive/GalleryList";
+import { galleryDataMock } from "@/mockData/galleryData";
 
 const FeedDetail = () => {
   const urlParams = useParams();
@@ -18,7 +20,10 @@ const FeedDetail = () => {
   const diary = diaryDataMock.filter(
     (diary) => diary.archiveId === Number(archiveId)
   );
-  console.log(diary);
+  // 덕질 갤러리 데이터 조회
+  const gallery = galleryDataMock.filter(
+    (gallery) => gallery.archiveId === Number(archiveId)
+  );
   if (!feed) {
     return <div>Feed not found</div>;
   }
@@ -42,6 +47,7 @@ const FeedDetail = () => {
         {/* 덕질 일기 */}
         <DiaryList diary={diary} />
         {/* 덕질 갤러리 */}
+        <GalleryList gallery={gallery} />
         {/* 티켓북 */}
         {/* 덕질 리포스트 */}
         {/* 좋아요 */}
