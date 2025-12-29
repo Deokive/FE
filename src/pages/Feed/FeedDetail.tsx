@@ -10,9 +10,9 @@ import Calendar from "@/components/calendar/Calendar";
 import DiaryList from "@/components/archive/DiaryList";
 import GalleryList from "@/components/archive/GalleryList";
 import TicketList from "@/components/archive/TicketList";
-import RepostCard from "@/components/common/Card/RepostCard";
 import RepostList from "@/components/archive/RepostList";
 import { repostDataMock } from "@/mockData/repostData";
+import ButtonLike from "@/components/archive/ButtonLike";
 
 const FeedDetail = () => {
   const urlParams = useParams();
@@ -56,7 +56,7 @@ const FeedDetail = () => {
     <div>
       <Banner />
       {/* 배너 밑부분 */}
-      <div className="w-full flex flex-col items-start mt-[60px] pb-[100px] gap-[60px] px-[340px]">
+      <div className="w-full flex flex-col items-start mt-[60px] gap-[60px] px-[340px]">
         {/* 아카이브 헤더 */}
         <ArchiveHeader
           title={feed.title}
@@ -75,6 +75,13 @@ const FeedDetail = () => {
         {/* 덕질 리포스트 */}
         <RepostList repost={repost} />
         {/* 좋아요 */}
+        <ButtonLike
+          liked={feed.liked}
+          likeCount={feed.likeCount}
+          onClick={() => {
+            console.log("좋아요 클릭");
+          }}
+        />
       </div>
     </div>
   );
