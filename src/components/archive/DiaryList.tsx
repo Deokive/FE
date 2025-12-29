@@ -1,4 +1,4 @@
-import DiaryCard from "../diary/DiaryCard";
+import DiaryCard from "../common/Card/DiaryCard";
 
 interface DiaryListProps {
   diary: Diary[];

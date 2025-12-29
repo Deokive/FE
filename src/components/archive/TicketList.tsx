@@ -1,21 +1,22 @@
-import GalleryCard from "../common/Card/GalleryCard";
+import TicketCard from "../common/Card/TicketCard";
 
-interface Gallery {
+interface Ticket {
   id?: number;
   archiveId?: number;
-  image?: string;
+  title?: string;
+  date?: string;
   onClick?: () => void;
 }
-interface GalleryListProps {
-  gallery?: Gallery[];
+interface TicketListProps {
+  ticket?: Ticket[];
 }
 
-const GalleryList = ({ gallery }: GalleryListProps) => {
+const TicketList = ({ ticket }: TicketListProps) => {
   return (
     <div className="w-full flex flex-col items-start gap-[60px]">
       {/* 갤러리 헤더부분 */}
       <div className="w-full flex gap-[10px]">
-        <p className="flex-1 typo-h1 text-color-highest">덕질 갤러리</p>
+        <p className="flex-1 typo-h1 text-color-highest">티켓 북</p>
         <button
           onClick={() => {
             console.log("더보기 클릭");
@@ -25,16 +26,16 @@ const GalleryList = ({ gallery }: GalleryListProps) => {
           + 더보기
         </button>
       </div>
-      {/* 갤러리 리스트부분 */}
+      {/* 티켓 리스트부분 */}
       <div className="flex items-start justify-between gap-[80px]">
-        {gallery?.slice(0, 3).map((gallery) => (
-          <GalleryCard
-            key={gallery.id}
-            id={gallery.id}
-            archiveId={gallery.archiveId}
-            image={gallery.image}
+        {ticket?.slice(0, 3).map((ticket) => (
+          <TicketCard
+            key={ticket.id}
+            id={ticket.id}
+            title={ticket.title}
+            date={ticket.date}
             onClick={() => {
-              console.log(gallery.id + "번 갤러리 클릭");
+              console.log(ticket.id + "번 티켓 클릭");
             }}
           />
         ))}
@@ -43,4 +44,4 @@ const GalleryList = ({ gallery }: GalleryListProps) => {
   );
 };
 
-export default GalleryList;
+export default TicketList;

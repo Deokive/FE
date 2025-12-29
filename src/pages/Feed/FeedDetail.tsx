@@ -1,13 +1,15 @@
+import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
+import { diaryDataMock } from "@/mockData/diaryData";
+import { galleryDataMock } from "@/mockData/galleryData";
+import { ticketDataMock } from "@/mockData/ticketData";
 import Banner from "@/components/community/Banner";
 import { feedDataMock } from "@/mockData/feedData";
 import { useParams } from "react-router-dom";
 import ArchiveHeader from "@/components/archive/ArchiveHeader";
 import Calendar from "@/components/calendar/Calendar";
-import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
-import { diaryDataMock } from "@/mockData/diaryData";
 import DiaryList from "@/components/archive/DiaryList";
 import GalleryList from "@/components/archive/GalleryList";
-import { galleryDataMock } from "@/mockData/galleryData";
+import TicketList from "@/components/archive/TicketList";
 
 const FeedDetail = () => {
   const urlParams = useParams();
@@ -24,6 +26,11 @@ const FeedDetail = () => {
   const gallery = galleryDataMock.filter(
     (gallery) => gallery.archiveId === Number(archiveId)
   );
+  // 티켓 데이터 조회
+  const ticket = ticketDataMock.filter(
+    (ticket) => ticket.archiveId === Number(archiveId)
+  );
+
   if (!feed) {
     return <div>Feed not found</div>;
   }
@@ -49,6 +56,7 @@ const FeedDetail = () => {
         {/* 덕질 갤러리 */}
         <GalleryList gallery={gallery} />
         {/* 티켓북 */}
+        <TicketList ticket={ticket} />
         {/* 덕질 리포스트 */}
         {/* 좋아요 */}
       </div>
