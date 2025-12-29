@@ -10,6 +10,9 @@ import Calendar from "@/components/calendar/Calendar";
 import DiaryList from "@/components/archive/DiaryList";
 import GalleryList from "@/components/archive/GalleryList";
 import TicketList from "@/components/archive/TicketList";
+import RepostCard from "@/components/common/Card/RepostCard";
+import RepostList from "@/components/archive/RepostList";
+import { repostDataMock } from "@/mockData/repostData";
 
 const FeedDetail = () => {
   const urlParams = useParams();
@@ -30,12 +33,24 @@ const FeedDetail = () => {
   const ticket = ticketDataMock.filter(
     (ticket) => ticket.archiveId === Number(archiveId)
   );
-
+  // 덕질 리포스트 데이터 조회
+  const repost = repostDataMock.filter(
+    (repost) => repost.archiveId === Number(archiveId)
+  );
   if (!feed) {
     return <div>Feed not found</div>;
   }
   if (!diary) {
     return <div>Diary not found</div>;
+  }
+  if (!gallery) {
+    return <div>Gallery not found</div>;
+  }
+  if (!ticket) {
+    return <div>Ticket not found</div>;
+  }
+  if (!repost) {
+    return <div>Repost not found</div>;
   }
   return (
     <div>
@@ -58,6 +73,7 @@ const FeedDetail = () => {
         {/* 티켓북 */}
         <TicketList ticket={ticket} />
         {/* 덕질 리포스트 */}
+        <RepostList repost={repost} />
         {/* 좋아요 */}
       </div>
     </div>
