@@ -21,7 +21,7 @@ const RepostCard = ({
   return (
     <button
       type="button"
-      data-repostCard-id={id}
+      data-repost-id={id}
       data-archive-id={archiveId}
       data-tab-id={tabId}
       onClick={onClick}
