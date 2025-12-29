@@ -2,7 +2,9 @@ import { useState } from "react";
 import vectorIcon from "@/assets/icon/VectorGray.svg";
 
 interface DiaryCardProps {
-  key?: number;
+  id?: number;
+  archiveId?: number;
+  diaryId?: number;
   title?: string;
   image?: string;
   date?: string;
@@ -20,7 +22,14 @@ export const formatDate = (input: Date | string): string => {
   return `${year}.${month}.${day}`;
 };
 
-const DiaryCard = ({ key, title, image, date, onClick }: DiaryCardProps) => {
+const DiaryCard = ({
+  archiveId,
+  diaryId,
+  title,
+  image,
+  date,
+  onClick,
+}: DiaryCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -30,7 +39,8 @@ const DiaryCard = ({ key, title, image, date, onClick }: DiaryCardProps) => {
 
   return (
     <div
-      key={key}
+      data-archive-id={archiveId}
+      data-diary-id={diaryId}
       onClick={onClick}
       className="pt-[25px] px-[20px] flex flex-col items-center justify-center w-[360px] h-[300px] rounded-[10px] bg-brand-blue-400 cursor-pointer"
     >

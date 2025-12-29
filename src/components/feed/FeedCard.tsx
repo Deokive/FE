@@ -2,13 +2,13 @@ import { useState } from "react";
 import vectorIcon from "@/assets/icon/VectorGray.svg";
 
 interface FeedCardProps {
-  key?: number;
+  id?: number;
   title?: string;
   image?: string;
   onClick: () => void;
 }
 
-const FeedCard = ({ key, title, image, onClick }: FeedCardProps) => {
+const FeedCard = ({ id, title, image, onClick }: FeedCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -18,7 +18,7 @@ const FeedCard = ({ key, title, image, onClick }: FeedCardProps) => {
 
   return (
     <div
-      key={key}
+      key={id}
       onClick={onClick}
       className="pt-[25px] px-[20px] flex flex-col items-center justify-center w-[360px] h-[300px] rounded-[10px] bg-brand-blue-400 cursor-pointer"
     >

@@ -5,13 +5,25 @@ import ArchiveHeader from "@/components/archive/ArchiveHeader";
 import Calendar from "@/components/calendar/Calendar";
 import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
 import DiaryCard from "@/components/diary/DiaryCard";
+import { diaryDataMock } from "@/mockData/diaryData";
 
 const FeedDetail = () => {
   const urlParams = useParams();
-  const feedId = urlParams.id;
-  const feed = feedDataMock.find((feed) => feed.id === Number(feedId));
+  const archiveId = urlParams.id;
+  // 아카이브 데이터 조회
+  const feed = feedDataMock.find(
+    (feed) => feed.archiveId === Number(archiveId)
+  );
+  // 덕질 일기 데이터 조회
+  const diary = diaryDataMock.filter(
+    (diary) => diary.archiveId === Number(archiveId)
+  );
+  console.log(diary);
   if (!feed) {
     return <div>Feed not found</div>;
+  }
+  if (!diary) {
+    return <div>Diary not found</div>;
   }
   return (
     <div>
@@ -36,22 +48,26 @@ const FeedDetail = () => {
               onClick={() => {
                 console.log("더보기 클릭");
               }}
-              className="w-[84px] h-[29px] flex items-start justify-end typo-h2-semibold text-color-high cursor-pointer"
+              className="h-[29px] flex items-start justify-end typo-h2-semibold text-color-high cursor-pointer"
             >
               + 더보기
             </button>
           </div>
           {/* 덕질일기 리스트부분 */}
-          <div className="w-full flex items-start justify-between gap-[80px]">
-            <DiaryCard
-              key={feed.id}
-              title={feed.title}
-              image={feed.image}
-              date={feed.createdAt}
-              onClick={() => {
-                console.log("덕질일기 클릭");
-              }}
-            />
+          <div className="flex items-start justify-between gap-[80px]">
+            {/* 3개까지 보이게 설정 */}
+            {diary.slice(0, 3).map((diary) => (
+              <DiaryCard
+                key={diary.id}
+                archiveId={feed.archiveId}
+                title={diary.title}
+                image={diary.image}
+                date={diary.date}
+                onClick={() => {
+                  console.log(diary.id + "번 덕질일기 클릭");
+                }}
+              />
+            ))}
           </div>
         </div>
         {/* 덕질 갤러리 */}

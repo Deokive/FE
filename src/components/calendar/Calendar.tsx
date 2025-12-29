@@ -103,11 +103,17 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
             {/* 예시: 1일인 경우 스티커 영역 표시 */}
             {sticker && (
               <div className="w-full h-[80px] bg-[#E9ECF1] rounded-[4px]">
-                <img
-                  src={stickerImage || ""}
-                  alt="스티커영역"
-                  className="w-full h-full object-cover"
-                />
+                {stickerImage ? (
+                  <img
+                    src={stickerImage}
+                    alt="스티커영역"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-color-mid">
+                    스티커 영역
+                  </div>
+                )}
               </div>
             )}
           </div>

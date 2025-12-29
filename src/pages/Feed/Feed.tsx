@@ -19,8 +19,8 @@ const Feed = () => {
 
   const [option, setOption] = useState<string>("popular");
   return (
-    <div className="my-[60px]">
-      <div className="h-full w-full px-[340px] my-[60px] flex flex-col items-start justify-center">
+    <div className="w-full my-[60px]">
+      <div className="px-[340px] my-[60px] flex flex-col items-start justify-center">
         {/* SelectBox를 오른쪽으로 정렬 */}
         <div className="flex items-center justify-end w-full mb-[40px]">
           <SelectBox
@@ -36,7 +36,7 @@ const Feed = () => {
               key={feed.id}
               image={feed.image}
               title={feed.title}
-              onClick={() => navigate(`/feed/${feed.id}`)}
+              onClick={() => navigate(`/feed/${feed.archiveId}`)}
             />
           ))}
         </div>
