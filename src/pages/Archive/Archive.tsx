@@ -3,15 +3,19 @@ import EmptyArchive from "@/components/archive/EmptyArchive";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
 
-// 현재 로그인한 사용자 ID
-const userId = 1;
-
 const Archive = () => {
-  // 아카이브 데이터 조회
+  // 현재 로그인한 사용자 ID
+  const user = {
+    userId: 1,
+    nickname: "홍길동",
+  };
+
+  // 아카이브 데이터 조회 (test용) => 실제로는 API에서 가져올 데이터
   // const archiveData = archiveDataMock.filter(
-  //   (archive) => archive.userId === userId
+  //   (archive) => archive.userId === user.userId
   // );
-  // 아카이브 데이터가 없는 경우 빈 배열을 반환 (test용)
+
+  // 아카이브 데이터가 없는 경우 빈 배열을 반환 (test용) => 실제로는 API에서 가져올 데이터
   const archiveData: any[] = [];
 
   return (
