@@ -1,9 +1,14 @@
 import banner from "@/assets/images/banner.png";
 
-const Banner = () => {
+interface BannerProps {
+  image?: string;
+}
+
+const Banner = ({ image }: BannerProps) => {
   return (
     <div className="flex justify-center items-center w-full">
-      <img src={banner} alt="banner" role="img"></img>
+      {image && <img src={image} alt="banner" role="img" />}
+      {!image && <img src={banner} alt="banner" role="img" />}
     </div>
   );
 };
