@@ -5,6 +5,7 @@ interface ArchiveCardProps {
   archiveId?: number;
   userId?: number;
   title?: string;
+  bannerUrl?: string;
   image?: string;
   viewCount?: number;
   likeCount?: number;
@@ -15,6 +16,7 @@ const ArchiveCard = ({
   archiveId,
   userId,
   title,
+  bannerUrl,
   image,
   onClick,
 }: ArchiveCardProps) => {
@@ -29,8 +31,9 @@ const ArchiveCard = ({
     <div
       data-archive-id={archiveId}
       data-user-id={userId}
+      data-banner-url={bannerUrl}
       onClick={onClick}
-      className="pt-[25px] px-[20px] flex flex-col items-center justify-center w-[360px] h-[300px] rounded-[10px] bg-brand-blue-400 cursor-pointer"
+      className="pt-[25px] px-5 flex flex-col items-center justify-center w-90 h-75 rounded-[10px] bg-brand-blue-400 cursor-pointer"
     >
       <div className="w-[321px] h-[179px] rounded-t-[10px] bg-white flex items-center justify-center overflow-hidden">
         {/* 1) 이미지가 있고, 로딩 성공 */}
@@ -61,8 +64,8 @@ const ArchiveCard = ({
         )}
       </div>
 
-      <div className="bottom-0 w-[360px] h-[96px] rounded-b-[10px] bg-brand-blue-300">
-        <p className="flex items-center h-[96px] px-[20px] typo-body1-semibold text-color-highest">
+      <div className="bottom-0 w-90 h-24 rounded-b-[10px] bg-brand-blue-300">
+        <p className="flex items-center h-24 px-5 typo-body1-semibold text-color-highest">
           {title ? title : "사용자가 지정한 아카이브 파일명"}
         </p>
       </div>
