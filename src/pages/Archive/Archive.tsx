@@ -1,9 +1,7 @@
 import ArchiveCard from "@/components/archive/ArchiveCard";
 import EmptyArchive from "@/components/archive/EmptyArchive";
-import { BtnIcon } from "@/components/common/Button/Btn";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
-import { Plus } from "lucide-react";
 
 // 현재 로그인한 사용자 ID
 const userId = 1;
@@ -31,6 +29,7 @@ const Archive = () => {
               archiveId={archive.archiveId}
               userId={archive.userId}
               title={archive.title}
+              bannerUrl={archive.bannerUrl}
               image={archive.image}
               onClick={() => {
                 console.log(archive.archiveId + "번 아카이브 클릭");
