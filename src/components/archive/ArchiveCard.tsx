@@ -9,7 +9,7 @@ interface ArchiveCardProps {
   image?: string;
   viewCount?: number;
   likeCount?: number;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const ArchiveCard = ({

@@ -110,4 +110,14 @@ export const archiveDataMock = [
     createdAt: "KST Datetime",
     lastModifiedAt: "KST Datetime",
   },
+  {
+    archiveId: 10,
+    userId: 1,
+    title: "나의 열번째 아카이브",
+    bannerUrl: "https://picsum.photos/1920/200?random=10",
+    image: "https://picsum.photos/210/300",
+    viewCount: 150,
+    likeCount: 50,
+    visibility: "PRIVATE",
+  },
 ];

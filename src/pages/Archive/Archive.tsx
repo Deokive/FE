@@ -1,4 +1,5 @@
 import ArchiveCard from "@/components/archive/ArchiveCard";
+import ArchiveList from "@/components/archive/ArchiveList";
 import EmptyArchive from "@/components/archive/EmptyArchive";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
@@ -11,12 +12,12 @@ const Archive = () => {
   };
 
   // 아카이브 데이터 조회 (test용) => 실제로는 API에서 가져올 데이터
-  // const archiveData = archiveDataMock.filter(
-  //   (archive) => archive.userId === user.userId
-  // );
+  const archiveData = archiveDataMock.filter(
+    (archive) => archive.userId === user.userId
+  );
 
   // 아카이브 데이터가 없는 경우 빈 배열을 반환 (test용) => 실제로는 API에서 가져올 데이터
-  const archiveData: any[] = [];
+  // const archiveData: any[] = [];
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -27,19 +28,7 @@ const Archive = () => {
       <div className="max-w-[1920px] mx-auto gap-15">
         {/* 아카이브가 존재하면 아카이브 카드를 보여줍니다. */}
         {archiveData.length > 0 ? (
-          archiveData.map((archive) => (
-            <ArchiveCard
-              key={archive.archiveId}
-              archiveId={archive.archiveId}
-              userId={archive.userId}
-              title={archive.title}
-              bannerUrl={archive.bannerUrl}
-              image={archive.image}
-              onClick={() => {
-                console.log(archive.archiveId + "번 아카이브 클릭");
-              }}
-            />
-          ))
+          <ArchiveList archive={archiveData} />
         ) : (
           <EmptyArchive />
         )}
