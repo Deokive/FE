@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { BtnIcon } from "../common/Button/Btn";
+import { BtnIcon } from "@/components/common/Button/Btn";
 
 const EmptyArchive = () => {
   return (

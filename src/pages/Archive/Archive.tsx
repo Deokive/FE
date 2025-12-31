@@ -1,6 +1,6 @@
 import TrashIcon from "@/assets/Icon/TrashIcon";
 import ArchiveList from "@/components/archive/ArchiveList";
-import EmptyArchive from "@/components/archive/EmptyArchive";
+import EmptyArchive from "@/components/archive/Empty/EmptyArchive";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
