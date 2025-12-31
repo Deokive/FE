@@ -1,4 +1,3 @@
-import ArchiveCard from "@/components/archive/ArchiveCard";
 import ArchiveList from "@/components/archive/ArchiveList";
 import EmptyArchive from "@/components/archive/EmptyArchive";
 import Banner from "@/components/community/Banner";
