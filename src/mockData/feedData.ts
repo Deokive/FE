@@ -3,7 +3,7 @@ import banner from "@/assets/images/banner.png";
 export const feedDataMock = [
   {
     id: 1,
-    archiveId: 1,
+    archiveId: 12,
     title: "나의 첫 아카이브",
     visibility: "PUBLIC",
     badge: "NEWBIE",
@@ -18,8 +18,9 @@ export const feedDataMock = [
   },
   {
     id: 2,
-    archiveId: 2,
+    archiveId: 13,
     image: "",
+    bannerUrl: "https://picsum.photos/1920/200",
     title: "빈 이미지 1",
     viewCount: 150,
     likeCount: 41,
@@ -30,7 +31,7 @@ export const feedDataMock = [
   },
   {
     id: 3,
-    archiveId: 3,
+    archiveId: 14,
     image: "https://picsum.photos/202/300",
     title: "랜덤 이미지 2",
     createdAt: "2025-8-23 10:00:00",
@@ -42,7 +43,7 @@ export const feedDataMock = [
   },
   {
     id: 4,
-    archiveId: 4,
+    archiveId: 15,
     image: "https://picsum.photos/203/300",
     title: "랜덤 이미지 3",
     createdAt: "2025-5-1 10:00:00",
@@ -54,7 +55,7 @@ export const feedDataMock = [
   },
   {
     id: 5,
-    archiveId: 5,
+    archiveId: 16,
     image: "",
     title: "빈 이미지 2",
     createdAt: "2025-7-23 10:00:00",
@@ -66,7 +67,7 @@ export const feedDataMock = [
   },
   {
     id: 6,
-    archiveId: 6,
+    archiveId: 17,
     image: "https://picsum.photos/204/300",
     title: "랜덤 이미지 4",
     createdAt: "2025-8-23 10:00:00",
@@ -78,7 +79,7 @@ export const feedDataMock = [
   },
   {
     id: 7,
-    archiveId: 7,
+    archiveId: 18,
     image: "",
     title: "빈 이미지 3",
     createdAt: "2025-2-23 10:00:00",
@@ -86,7 +87,7 @@ export const feedDataMock = [
   },
   {
     id: 8,
-    archiveId: 8,
+    archiveId: 19,
     image: "",
     title: "빈 이미지 4",
     createdAt: "2025-4-23 10:00:00",
@@ -98,7 +99,7 @@ export const feedDataMock = [
   },
   {
     id: 9,
-    archiveId: 9,
+    archiveId: 20,
     image: "",
     title: "빈 이미지 5",
     createdAt: "2025-10-23 10:00:00",
@@ -106,7 +107,7 @@ export const feedDataMock = [
   },
   {
     id: 10,
-    archiveId: 10,
+    archiveId: 21,
     image: "",
     title: "빈 이미지 6",
     createdAt: "2025-6-23 10:00:00",

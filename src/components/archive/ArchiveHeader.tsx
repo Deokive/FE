@@ -37,10 +37,10 @@ const ArchiveHeader = ({
           </div>
           {/* 디데이 부분 */}
           <div
-            className="flex justify-center items-center px-[10px] py-[4px] rounded-[4px]
-      bg-[#B2BCC2] typo-h1 text-color-lowest"
+            className="h-[51px] flex justify-center items-center px-[10px] py-[4px] rounded-[4px]
+        bg-surface-container-40 typo-h1 text-color-lowest"
           >
-            + {getDPlusDay(createdAt ?? "")} Day
+            + {getDPlusDay(createdAt ?? "")} DAY
           </div>
         </div>
       </div>

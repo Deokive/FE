@@ -36,7 +36,10 @@ const Feed = () => {
               key={feed.id}
               image={feed.image}
               title={feed.title}
-              onClick={() => navigate(`/feed/${feed.archiveId}`)}
+              onClick={() => {
+                navigate(`/feed/${feed.archiveId}`);
+                console.log(feed.archiveId + "번 피드 클릭");
+              }}
             />
           ))}
         </div>

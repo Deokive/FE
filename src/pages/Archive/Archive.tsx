@@ -8,7 +8,8 @@ import { Pencil, Plus, SquareX } from "lucide-react";
 import { useState } from "react";
 
 const Archive = () => {
-  // 현재 로그인한 사용자 ID
+  // 현재 로그인한 사용자 ID (test용) => 실제로는 API에서 가져올 데이터
+  // userID = 1,2 은 존재하는 아카이브를 가지고 있는 사용자 ID 나머지는 빈 아카이브
   const user = {
     userId: 1,
     nickname: "홍길동",
@@ -18,9 +19,6 @@ const Archive = () => {
   const archiveData = archiveDataMock.filter(
     (archive) => archive.userId === user.userId
   );
-
-  // 아카이브 데이터가 없는 경우 빈 배열을 반환 (test용) => 실제로는 API에서 가져올 데이터
-  // const archiveData: any[] = [];
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false); // 편집 모드 여부
 
