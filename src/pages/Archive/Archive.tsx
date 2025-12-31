@@ -80,7 +80,7 @@ const Archive = () => {
               </div>
             )}
 
-            <ArchiveList archive={archiveData} />
+            <ArchiveList archive={archiveData} isEditMode={isEditMode} />
           </div>
         ) : (
           <EmptyArchive />

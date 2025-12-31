@@ -8,10 +8,14 @@ interface Archive {
   image: string;
 }
 
+type Props = ArchiveListProps & {
+  isEditMode?: boolean;
+};
+
 interface ArchiveListProps {
   archive: Archive[];
 }
-const ArchiveList = ({ archive }: ArchiveListProps) => {
+const ArchiveList = ({ archive, isEditMode = false }: Props) => {
   return (
     <div className="w-310 flex flex-wrap items-start justify-start gap-x-20 gap-y-15">
       {archive.map((archive) => (
@@ -22,6 +26,7 @@ const ArchiveList = ({ archive }: ArchiveListProps) => {
           title={archive.title}
           bannerUrl={archive.bannerUrl}
           image={archive.image}
+          isEditMode={isEditMode}
           onClick={() => {
             console.log(archive.archiveId + "번 아카이브 클릭");
           }}
