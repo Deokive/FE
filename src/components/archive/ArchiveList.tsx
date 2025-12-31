@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import ArchiveCard from "./ArchiveCard";
 
 interface Archive {
@@ -16,6 +17,7 @@ interface ArchiveListProps {
   archive: Archive[];
 }
 const ArchiveList = ({ archive, isEditMode = false }: Props) => {
+  const navigate = useNavigate();
   return (
     <div className="w-310 flex flex-wrap items-start justify-start gap-x-20 gap-y-15">
       {archive.map((archive) => (
@@ -29,6 +31,7 @@ const ArchiveList = ({ archive, isEditMode = false }: Props) => {
           isEditMode={isEditMode}
           onClick={() => {
             console.log(archive.archiveId + "번 아카이브 클릭");
+            navigate(`/archive/${archive.archiveId}`);
           }}
         />
       ))}

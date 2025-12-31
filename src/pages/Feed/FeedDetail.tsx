@@ -58,30 +58,32 @@ const FeedDetail = () => {
       {/* 배너 밑부분 */}
       <div className="max-w-[1920px] mx-auto flex flex-col items-start mt-[60px] gap-[60px]">
         {/* 아카이브 헤더 */}
-        <ArchiveHeader
-          title={feed.title}
-          ownerNickname={feed.ownerNickname}
-          badge={feed.badge}
-          createdAt={feed.createdAt}
-        />
-        {/* 아카이브 달력 */}
-        <Calendar labelData={labelDataMock} stickerData={stickerDataMock} />
-        {/* 덕질 일기 */}
-        <DiaryList diary={diary} />
-        {/* 덕질 갤러리 */}
-        <GalleryList gallery={gallery} />
-        {/* 티켓북 */}
-        <TicketList ticket={ticket} />
-        {/* 덕질 리포스트 */}
-        <RepostList repost={repost} />
-        {/* 좋아요 */}
-        <ButtonLike
-          liked={feed.liked}
-          likeCount={feed.likeCount}
-          onClick={() => {
-            console.log("좋아요 클릭");
-          }}
-        />
+        <div className="w-310">
+          <ArchiveHeader
+            title={feed.title}
+            ownerNickname={feed.ownerNickname}
+            badge={feed.badge}
+            createdAt={feed.createdAt}
+          />
+          {/* 아카이브 달력 */}
+          <Calendar labelData={labelDataMock} stickerData={stickerDataMock} />
+          {/* 덕질 일기 */}
+          <DiaryList diary={diary} />
+          {/* 덕질 갤러리 */}
+          <GalleryList gallery={gallery} />
+          {/* 티켓북 */}
+          <TicketList ticket={ticket} />
+          {/* 덕질 리포스트 */}
+          <RepostList repost={repost} />
+          {/* 좋아요 */}
+          <ButtonLike
+            liked={feed.liked}
+            likeCount={feed.likeCount}
+            onClick={() => {
+              console.log("좋아요 클릭");
+            }}
+          />
+        </div>
       </div>
     </div>
   );

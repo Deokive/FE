@@ -11,6 +11,7 @@ import LoginPage from "@/pages/Auth/LoginPage";
 import SignupPage from "@/pages/Auth/SignupPage";
 import TestPlayGround from "@/pages/Test/TestPlayGround";
 import FeedDetail from "@/pages/Feed/FeedDetail";
+import ArchiveDetail from "@/pages/Archive/ArchiveDetail";
 
 // 로그인 하지 않은 사용자만 접근 가능한 라우트 (메인 홈, 커뮤니티 열람, 피드 열람)
 const publicRoutes: RouteObject[] = [
@@ -22,6 +23,7 @@ const publicRoutes: RouteObject[] = [
       { path: "login", element: <LoginPage /> },
       { path: "signup", element: <SignupPage /> },
       { path: "archive", element: <Archive /> },
+      { path: "archive/:id", element: <ArchiveDetail /> },
       { path: "feed", element: <Feed /> },
       { path: "feed/:id", element: <FeedDetail /> },
       { path: "community", element: <Community /> },
