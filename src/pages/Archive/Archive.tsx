@@ -1,7 +1,11 @@
+import TrashIcon from "@/assets/Icon/TrashIcon";
 import ArchiveList from "@/components/archive/ArchiveList";
 import EmptyArchive from "@/components/archive/EmptyArchive";
+import { BtnIcon } from "@/components/common/Button/Btn";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
+import { Pencil, Plus, SquareX } from "lucide-react";
+import { useState } from "react";
 
 const Archive = () => {
   // 현재 로그인한 사용자 ID
@@ -18,16 +22,66 @@ const Archive = () => {
   // 아카이브 데이터가 없는 경우 빈 배열을 반환 (test용) => 실제로는 API에서 가져올 데이터
   // const archiveData: any[] = [];
 
+  const [isEditMode, setIsEditMode] = useState<boolean>(false); // 편집 모드 여부
+
+  const handleEditMode = () => {
+    setIsEditMode((prev) => !prev);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center">
       <Banner />
       <div className="w-310 h-10 my-15">
         <p className="typo-h1 text-color-highest">마이 아카이브</p>
       </div>
-      <div className="max-w-[1920px] mx-auto gap-15">
+      <div className="max-w-[1920px] mx-auto mb-40">
         {/* 아카이브가 존재하면 아카이브 카드를 보여줍니다. */}
         {archiveData.length > 0 ? (
-          <ArchiveList archive={archiveData} />
+          <div className="flex flex-col gap-10">
+            {isEditMode ? (
+              <div className="flex items-center justify-end gap-5">
+                <BtnIcon
+                  startIcon={<TrashIcon className="w-6 h-6 text-color-high" />}
+                  onClick={() => {
+                    console.log("삭제 버튼 클릭");
+                  }}
+                >
+                  삭제하기
+                </BtnIcon>
+                <BtnIcon
+                  startIcon={<SquareX className="w-6 h-6 text-color-high" />}
+                  onClick={() => {
+                    console.log("취소 버튼 클릭");
+                    setIsEditMode(false);
+                  }}
+                >
+                  취소하기
+                </BtnIcon>
+              </div>
+            ) : (
+              <div className="flex items-center justify-end gap-5">
+                <BtnIcon
+                  startIcon={<Plus className="w-6 h-6 text-color-high" />}
+                  onClick={() => {
+                    console.log("덕카이브 추가 버튼 클릭");
+                  }}
+                >
+                  덕카이브
+                </BtnIcon>
+                <BtnIcon
+                  startIcon={<Pencil className="w-6 h-6 text-color-high" />}
+                  onClick={() => {
+                    handleEditMode();
+                    console.log(isEditMode);
+                  }}
+                >
+                  편집하기
+                </BtnIcon>
+              </div>
+            )}
+
+            <ArchiveList archive={archiveData} />
+          </div>
         ) : (
           <EmptyArchive />
         )}

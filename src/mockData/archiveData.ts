@@ -120,4 +120,14 @@ export const archiveDataMock = [
     likeCount: 50,
     visibility: "PRIVATE",
   },
+  {
+    archiveId: 11,
+    userId: 1,
+    title: "나의 열한번째 아카이브",
+    bannerUrl: "https://picsum.photos/1920/200?random=11",
+    image: "https://picsum.photos/211/300",
+    viewCount: 150,
+    likeCount: 50,
+    visibility: "PRIVATE",
+  },
 ];
