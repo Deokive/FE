@@ -33,8 +33,10 @@ const ArchiveCard = ({
   // 편집 모드가 해제되면 선택 상태도 초기화
   useEffect(() => {
     if (!isEditMode) {
+      // 편집모드가 아닐 때 선택 상태를 모두 false로 초기화.
       setIsSelected(false);
     }
+    //의존성 배열로 설정해 isEditMode가 변경될 때마다 실행되도록 함.
   }, [isEditMode]);
 
   const hasImage = !!image;
