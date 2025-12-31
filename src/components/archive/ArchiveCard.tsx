@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import vectorIcon from "@/assets/icon/VectorGray.svg";
 import { twMerge } from "tailwind-merge";
 import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
@@ -29,6 +29,13 @@ const ArchiveCard = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
+
+  // 편집 모드가 해제되면 선택 상태도 초기화
+  useEffect(() => {
+    if (!isEditMode) {
+      setIsSelected(false);
+    }
+  }, [isEditMode]);
 
   const hasImage = !!image;
   const isLoading = hasImage && !imageLoaded && !imageError;
