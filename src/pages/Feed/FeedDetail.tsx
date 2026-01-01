@@ -14,6 +14,7 @@ import RepostList from "@/components/archive/RepostList";
 import { repostDataMock } from "@/mockData/repostData";
 import ButtonLike from "@/components/archive/ButtonLike";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
+import EmptyFeedList from "@/components/feed/EmptyFeedList";
 
 const FeedDetail = () => {
   const urlParams = useParams();
@@ -38,32 +39,17 @@ const FeedDetail = () => {
   const repost = repostDataMock.filter(
     (repost) => repost.archiveId === Number(archiveId)
   );
-  if (!feed) {
-    return <div>Feed not found</div>;
-  }
-  if (!diary) {
-    return <div>Diary not found</div>;
-  }
-  if (!gallery) {
-    return <div>Gallery not found</div>;
-  }
-  if (!ticket) {
-    return <div>Ticket not found</div>;
-  }
-  if (!repost) {
-    return <div>Repost not found</div>;
-  }
   return (
     <div className="flex flex-col items-center justify-center">
-      <Banner image={feed.bannerUrl} />
+      <Banner image={feed?.bannerUrl} />
       {/* 배너 밑부분 */}
       <div className="max-w-[1920px] mx-auto flex flex-col items-start mt-[60px] gap-[60px]">
         {/* 아카이브 헤더 */}
         <ArchiveHeader
-          title={feed.title}
-          ownerNickname={feed.ownerNickname}
-          badge={feed.badge}
-          createdAt={feed.createdAt}
+          title={feed?.title}
+          ownerNickname={feed?.ownerNickname}
+          badge={feed?.badge}
+          createdAt={feed?.createdAt}
         />
         {/* 아카이브 달력 */}
         <Calendar labelData={labelDataMock} stickerData={stickerDataMock} />
@@ -75,7 +61,11 @@ const FeedDetail = () => {
             console.log("덕질 일기 더보기 클릭");
           }}
         />
-        <DiaryList diary={diary} />
+        {diary.length ?? 0 > 0 ? (
+          <DiaryList diary={diary} />
+        ) : (
+          <EmptyFeedList description="아직 작성된 일기가 없어요." />
+        )}
         {/* 덕질 갤러리 */}
         <ArchiveTitle
           title="덕질 갤러리"
@@ -84,7 +74,11 @@ const FeedDetail = () => {
             console.log("덕질 갤러리 더보기 클릭");
           }}
         />
-        <GalleryList gallery={gallery} />
+        {gallery.length ?? 0 > 0 ? (
+          <GalleryList gallery={gallery} />
+        ) : (
+          <EmptyFeedList description="아직 작성된 갤러리가 없어요." />
+        )}
         {/* 티켓북 */}
         <ArchiveTitle
           title="티켓북"
@@ -93,7 +87,11 @@ const FeedDetail = () => {
             console.log("티켓북 더보기 클릭");
           }}
         />
-        <TicketList ticket={ticket} />
+        {ticket.length ?? 0 > 0 ? (
+          <TicketList ticket={ticket} />
+        ) : (
+          <EmptyFeedList description="아직 작성된 티켓북이 없어요." />
+        )}
         {/* 덕질 리포스트 */}
         <ArchiveTitle
           title="덕질 리포스트"
@@ -102,11 +100,15 @@ const FeedDetail = () => {
             console.log("덕질 리포스트 더보기 클릭");
           }}
         />
-        <RepostList repost={repost} />
+        {repost.length ?? 0 > 0 ? (
+          <RepostList repost={repost} />
+        ) : (
+          <EmptyFeedList description="아직 작성된 리포스트가 없어요." />
+        )}
         {/* 좋아요 */}
         <ButtonLike
-          liked={feed.liked}
-          likeCount={feed.likeCount}
+          liked={feed?.liked}
+          likeCount={feed?.likeCount ?? 0}
           onClick={() => {
             console.log("좋아요 클릭");
           }}
