@@ -2,6 +2,7 @@ import ArchiveHeader from "@/components/archive/ArchiveHeader";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import ButtonLike from "@/components/archive/ButtonLike";
 import DiaryList from "@/components/archive/DiaryList";
+import EmptyList from "@/components/archive/Empty/EmptyList";
 import GalleryList from "@/components/archive/GalleryList";
 import RepostList from "@/components/archive/RepostList";
 import TicketList from "@/components/archive/TicketList";
@@ -18,6 +19,7 @@ const ArchiveDetail = () => {
   const archive = archiveDataMock.find(
     (archive) => archive.archiveId === Number(archiveId)
   );
+
   return (
     <div className="flex flex-col items-center justify-center">
       <Banner image={archive?.bannerUrl} />
@@ -37,14 +39,26 @@ const ArchiveDetail = () => {
             {/* 덕질 일기 */}
             <ArchiveTitle
               title="덕질 일기"
+              isMore={(archive?.Diary?.length ?? 0) >= 3}
               onClick={() => {
                 console.log("덕질 일기 더보기 클릭");
               }}
             />
-            <DiaryList diary={archive?.Diary} />
+            {archive?.Diary?.length ?? 0 > 0 ? (
+              <DiaryList diary={archive?.Diary} />
+            ) : (
+              <EmptyList
+                title="덕질 일기"
+                description="덕질 일기가 비어 있어요."
+                onClick={() => {
+                  console.log("덕질 일기 추가 버튼 클릭");
+                }}
+              />
+            )}
             {/* 덕질 갤러리 */}
             <ArchiveTitle
               title="덕질 갤러리"
+              isMore={(archive?.Gallery?.length ?? 0) >= 3}
               onClick={() => {
                 console.log("덕질 갤러리 더보기 클릭");
               }}
@@ -53,6 +67,7 @@ const ArchiveDetail = () => {
             {/* 티켓북 */}
             <ArchiveTitle
               title="티켓북"
+              isMore={(archive?.Ticket?.length ?? 0) >= 3}
               onClick={() => {
                 console.log("티켓북 더보기 클릭");
               }}
@@ -61,6 +76,7 @@ const ArchiveDetail = () => {
             {/* 덕질 리포스트 */}
             <ArchiveTitle
               title="덕질 리포스트"
+              isMore={(archive?.Repost?.length ?? 0) >= 3}
               onClick={() => {
                 console.log("덕질 리포스트 더보기 클릭");
               }}

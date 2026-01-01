@@ -70,6 +70,7 @@ const FeedDetail = () => {
         {/* 덕질 일기 */}
         <ArchiveTitle
           title="덕질 일기"
+          isMore={(diary.length ?? 0) >= 3}
           onClick={() => {
             console.log("덕질 일기 더보기 클릭");
           }}
@@ -78,6 +79,7 @@ const FeedDetail = () => {
         {/* 덕질 갤러리 */}
         <ArchiveTitle
           title="덕질 갤러리"
+          isMore={(gallery.length ?? 0) >= 3}
           onClick={() => {
             console.log("덕질 갤러리 더보기 클릭");
           }}
@@ -86,6 +88,7 @@ const FeedDetail = () => {
         {/* 티켓북 */}
         <ArchiveTitle
           title="티켓북"
+          isMore={(ticket.length ?? 0) >= 3}
           onClick={() => {
             console.log("티켓북 더보기 클릭");
           }}
@@ -94,6 +97,7 @@ const FeedDetail = () => {
         {/* 덕질 리포스트 */}
         <ArchiveTitle
           title="덕질 리포스트"
+          isMore={(repost.length ?? 0) >= 3}
           onClick={() => {
             console.log("덕질 리포스트 더보기 클릭");
           }}
