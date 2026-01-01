@@ -20,7 +20,6 @@ const EmptyList = ({
   rounded-lg border-2 border-solid border-border-low"
     >
       <BtnIcon
-        className="h-11"
         startIcon={startIcon ?? <Plus className="w-6 h-6 text-color-high" />}
         onClick={() => {
           onClick?.();

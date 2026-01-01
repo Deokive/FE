@@ -10,6 +10,7 @@ import Calendar from "@/components/calendar/Calendar";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
 import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
+import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 const ArchiveDetail = () => {
@@ -48,10 +49,10 @@ const ArchiveDetail = () => {
               <DiaryList diary={archive?.Diary} />
             ) : (
               <EmptyList
-                title="덕질 일기"
-                description="덕질 일기가 비어 있어요."
+                title="일기 추가"
+                description="아직 작성된 일기가 없어요."
                 onClick={() => {
-                  console.log("덕질 일기 추가 버튼 클릭");
+                  console.log("일기 추가 버튼 클릭");
                 }}
               />
             )}
@@ -63,7 +64,18 @@ const ArchiveDetail = () => {
                 console.log("덕질 갤러리 더보기 클릭");
               }}
             />
-            <GalleryList gallery={archive?.Gallery} />
+            {archive?.Gallery?.length ?? 0 > 0 ? (
+              <GalleryList gallery={archive?.Gallery} />
+            ) : (
+              <EmptyList
+                title="사진 추가"
+                description="사진을 추가해서 덕질 기록을 남겨보세요."
+                startIcon={<Camera className="w-6 h-6 text-color-high" />}
+                onClick={() => {
+                  console.log("갤러리 추가 버튼 클릭");
+                }}
+              />
+            )}
             {/* 티켓북 */}
             <ArchiveTitle
               title="티켓북"
@@ -72,7 +84,17 @@ const ArchiveDetail = () => {
                 console.log("티켓북 더보기 클릭");
               }}
             />
-            <TicketList ticket={archive?.Ticket} />
+            {archive?.Ticket?.length ?? 0 > 0 ? (
+              <TicketList ticket={archive?.Ticket} />
+            ) : (
+              <EmptyList
+                title="티켓 추가"
+                description="새로운 티켓을 추가해보세요."
+                onClick={() => {
+                  console.log("티켓 추가 버튼 클릭");
+                }}
+              />
+            )}
             {/* 덕질 리포스트 */}
             <ArchiveTitle
               title="덕질 리포스트"
@@ -81,7 +103,18 @@ const ArchiveDetail = () => {
                 console.log("덕질 리포스트 더보기 클릭");
               }}
             />
-            <RepostList repost={archive?.Repost} />
+            {archive?.Repost?.length ?? 0 > 0 ? (
+              <RepostList repost={archive?.Repost} />
+            ) : (
+              <EmptyList
+                title="링크 첨부"
+                description="링크를 모아서 아카이브를 만들어보세요."
+                startIcon={<Link className="w-6 h-6 text-color-high" />}
+                onClick={() => {
+                  console.log("링크 첨부 버튼 클릭");
+                }}
+              />
+            )}
           </div>
           {/* 좋아요 */}
           <ButtonLike
