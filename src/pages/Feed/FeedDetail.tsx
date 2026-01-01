@@ -13,6 +13,7 @@ import TicketList from "@/components/archive/TicketList";
 import RepostList from "@/components/archive/RepostList";
 import { repostDataMock } from "@/mockData/repostData";
 import ButtonLike from "@/components/archive/ButtonLike";
+import ArchiveTitle from "@/components/archive/ArchiveTitle";
 
 const FeedDetail = () => {
   const urlParams = useParams();
@@ -67,12 +68,36 @@ const FeedDetail = () => {
         {/* 아카이브 달력 */}
         <Calendar labelData={labelDataMock} stickerData={stickerDataMock} />
         {/* 덕질 일기 */}
+        <ArchiveTitle
+          title="덕질 일기"
+          onClick={() => {
+            console.log("덕질 일기 더보기 클릭");
+          }}
+        />
         <DiaryList diary={diary} />
         {/* 덕질 갤러리 */}
+        <ArchiveTitle
+          title="덕질 갤러리"
+          onClick={() => {
+            console.log("덕질 갤러리 더보기 클릭");
+          }}
+        />
         <GalleryList gallery={gallery} />
         {/* 티켓북 */}
+        <ArchiveTitle
+          title="티켓북"
+          onClick={() => {
+            console.log("티켓북 더보기 클릭");
+          }}
+        />
         <TicketList ticket={ticket} />
         {/* 덕질 리포스트 */}
+        <ArchiveTitle
+          title="덕질 리포스트"
+          onClick={() => {
+            console.log("덕질 리포스트 더보기 클릭");
+          }}
+        />
         <RepostList repost={repost} />
         {/* 좋아요 */}
         <ButtonLike

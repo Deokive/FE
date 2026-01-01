@@ -46,6 +46,48 @@ const repostDataMock = [
     title: "리포스팅 기록 이름7",
     image: "https://picsum.photos/406/300",
   },
+  {
+    id: 8,
+    archiveId: 1,
+    tabId: 1,
+    title: "리포스팅 기록 이름8",
+    image: "https://picsum.photos/407/300",
+  },
+  {
+    id: 9,
+    archiveId: 1,
+    tabId: 1,
+    title: "리포스팅 기록 이름9",
+    image: "https://picsum.photos/408/300",
+  },
+  {
+    id: 10,
+    archiveId: 1,
+    tabId: 1,
+    title: "리포스팅 기록 이름10",
+    image: "https://picsum.photos/409/300",
+  },
+  {
+    id: 11,
+    archiveId: 2,
+    tabId: 1,
+    title: "리포스팅 기록 이름11",
+    image: "https://picsum.photos/410/300",
+  },
+  {
+    id: 12,
+    archiveId: 2,
+    tabId: 1,
+    title: "리포스팅 기록 이름12",
+    image: "https://picsum.photos/411/300",
+  },
+  {
+    id: 13,
+    archiveId: 3,
+    tabId: 1,
+    title: "리포스팅 기록 이름13",
+    image: "https://picsum.photos/412/300",
+  },
 ];
 
 export { repostDataMock };

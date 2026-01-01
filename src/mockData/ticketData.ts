@@ -41,6 +41,42 @@ const ticketDataMock = [
     title: "뮤지컬",
     date: "2025-01-04",
   },
+  {
+    id: 8,
+    archiveId: 1,
+    title: "뮤지컬",
+    date: "2025-01-05",
+  },
+  {
+    id: 9,
+    archiveId: 1,
+    title: "뮤지컬",
+    date: "2025-01-06",
+  },
+  {
+    id: 10,
+    archiveId: 2,
+    title: "뮤지컬",
+    date: "2025-01-07",
+  },
+  {
+    id: 11,
+    archiveId: 2,
+    title: "뮤지컬",
+    date: "2025-01-08",
+  },
+  {
+    id: 12,
+    archiveId: 3,
+    title: "뮤지컬",
+    date: "2025-01-09",
+  },
+  {
+    id: 13,
+    archiveId: 1,
+    title: "뮤지컬",
+    date: "2025-01-10",
+  },
 ];
 
 export { ticketDataMock };
