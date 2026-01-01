@@ -4,11 +4,7 @@ interface ArchiveTitleProps {
   isMore?: boolean;
 }
 
-const ArchiveTitle = ({
-  title,
-  onClick,
-  isMore = false,
-}: ArchiveTitleProps) => {
+const ArchiveTitle = ({ title, onClick, isMore = true }: ArchiveTitleProps) => {
   return (
     <div className="w-full flex flex-col items-start gap-[20px]">
       {/* 덕질일기 헤더부분 */}

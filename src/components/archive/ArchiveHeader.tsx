@@ -1,11 +1,14 @@
 import getDPlusDay from "@/utils/dPlusDay";
 import UserIcon from "@/assets/icon/S.svg";
+import { Ellipsis } from "lucide-react";
 
 interface ArchiveHeaderProps {
   title?: string;
   ownerNickname?: string;
   badge?: string;
   createdAt?: string;
+  isMenu?: boolean;
+  onClickMenu?: () => void;
 }
 
 const ArchiveHeader = ({
@@ -13,10 +16,19 @@ const ArchiveHeader = ({
   ownerNickname,
   badge,
   createdAt,
+  isMenu = false,
+  onClickMenu,
 }: ArchiveHeaderProps) => {
   return (
-    <div className="w-full flex flex-col items-start gap-[20px]">
-      <p className="typo-h1 text-color-highest">{title}</p>
+    <div className="w-full flex flex-col items-start  gap-[20px]">
+      <div className="w-full flex items-center justify-between">
+        <p className="typo-h1 text-color-highest">{title}</p>
+        {isMenu && (
+          <button onClick={onClickMenu}>
+            <Ellipsis className="w-8 h-8 text-color-high cursor-pointer" />
+          </button>
+        )}
+      </div>
       <div className="w-full h-[51px] flex items-center justify-between gap-[20px]">
         {/* 아카이브 소유자 부분 */}
         <button
@@ -26,7 +38,7 @@ const ArchiveHeader = ({
           className="flex gap-[10px] items-center cursor-pointer"
         >
           <img src={UserIcon} alt="user" className="w-[40px] h-[40px]" />
-          <p className="typo-body2 text-color-high">
+          <p className="typo-h2-semibold text-color-high">
             {ownerNickname ?? "사용자명"}
           </p>
         </button>

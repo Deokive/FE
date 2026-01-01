@@ -1,5 +1,5 @@
 import TrashIcon from "@/assets/Icon/TrashIcon";
-import ArchiveList from "@/components/archive/ArchiveList";
+import ArchiveList from "@/components/archive/List/ArchiveList";
 import EmptyArchive from "@/components/archive/Empty/EmptyArchive";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import Banner from "@/components/community/Banner";

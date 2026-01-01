@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import ArchiveCard from "./ArchiveCard";
+import ArchiveCard from "../ArchiveCard";
 
 interface Archive {
   archiveId: number;

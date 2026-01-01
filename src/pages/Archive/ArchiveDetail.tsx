@@ -1,22 +1,31 @@
 import ArchiveHeader from "@/components/archive/ArchiveHeader";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import ButtonLike from "@/components/archive/ButtonLike";
-import DiaryList from "@/components/archive/DiaryList";
+import DiaryList from "@/components/archive/List/DiaryList";
 import EmptyList from "@/components/archive/Empty/EmptyList";
-import GalleryList from "@/components/archive/GalleryList";
-import RepostList from "@/components/archive/RepostList";
-import TicketList from "@/components/archive/TicketList";
+import GalleryList from "@/components/archive/List/GalleryList";
+import RepostList from "@/components/archive/List/RepostList";
+import TicketList from "@/components/archive/List/TicketList";
 import Calendar from "@/components/calendar/Calendar";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
 import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
 import { Camera, Link } from "lucide-react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 const ArchiveDetail = () => {
   const urlParams = useParams();
   const archiveId = urlParams.id;
 
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
+  const handleMenuClick = () => {
+    setIsMenuOpen((prev) => !prev);
+    console.log("메뉴 버튼 클릭");
+  };
+
+  // 아카이브 데이터 조회 => 추후에 실제 API로 연결
   const archive = archiveDataMock.find(
     (archive) => archive.archiveId === Number(archiveId)
   );
@@ -33,6 +42,8 @@ const ArchiveDetail = () => {
             ownerNickname={archive?.ownerNickname}
             badge={archive?.badge}
             createdAt={archive?.createdAt}
+            isMenu={true}
+            onClickMenu={handleMenuClick}
           />
           {/* 아카이브 달력 */}
           <Calendar labelData={labelDataMock} stickerData={stickerDataMock} />
@@ -40,10 +51,10 @@ const ArchiveDetail = () => {
             {/* 덕질 일기 */}
             <ArchiveTitle
               title="덕질 일기"
-              isMore={(archive?.Diary?.length ?? 0) >= 3}
               onClick={() => {
                 console.log("덕질 일기 더보기 클릭");
               }}
+              isMore={(archive?.Diary?.length ?? 0) > 0}
             />
             {archive?.Diary?.length ?? 0 > 0 ? (
               <DiaryList diary={archive?.Diary} />
@@ -59,10 +70,10 @@ const ArchiveDetail = () => {
             {/* 덕질 갤러리 */}
             <ArchiveTitle
               title="덕질 갤러리"
-              isMore={(archive?.Gallery?.length ?? 0) >= 3}
               onClick={() => {
                 console.log("덕질 갤러리 더보기 클릭");
               }}
+              isMore={(archive?.Gallery?.length ?? 0) > 0}
             />
             {archive?.Gallery?.length ?? 0 > 0 ? (
               <GalleryList gallery={archive?.Gallery} />
@@ -79,10 +90,10 @@ const ArchiveDetail = () => {
             {/* 티켓북 */}
             <ArchiveTitle
               title="티켓북"
-              isMore={(archive?.Ticket?.length ?? 0) >= 3}
               onClick={() => {
                 console.log("티켓북 더보기 클릭");
               }}
+              isMore={(archive?.Ticket?.length ?? 0) > 0}
             />
             {archive?.Ticket?.length ?? 0 > 0 ? (
               <TicketList ticket={archive?.Ticket} />
@@ -98,10 +109,10 @@ const ArchiveDetail = () => {
             {/* 덕질 리포스트 */}
             <ArchiveTitle
               title="덕질 리포스트"
-              isMore={(archive?.Repost?.length ?? 0) >= 3}
               onClick={() => {
                 console.log("덕질 리포스트 더보기 클릭");
               }}
+              isMore={(archive?.Repost?.length ?? 0) > 0}
             />
             {archive?.Repost?.length ?? 0 > 0 ? (
               <RepostList repost={archive?.Repost} />

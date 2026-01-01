@@ -1,4 +1,4 @@
-import GalleryCard from "../common/Card/GalleryCard";
+import GalleryCard from "@/components/common/Card/GalleryCard";
 
 interface Gallery {
   id?: number;

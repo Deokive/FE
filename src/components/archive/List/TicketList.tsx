@@ -1,4 +1,4 @@
-import TicketCard from "../common/Card/TicketCard";
+import TicketCard from "@/components/common/Card/TicketCard";
 
 interface Ticket {
   id?: number;

@@ -7,10 +7,10 @@ import { feedDataMock } from "@/mockData/feedData";
 import { useParams } from "react-router-dom";
 import ArchiveHeader from "@/components/archive/ArchiveHeader";
 import Calendar from "@/components/calendar/Calendar";
-import DiaryList from "@/components/archive/DiaryList";
-import GalleryList from "@/components/archive/GalleryList";
-import TicketList from "@/components/archive/TicketList";
-import RepostList from "@/components/archive/RepostList";
+import DiaryList from "@/components/archive/List/DiaryList";
+import GalleryList from "@/components/archive/List/GalleryList";
+import TicketList from "@/components/archive/List/TicketList";
+import RepostList from "@/components/archive/List/RepostList";
 import { repostDataMock } from "@/mockData/repostData";
 import ButtonLike from "@/components/archive/ButtonLike";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
@@ -56,10 +56,10 @@ const FeedDetail = () => {
         {/* 덕질 일기 */}
         <ArchiveTitle
           title="덕질 일기"
-          isMore={(diary.length ?? 0) >= 3}
           onClick={() => {
             console.log("덕질 일기 더보기 클릭");
           }}
+          isMore={(diary.length ?? 0) > 0}
         />
         {diary.length ?? 0 > 0 ? (
           <DiaryList diary={diary} />
@@ -69,10 +69,10 @@ const FeedDetail = () => {
         {/* 덕질 갤러리 */}
         <ArchiveTitle
           title="덕질 갤러리"
-          isMore={(gallery.length ?? 0) >= 3}
           onClick={() => {
             console.log("덕질 갤러리 더보기 클릭");
           }}
+          isMore={(gallery.length ?? 0) > 0}
         />
         {gallery.length ?? 0 > 0 ? (
           <GalleryList gallery={gallery} />
@@ -82,10 +82,10 @@ const FeedDetail = () => {
         {/* 티켓북 */}
         <ArchiveTitle
           title="티켓북"
-          isMore={(ticket.length ?? 0) >= 3}
           onClick={() => {
             console.log("티켓북 더보기 클릭");
           }}
+          isMore={(ticket.length ?? 0) > 0}
         />
         {ticket.length ?? 0 > 0 ? (
           <TicketList ticket={ticket} />
@@ -95,10 +95,10 @@ const FeedDetail = () => {
         {/* 덕질 리포스트 */}
         <ArchiveTitle
           title="덕질 리포스트"
-          isMore={(repost.length ?? 0) >= 3}
           onClick={() => {
             console.log("덕질 리포스트 더보기 클릭");
           }}
+          isMore={(repost.length ?? 0) > 0}
         />
         {repost.length ?? 0 > 0 ? (
           <RepostList repost={repost} />

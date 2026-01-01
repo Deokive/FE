@@ -1,4 +1,4 @@
-import RepostCard from "../common/Card/RepostCard";
+import RepostCard from "@/components/common/Card/RepostCard";
 
 interface Repost {
   id?: number;
