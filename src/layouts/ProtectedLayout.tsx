@@ -8,7 +8,6 @@ const ProtectedLayout = () => {
       <div>
         <MainNavbar />
         <Outlet />
-        <Footbar />
       </div>
     </div>
   );
