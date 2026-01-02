@@ -71,7 +71,9 @@ export default function SelectBox({
           isOpen && "border-color-primary border-[2px] border-solid"
         )}
       >
-        <span className="typo-body2 flex-1 text-center">{displayText}</span>
+        <span className="typo-body2-medium flex-1 text-center">
+          {displayText}
+        </span>
         {Icon ||
           (isOpen ? (
             <ChevronUp className="w-[24px] h-[24px] shrink-0 text-color-primary" />
@@ -82,7 +84,7 @@ export default function SelectBox({
 
       {/* 드롭다운 리스트 */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-[8px] bg-brand-blue-100 rounded-[8px] shadow-[0px_0px_4px_0px_var(--color-border-mid)] flex flex-col overflow-hidden z-10">
+        <div className="py-2.5 absolute top-full left-0 right-0 mt-[8px] bg-brand-blue-100 rounded-[8px] shadow-[0px_0px_4px_0px_var(--color-border-mid)] flex flex-col overflow-hidden z-10">
           {options.map((opt) => (
             <List
               key={opt.value}

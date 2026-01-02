@@ -23,7 +23,7 @@ const ButtonLike = ({
   };
 
   return (
-    <div className="w-full flex flex-col py-10 items-end">
+    <div className="w-full flex flex-col items-end">
       <button
         type="button"
         className="flex items-center justify-center h-11 gap-2.5 rounded-lg bg-surface-container-10 p-2.5 cursor-pointer"
@@ -36,9 +36,7 @@ const ButtonLike = ({
         )}
         <span className="typo-body2-mid text-color-highest">좋아요</span>
         <div className="w-0.5 h-[16px] bg-surface-container-30" />
-        {likeCount > 0 && (
-          <span className="typo-body2-mid text-color-highest">{likeCount}</span>
-        )}
+        <span className="typo-body2-mid text-color-highest">{likeCount}</span>
       </button>
     </div>
   );

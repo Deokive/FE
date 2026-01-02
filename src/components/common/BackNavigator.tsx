@@ -47,7 +47,7 @@ export default function BackNavigator({
       />
 
       {!labelHidden && (
-        <span className="text-typo-body1 select-none text-high group-hover:text-primary group-active:text-highest transition-colors duration-150">
+        <span className="text-typo-body1 select-none text-color-highest group-active:text-highest transition-colors duration-150">
           {label}
         </span>
       )}

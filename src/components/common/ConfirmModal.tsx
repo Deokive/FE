@@ -25,6 +25,7 @@ type ConfirmModalProps = {
 
   // 확인 콜백
   onConfirm: () => void;
+  onCancel?: () => void;
 
   // 기타 옵션
   className?: string;
@@ -45,6 +46,7 @@ export default function ConfirmModal({
   open: controlledOpen,
   onOpenChange,
   onConfirm,
+  onCancel,
   className = "",
   confirmVariant = "blue",
   cancelVariant = "gray",
@@ -72,6 +74,7 @@ export default function ConfirmModal({
 
   const handleClose = () => {
     setOpenInternal(false);
+    onCancel?.();
     // 포커스 원복
     setTimeout(() => {
       const el = lastActiveElement.current as HTMLElement | null;

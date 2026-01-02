@@ -56,7 +56,7 @@ const FeedDetail = () => {
     <div>
       <Banner />
       {/* 배너 밑부분 */}
-      <div className="w-full flex flex-col items-start mt-[60px] gap-[60px] px-[340px]">
+      <div className="w-full flex flex-col mt-[60px] gap-[60px] px-[340px]">
         {/* 아카이브 헤더 */}
         <ArchiveHeader
           title={feed.title}
@@ -75,13 +75,15 @@ const FeedDetail = () => {
         {/* 덕질 리포스트 */}
         <RepostList repost={repost} />
         {/* 좋아요 */}
-        <ButtonLike
-          liked={feed.liked}
-          likeCount={feed.likeCount}
-          onClick={() => {
-            console.log("좋아요 클릭");
-          }}
-        />
+        <div className="mb-10">
+          <ButtonLike
+            liked={feed.liked}
+            likeCount={feed.likeCount}
+            onClick={() => {
+              console.log("좋아요 클릭");
+            }}
+          />
+        </div>
       </div>
     </div>
   );

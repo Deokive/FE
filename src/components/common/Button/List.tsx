@@ -12,7 +12,7 @@ const List = ({
   className,
   selected = false,
 }: ListProps) => {
-  const base = "w-[110px] h-[27px] px-[10px] py-[4px";
+  const base = "flex flex-col align-center px-6 py-1 cursor-pointer";
   const enabled = "bg-brand-blue-100 text-color-mid";
   const hover = "hover:bg-brand-blue-200 hover:text-color-highest";
   const selectedCls =

@@ -3,10 +3,9 @@ import { Outlet } from "react-router-dom";
 
 const HomeLayout = () => {
   return (
-    <div className="w-[1920px] h-full">
+    <div className="w-full h-full">
       <MainNavbar />
       <Outlet />
-      {/* <Footbar /> */}
     </div>
   );
 };
