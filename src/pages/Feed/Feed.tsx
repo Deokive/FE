@@ -19,7 +19,7 @@ const Feed = () => {
 
   const [option, setOption] = useState<string>("popular");
   return (
-    <div className="flex flex-col items-center justify-center my-[60px]">
+    <div className="flex flex-col items-center justify-center my-15">
       <div className="max-w-[1920px] mx-auto mb-[60px]">
         {/* SelectBox를 오른쪽으로 정렬 */}
         <div className="w-310 flex justify-end mb-[40px]">
@@ -45,7 +45,7 @@ const Feed = () => {
         </div>
       </div>
       <Pagination
-        className="w-310 flex justify-center items-center mx-auto mb-[70px]"
+        className="w-310 flex justify-center items-center mx-auto"
         totalItems={feedData.length}
         pageSize={10}
         visiblePages={5}

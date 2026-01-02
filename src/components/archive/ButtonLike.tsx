@@ -23,7 +23,7 @@ const ButtonLike = ({
   };
 
   return (
-    <div className="w-full flex flex-col items-end">
+    <div className="w-full flex flex-col items-end py-10">
       <button
         type="button"
         className="flex items-center justify-center h-11 gap-2.5 rounded-lg bg-surface-container-10 p-2.5 cursor-pointer"
