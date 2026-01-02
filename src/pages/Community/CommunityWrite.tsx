@@ -1,0 +1,150 @@
+import React, { useEffect, useMemo, useState } from "react";
+import BackNavigator from "@/components/common/BackNavigator";
+import RequiredLabel from "@/components/common/Form/RequiredLabel";
+import TextField from "@/components/common/Form/TextField";
+import MediaUploader from "@/components/media/MediaUploader";
+import CommunityTab from "@/components/community/CommunityTab";
+import { BtnBasic } from "@/components/common/Button/Btn";
+import { useNavigate } from "react-router-dom";
+
+export default function CommunityWrite() {
+  const navigate = useNavigate();
+
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState<string>("");
+  const [mediaItems, setMediaItems] = useState<any[]>([]);
+
+  // 에러 상태
+  const [titleError, setTitleError] = useState<string | null>(null);
+  const [contentError, setContentError] = useState<string | null>(null);
+
+  const TITLE_MAX = 50;
+  const CONTENT_MAX = 5000;
+
+  // 실시간 검증 (타이핑할 때마다)
+  useEffect(() => {
+    if (title.length > TITLE_MAX) {
+      setTitleError("제목은 최대 50자까지 작성할 수 있어요.");
+    } else {
+      setTitleError(null);
+    }
+  }, [title]);
+
+  useEffect(() => {
+    if (content.length > CONTENT_MAX) {
+      setContentError("본문은 최대 5,000자까지 작성할 수 있어요.");
+    } else {
+      setContentError(null);
+    }
+  }, [content]);
+
+  // 다른 필수 체크
+  const isCategoryValid = category !== "" && category !== "all";
+  const isMediaValid = useMemo(() => {
+    if (mediaItems.length === 0) return false;
+    if (mediaItems.length === 1) return true;
+    return mediaItems.some((m) => !!m.isRepresentative);
+  }, [mediaItems]);
+
+  // 전체 폼 유효성: 모든 필드가 유효하고 에러가 없을 때만 true
+  const isFormValid = useMemo(() => {
+    return !titleError && !contentError && isCategoryValid && isMediaValid;
+  }, [titleError, contentError, isCategoryValid, isMediaValid]);
+
+  const handleSubmit = async () => {
+    if (!isFormValid) return;
+    const mediaIds = mediaItems.map((m) => m.serverId).filter(Boolean);
+    const payload = { title, content, category, mediaIds };
+    try {
+      // await api.createCommunityPost(payload);
+      console.log("submit", payload);
+      navigate("/community");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return (
+    <div>
+      <div className="mb-10">
+        <BackNavigator label="커뮤니티 보기" onClick={() => history.back()} />
+      </div>
+      <div className="flex justify-center">
+        <div className="max-w-310 flex flex-col gap-10">
+          <div>
+            <RequiredLabel required>미디어</RequiredLabel>
+            <MediaUploader onChange={(items) => setMediaItems(items)} />
+          </div>
+
+          <div>
+            <RequiredLabel required>카테고리</RequiredLabel>
+            <CommunityTab value={category} onChange={setCategory} hideAll />
+          </div>
+
+          <div>
+            <RequiredLabel required>제목</RequiredLabel>
+            <TextField
+              id="post-title"
+              value={title}
+              onChange={setTitle}
+              placeholder="커뮤니티 게시물의 제목을 작성해주세요."
+              maxLength={TITLE_MAX}
+              showCount
+              multiline={false}
+              error={titleError}
+            />
+
+            {/* 제목 에러 문구 */}
+            <div aria-live="polite">
+              {titleError ? (
+                <p className="typo-caption mt-3 text-[#FF0000]">{titleError}</p>
+              ) : (
+                <p></p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <RequiredLabel required>내용</RequiredLabel>
+            <TextField
+              id="post-content"
+              value={content}
+              onChange={setContent}
+              placeholder="기록하고 싶은 활동과 순간을 남겨보세요."
+              maxLength={5000}
+              showCount
+              multiline
+              rows={12}
+              error={contentError}
+            />
+
+            {/* 본문 에러 문구 */}
+            <div aria-live="polite">
+              {contentError ? (
+                <p className="typo-caption mt-3 text-[#FF0000]">
+                  {contentError}
+                </p>
+              ) : (
+                <p></p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex justify-center gap-4 mb-12">
+            <BtnBasic variant="gray" onClick={() => navigate(-1)}>
+              취소
+            </BtnBasic>
+            <BtnBasic
+              variant={isFormValid ? "blue" : "gray"}
+              onClick={handleSubmit}
+              disabled={!isFormValid}
+            >
+              등록
+            </BtnBasic>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
