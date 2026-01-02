@@ -6,6 +6,7 @@ type CommunityTabProps = {
   value: string;
   onChange: (value: string) => void;
   options?: Option[];
+  hideAll?: boolean;
 };
 
 const DEFAULT_OPTIONS: Option[] = [
@@ -23,13 +24,15 @@ export default function CommunityTab({
   value,
   onChange,
   options = DEFAULT_OPTIONS,
+  hideAll = false,
 }: CommunityTabProps) {
+  const effectiveOptions = hideAll
+    ? options.filter((o) => o.value !== "all")
+    : options;
+
   return (
-    <div
-      role="tablist"
-      className="w-full flex items-center justify-center gap-[23px]"
-    >
-      {options.map((opt) => (
+    <div role="tablist" className="flex gap-[23px]">
+      {effectiveOptions.map((opt) => (
         <Chip
           key={opt.value}
           selected={opt.value === value}

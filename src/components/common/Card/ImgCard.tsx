@@ -10,9 +10,11 @@ interface ImgCardProps {
   selected?: boolean;
   onDelete?: () => void; // 대표이미지 삭제 시 호출
   img?: string;
+  mediaType?: "image" | "video";
   // children: React.ReactNode;
   type?: CardType; //default: normal
   className?: string;
+  readOnly?: boolean;
 }
 
 const ImgCard = ({
@@ -20,6 +22,7 @@ const ImgCard = ({
   selected = false,
   onDelete,
   img,
+  mediaType = "image",
   type = "normal",
   className,
 }: ImgCardProps) => {
@@ -37,7 +40,8 @@ const ImgCard = ({
   const typeCls = type === "representative" ? representative : normal;
 
   // 이미지가 없거나 로드 실패했거나 아직 로딩 중일 때 벡터 아이콘 표시
-  const showIcon = !img || !imageLoaded || imageError;
+  const showIcon =
+    !img || (!imageLoaded && mediaType === "image") || imageError;
 
   return (
     <div
@@ -52,7 +56,7 @@ const ImgCard = ({
       )}
     >
       {type === "representative" && (
-        <div className="absolute top-0 left-0 bg-brand-blue-400 text-text-lowest px-4 py-2 rounded-tl-[6px]">
+        <div className="absolute top-0 left-0 bg-brand-blue-400 text-text-lowest px-4 py-2 rounded-tl-[6px] z-50">
           <p className="typo-body2-semibold">대표</p>
         </div>
       )}
@@ -71,29 +75,59 @@ const ImgCard = ({
           <X className="w-4 h-4 text-white" />
         </button>
       )}
-      {img && (
-        <img
-          src={img}
-          alt="img"
-          className={twMerge(
-            "w-full h-full object-cover absolute inset-0",
-            imageLoaded && !imageError ? "block" : "hidden"
+      {mediaType === "image" ? (
+        <>
+          {img && (
+            <img
+              src={img}
+              alt="img"
+              className={twMerge(
+                "w-full h-full object-cover absolute inset-0",
+                imageLoaded && !imageError ? "block" : "hidden"
+              )}
+              onLoad={() => {
+                setImageLoaded(true);
+                setImageError(false);
+              }}
+              onError={() => {
+                setImageError(true);
+                setImageLoaded(false);
+              }}
+            />
           )}
-          onLoad={() => {
-            setImageLoaded(true);
-            setImageError(false);
-          }}
-          onError={() => {
-            setImageError(true);
-            setImageLoaded(false);
-          }}
-        />
-      )}
-      {/* 벡터 아이콘: 이미지가 없거나 로드 실패했거나 로딩 중일 때만 표시 */}
-      {showIcon && (
-        <div className="flex items-center justify-center">
-          <img src={vectorIcon} alt="icon" className="w-[43px] h-[31px]" />
-        </div>
+          {/* 벡터 아이콘: 이미지가 없거나 로드 실패했거나 로딩 중일 때만 표시 */}
+          {showIcon && (
+            <div className="flex items-center justify-center">
+              <img src={vectorIcon} alt="icon" className="w-[43px] h-[31px]" />
+            </div>
+          )}
+        </>
+      ) : (
+        // video
+        <>
+          {img ? (
+            <video
+              src={img}
+              controls
+              playsInline
+              // autoPlay muted
+              className="w-full h-full object-cover absolute inset-0"
+              onLoadedData={() => {
+                // 로딩되면 아이콘 숨기려면 상태 변경 로직 추가 가능
+                setImageLoaded(true);
+                setImageError(false);
+              }}
+              onError={() => {
+                setImageError(true);
+                setImageLoaded(false);
+              }}
+            />
+          ) : (
+            <div className="flex items-center justify-center">
+              <img src={vectorIcon} alt="icon" className="w-[43px] h-[31px]" />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

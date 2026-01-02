@@ -6,7 +6,6 @@ const HomeLayout = () => {
     <div className="w-full h-full">
       <MainNavbar />
       <Outlet />
-      {/* <Footbar /> */}
     </div>
   );
 };

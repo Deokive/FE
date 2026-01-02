@@ -11,6 +11,8 @@ import LoginPage from "@/pages/Auth/LoginPage";
 import SignupPage from "@/pages/Auth/SignupPage";
 import TestPlayGround from "@/pages/Test/TestPlayGround";
 import FeedDetail from "@/pages/Feed/FeedDetail";
+import CommunityWrite from "@/pages/Community/CommunityWrite";
+import CommunityDetail from "@/pages/Community/CommunityDetail";
 import ArchiveDetail from "@/pages/Archive/ArchiveDetail";
 
 // 로그인 하지 않은 사용자만 접근 가능한 라우트 (메인 홈, 커뮤니티 열람, 피드 열람)
@@ -43,6 +45,8 @@ const privateRoutes: RouteObject[] = [
       { path: "archive", element: <Archive /> },
       { path: "feed", element: <Feed /> },
       { path: "community", element: <Community /> },
+      { path: "community/new", element: <CommunityWrite /> },
+      { path: "/community/:postId", element: <CommunityDetail /> },
       { path: "me", element: <MyPage /> },
       { path: "*", element: <NotFound /> },
     ],
