@@ -47,10 +47,33 @@ export default function CommunityWrite() {
     return mediaItems.some((m) => !!m.isRepresentative);
   }, [mediaItems]);
 
+  const isTitleValid = useMemo(
+    () => title.trim().length > 0 && title.length <= TITLE_MAX,
+    [title]
+  );
+  const isContentValid = useMemo(
+    () => content.trim().length > 0 && content.length <= CONTENT_MAX,
+    [content]
+  );
+
   // 전체 폼 유효성: 모든 필드가 유효하고 에러가 없을 때만 true
   const isFormValid = useMemo(() => {
-    return !titleError && !contentError && isCategoryValid && isMediaValid;
-  }, [titleError, contentError, isCategoryValid, isMediaValid]);
+    return (
+      isTitleValid &&
+      isContentValid &&
+      !titleError &&
+      !contentError &&
+      isCategoryValid &&
+      isMediaValid
+    );
+  }, [
+    isTitleValid,
+    isContentValid,
+    titleError,
+    contentError,
+    isCategoryValid,
+    isMediaValid,
+  ]);
 
   const handleSubmit = async () => {
     if (!isFormValid) return;
