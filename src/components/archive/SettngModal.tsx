@@ -88,21 +88,24 @@ const SettngModal = () => {
       </div>
       {/* 아카이브 삭제 */}
       <div className="flex flex-col items-start gap-2.5 ">
-        <p className="typo-h2-semibold text-color-highest">아카이브 삭제</p>
+        <p className="typo-h2-semibold text-color-highest pb-4">
+          아카이브 삭제
+        </p>
         <BtnBasic
           variant="gray"
           onClick={() => {
             console.log("삭제하기");
           }}
-          className="bg-surface-container-30"
+          className="w-55 bg-surface-container-30"
         >
-          아카이브 삭제
+          삭제하기
         </BtnBasic>
         <BtnBasic
           variant="gray"
           onClick={() => {
             console.log("취소하기");
           }}
+          className="w-55"
         >
           취소하기
         </BtnBasic>

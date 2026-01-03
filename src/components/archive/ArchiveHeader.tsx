@@ -2,7 +2,7 @@ import getDPlusDay from "@/utils/dPlusDay";
 import UserIcon from "@/assets/icon/S.svg";
 import { Ellipsis } from "lucide-react";
 import SettngModal from "./SettngModal";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ArchiveHeaderProps {
   title?: string;
@@ -20,6 +20,30 @@ const ArchiveHeader = ({
   isMenu = false,
 }: ArchiveHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // 모달 밖 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        modalRef.current &&
+        buttonRef.current &&
+        !modalRef.current.contains(e.target as Node) &&
+        !buttonRef.current.contains(e.target as Node)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   const handleMenuClick = () => {
     setIsMenuOpen((prev) => !prev);
@@ -32,11 +56,12 @@ const ArchiveHeader = ({
         <p className="typo-h1 text-color-highest">{title}</p>
         {isMenu && (
           <div className="relative">
-            <button onClick={handleMenuClick}>
+            <button ref={buttonRef} onClick={handleMenuClick}>
               <Ellipsis className="w-8 h-8 text-color-high cursor-pointer" />
             </button>
             {isMenuOpen && (
               <div
+                ref={modalRef}
                 className="absolute top-full right-0 mt-2 z-50"
                 onClick={(e) => {
                   e.stopPropagation(); // 모달 영역 클릭 시 메뉴 버튼 클릭 방지
