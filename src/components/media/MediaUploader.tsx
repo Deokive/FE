@@ -21,10 +21,16 @@ export default function MediaUploader({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [items, setItems] = useState<MediaItem[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  // 체크박스의 체크 상태는 selectedId가 가리키는 아이템의 isRepresentative와 동기화
+
+  // 유틸: 항목의 타입을 안전하게 읽음
+  const getItemType = (it: any): "image" | "video" | undefined =>
+    (it?.type as any) ?? (it?.mediaType as any);
+
+  // 선택 아이템과 대표 여부
   const selectedItem = items.find((i) => i.id === selectedId) ?? null;
   const isSelectedRepresentative = !!selectedItem?.isRepresentative;
 
+  // layout 상수
   const FIXED_WINDOW = 1240; // 전체 고정 영역
   const UPLOAD_CARD_WIDTH = 360; // 업로드 카드 너비
   const GAP = 20;
@@ -33,10 +39,26 @@ export default function MediaUploader({
     FIXED_WINDOW - UPLOAD_CARD_WIDTH - GAP
   );
 
+  // 이미지 개수와 선택된 항목이 이미지인지 여부
+  const imageCount = items.filter((i) => getItemType(i) === "image").length;
+  const selectedIsImage = selectedItem
+    ? getItemType(selectedItem) === "image"
+    : false;
+
+  // items 배열이 바뀔 때 대표 항목이 동영상이면 해제(또는 자동 재할당 로직을 추가할 수 있음)
   useEffect(() => {
-    // 선택 아이템이 바뀌면 자동으로 체크박스 상태(화면 표시)는 selectedItem.isRepresentative로 반영
-    // (여기선 derived 값이라 별도 state 필요 없음)
-  }, [selectedId, items]);
+    const rep = items.find((i) => i.isRepresentative);
+    if (rep && getItemType(rep) !== "image") {
+      // 대표가 동영상으로 설정되어 있다면 해제
+      const next = items.map((it) => ({ ...it, isRepresentative: false }));
+      setItems(next);
+      onChange?.(next);
+    }
+    // 만약 selectedId가 현재 items에 없으면 selectedId 초기화
+    if (selectedId && !items.some((i) => i.id === selectedId)) {
+      setSelectedId(null);
+    }
+  }, [items]);
 
   const openPicker = () => fileInputRef.current?.click();
 
@@ -51,6 +73,19 @@ export default function MediaUploader({
         alert(`이미지는 최대 ${maxImages}장까지 등록할 수 있습니다.`);
         continue;
       }
+
+      // 비디오 개수 제한
+      const existingVideos = items.filter(
+        (i) => getItemType(i) === "video"
+      ).length;
+      const newVideos = uploads.filter(
+        (u) => getItemType(u) === "video"
+      ).length;
+      if (!isImage && existingVideos + newVideos >= maxVideos) {
+        alert(`동영상은 최대 ${maxVideos}개까지 등록할 수 있습니다.`);
+        continue;
+      }
+
       const url = URL.createObjectURL(file);
       const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
       uploads.push({
@@ -62,9 +97,18 @@ export default function MediaUploader({
     }
 
     let next = [...items, ...uploads];
-    const imageCount = next.filter((i) => i.type === "image").length;
-    if (imageCount === 1)
-      next = next.map((i) => ({ ...i, isRepresentative: i.type === "image" }));
+
+    // 이미지가 하나뿐이면 그 이미지를 대표로 자동 지정
+    const nextImageCount = next.filter(
+      (i) => getItemType(i) === "image"
+    ).length;
+    if (nextImageCount === 1) {
+      next = next.map((i) => ({
+        ...i,
+        isRepresentative: getItemType(i) === "image",
+      }));
+    }
+
     setItems(next);
     onChange?.(next);
   };
@@ -76,15 +120,23 @@ export default function MediaUploader({
         URL.revokeObjectURL(target.url);
       } catch {}
     let next = items.filter((i) => i.id !== id);
-    const imageCount = next.filter((i) => i.type === "image").length;
-    if (imageCount === 1)
-      next = next.map((i) => ({ ...i, isRepresentative: i.type === "image" }));
+
+    // 이미지가 하나 남으면 자동 대표 지정
+    const imageCountAfter = next.filter(
+      (i) => getItemType(i) === "image"
+    ).length;
+    if (imageCountAfter === 1) {
+      next = next.map((i) => ({
+        ...i,
+        isRepresentative: getItemType(i) === "image",
+      }));
+    }
+
     setItems(next);
     if (selectedId === id) setSelectedId(null);
     onChange?.(next);
   };
 
-  // 카드 클릭: selectedId 설정 (선택만), 체크박스는 selectedItem.isRepresentative가 자동으로 반영됨
   const handleSelectCard = (id: string) => {
     setSelectedId((prev) => (prev === id ? prev : id));
   };
@@ -95,6 +147,17 @@ export default function MediaUploader({
       alert("대표로 지정할 이미지를 먼저 클릭해 주세요.");
       return;
     }
+
+    const selected = items.find((i) => i.id === selectedId);
+    if (!selected) {
+      alert("선택된 항목을 찾을 수 없습니다.");
+      return;
+    }
+    if (getItemType(selected) !== "image") {
+      alert("동영상은 대표 이미지로 설정할 수 없습니다.");
+      return;
+    }
+
     const next = items.map((i) => ({
       ...i,
       isRepresentative: checked ? i.id === selectedId : false,
@@ -153,7 +216,7 @@ export default function MediaUploader({
       </div>
 
       {/* 대표 체크박스: 이미지 2장 이상일 때만 보임 */}
-      {items.filter((i) => i.type === "image").length >= 2 && (
+      {imageCount >= 2 && selectedIsImage && (
         <div className="mt-3 flex items-center typo-body1 text-color-highest">
           <label className="inline-flex items-center gap-3 cursor-pointer">
             <input
