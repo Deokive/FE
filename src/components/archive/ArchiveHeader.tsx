@@ -1,6 +1,8 @@
 import getDPlusDay from "@/utils/dPlusDay";
 import UserIcon from "@/assets/icon/S.svg";
 import { Ellipsis } from "lucide-react";
+import SettngModal from "./SettngModal";
+import { useState } from "react";
 
 interface ArchiveHeaderProps {
   title?: string;
@@ -8,7 +10,6 @@ interface ArchiveHeaderProps {
   badge?: string;
   createdAt?: string;
   isMenu?: boolean;
-  onClickMenu?: () => void;
 }
 
 const ArchiveHeader = ({
@@ -17,16 +18,34 @@ const ArchiveHeader = ({
   badge,
   createdAt,
   isMenu = false,
-  onClickMenu,
 }: ArchiveHeaderProps) => {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
+  const handleMenuClick = () => {
+    setIsMenuOpen((prev) => !prev);
+    console.log("메뉴 버튼 클릭");
+  };
+
   return (
     <div className="w-full flex flex-col items-start  gap-[20px]">
       <div className="w-full flex items-center justify-between">
         <p className="typo-h1 text-color-highest">{title}</p>
         {isMenu && (
-          <button onClick={onClickMenu}>
-            <Ellipsis className="w-8 h-8 text-color-high cursor-pointer" />
-          </button>
+          <div className="relative">
+            <button onClick={handleMenuClick}>
+              <Ellipsis className="w-8 h-8 text-color-high cursor-pointer" />
+            </button>
+            {isMenuOpen && (
+              <div
+                className="absolute top-full right-0 mt-2 z-50"
+                onClick={(e) => {
+                  e.stopPropagation(); // 모달 영역 클릭 시 메뉴 버튼 클릭 방지
+                }}
+              >
+                <SettngModal />
+              </div>
+            )}
+          </div>
         )}
       </div>
       <div className="w-full h-[51px] flex items-center justify-between gap-[20px]">

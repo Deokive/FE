@@ -43,7 +43,6 @@ const ArchiveDetail = () => {
             badge={archive?.badge}
             createdAt={archive?.createdAt}
             isMenu={true}
-            onClickMenu={handleMenuClick}
           />
           {/* 아카이브 달력 */}
           <Calendar labelData={labelDataMock} stickerData={stickerDataMock} />
