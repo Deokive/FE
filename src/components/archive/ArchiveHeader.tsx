@@ -1,11 +1,15 @@
 import getDPlusDay from "@/utils/dPlusDay";
 import UserIcon from "@/assets/icon/S.svg";
+import { Ellipsis } from "lucide-react";
+import SettngModal from "./SettngModal";
+import { useEffect, useRef, useState } from "react";
 
 interface ArchiveHeaderProps {
   title?: string;
   ownerNickname?: string;
   badge?: string;
   createdAt?: string;
+  isMenu?: boolean;
 }
 
 const ArchiveHeader = ({
@@ -13,10 +17,62 @@ const ArchiveHeader = ({
   ownerNickname,
   badge,
   createdAt,
+  isMenu = false,
 }: ArchiveHeaderProps) => {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // 모달 밖 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        modalRef.current &&
+        buttonRef.current &&
+        !modalRef.current.contains(e.target as Node) &&
+        !buttonRef.current.contains(e.target as Node)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  const handleMenuClick = () => {
+    setIsMenuOpen((prev) => !prev);
+    console.log("메뉴 버튼 클릭");
+  };
+
   return (
-    <div className="w-full flex flex-col items-start gap-[20px]">
-      <p className="typo-h1 text-color-highest">{title}</p>
+    <div className="w-full flex flex-col items-start  gap-[20px]">
+      <div className="w-full flex items-center justify-between">
+        <p className="typo-h1 text-color-highest">{title}</p>
+        {isMenu && (
+          <div className="relative">
+            <button ref={buttonRef} onClick={handleMenuClick}>
+              <Ellipsis className="w-8 h-8 text-color-high cursor-pointer" />
+            </button>
+            {isMenuOpen && (
+              <div
+                ref={modalRef}
+                className="absolute top-full right-0 mt-2 z-50"
+                onClick={(e) => {
+                  e.stopPropagation(); // 모달 영역 클릭 시 메뉴 버튼 클릭 방지
+                }}
+              >
+                <SettngModal />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
       <div className="w-full h-[51px] flex items-center justify-between gap-[20px]">
         {/* 아카이브 소유자 부분 */}
         <button
@@ -26,7 +82,7 @@ const ArchiveHeader = ({
           className="flex gap-[10px] items-center cursor-pointer"
         >
           <img src={UserIcon} alt="user" className="w-[40px] h-[40px]" />
-          <p className="typo-body2 text-color-high">
+          <p className="typo-h2-semibold text-color-high">
             {ownerNickname ?? "사용자명"}
           </p>
         </button>
@@ -37,10 +93,10 @@ const ArchiveHeader = ({
           </div>
           {/* 디데이 부분 */}
           <div
-            className="flex justify-center items-center px-[10px] py-[4px] rounded-[4px]
-      bg-[#B2BCC2] typo-h1 text-color-lowest"
+            className="h-[51px] flex justify-center items-center px-[10px] py-[4px] rounded-[4px]
+        bg-surface-container-40 typo-h1 text-color-lowest"
           >
-            + {getDPlusDay(createdAt ?? "")} Day
+            + {getDPlusDay(createdAt ?? "")} DAY
           </div>
         </div>
       </div>

@@ -56,7 +56,7 @@ const BtnIcon = ({
   endIcon,
 }: BtnProps) => {
   const base =
-    "w-[110px] h-[44px] p-[10px] flex items-center justify-center rounded-[8px] gap-[10px] cursor-pointer typo-body2-semibold transition-colors";
+    "h-11 p-2.5 flex items-center justify-center rounded-[8px] gap-[10px] cursor-pointer typo-body2-semibold transition-colors";
 
   const enabled = "bg-brand-blue-100 text-color-highest";
   const hoverActive =

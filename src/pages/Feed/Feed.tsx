@@ -19,10 +19,10 @@ const Feed = () => {
 
   const [option, setOption] = useState<string>("popular");
   return (
-    <div className="w-full my-[60px]">
-      <div className="px-[340px] my-[60px] flex flex-col items-start justify-center">
+    <div className="flex flex-col items-center justify-center my-15">
+      <div className="max-w-[1920px] mx-auto mb-[60px]">
         {/* SelectBox를 오른쪽으로 정렬 */}
-        <div className="flex items-center justify-end w-full mb-[40px]">
+        <div className="w-310 flex justify-end mb-[40px]">
           <SelectBox
             options={FEED_OPTIONS}
             value={option}
@@ -30,19 +30,22 @@ const Feed = () => {
           />
         </div>
 
-        <div className="flex flex-wrap gap-x-[80px] gap-y-[60px] w-[1240px]">
+        <div className="w-310 flex flex-wrap gap-x-[80px] gap-y-[60px]">
           {feedData.map((feed) => (
             <FeedCard
               key={feed.id}
               image={feed.image}
               title={feed.title}
-              onClick={() => navigate(`/feed/${feed.archiveId}`)}
+              onClick={() => {
+                navigate(`/feed/${feed.archiveId}`);
+                console.log(feed.archiveId + "번 피드 클릭");
+              }}
             />
           ))}
         </div>
       </div>
       <Pagination
-        className="px-[340px] w-full flex justify-center items-center mb-[70px]"
+        className="w-310 flex justify-center items-center mx-auto"
         totalItems={feedData.length}
         pageSize={10}
         visiblePages={5}
