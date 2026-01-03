@@ -134,7 +134,7 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
   };
 
   return (
-    <div className="flex flex-col items-start">
+    <div className="flex flex-col items-start pb-10">
       {/* 커스텀 헤더 */}
       <div className="flex items-start justify-center gap-[40px] py-[24px]">
         <button
