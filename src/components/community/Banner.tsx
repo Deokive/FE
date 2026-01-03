@@ -27,7 +27,7 @@ const Banner = ({ image }: BannerProps) => {
             src={image}
             alt="banner"
             role="img"
-            className={imageLoaded ? "block" : "hidden"}
+            className={imageLoaded ? "block w-full" : "hidden"}
             onLoad={() => setImageLoaded(true)}
             onError={() => {
               setImageError(true);
@@ -49,7 +49,7 @@ const Banner = ({ image }: BannerProps) => {
 
       {/* 이미지가 없거나 로드 실패했을 때 기본 배너 */}
       {(!image || imageError) && !isLoading && (
-        <img src={banner} alt="banner" role="img" />
+        <img src={banner} alt="banner" role="img" className="w-full" />
       )}
     </div>
   );
