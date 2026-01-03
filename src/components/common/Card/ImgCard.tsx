@@ -24,6 +24,7 @@ const ImgCard = ({
   img,
   mediaType = "image",
   type = "normal",
+  readOnly = false,
   className,
 }: ImgCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -61,7 +62,7 @@ const ImgCard = ({
         </div>
       )}
       {/* X 버튼 - 오른쪽 상단 */}
-      {type === "representative" && onDelete && (
+      {onDelete && !readOnly && (
         <button
           type="button"
           onClick={(e) => {
