@@ -37,7 +37,11 @@ const ArchiveDetail = () => {
             isMenu={true}
           />
           {/* 아카이브 달력 */}
-          <Calendar labelData={labelDataMock} stickerData={stickerDataMock} />
+          <Calendar
+            labelData={labelDataMock}
+            stickerData={stickerDataMock}
+            mode="interactive"
+          />
           <div className="flex flex-col items-start justify-between gap-[60px] my-[60px]">
             {/* 덕질 일기 */}
             <ArchiveTitle

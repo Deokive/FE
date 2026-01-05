@@ -15,12 +15,21 @@ interface CalendarProps {
   stickerData?: Record<string, string>; //스티커는 날짜당 한개로 생각해서 string으로 처리
   /** 스티커 이미지 URL (스티커 영역에 표시할 이미지) */
   stickerImage?: string;
+  mode?: "interactive" | "readonly";
 }
 
 const labelColors = ["#B9E2B6", "#99CCFF", "#D2D2FF", "#FFD1DC"];
 
-const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
-  const [value, onChange] = useState<Value>(new Date());
+const Calendar = ({
+  labelData,
+  stickerData,
+  stickerImage,
+  mode = "interactive",
+}: CalendarProps) => {
+  const isReadonly = mode === "readonly";
+
+  // 피그마처럼 초기에는 선택(Active) 상태가 없도록 null로 시작
+  const [value, onChange] = useState<Value>(null);
   const [activeDate, setActiveDate] = useState(new Date());
 
   const handleNextMonth = () => {
@@ -122,6 +131,7 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
     }
     return null;
   };
+  //여기서 API 호출
   const handleClickDate = (date: Date) => {
     console.log(
       String(date.getFullYear()) +
@@ -157,6 +167,7 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
       {/* 달력 */}
       <div className="calendar-container w-[1240px]">
         <ReactCalendar
+          tileDisabled={isReadonly ? () => true : undefined} // ✅ 타일 전부 클릭/포커스 불가
           /** 날짜 클릭 시 실행되는 콜백 함수 */
           onClickDay={handleClickDate}
           /** 선택된 날짜가 변경될 때 호출되는 콜백 함수 */

@@ -71,7 +71,8 @@ src/components/calendar/Calendar.css .calendar-container {
   min-height: 200px;
   width: 100% !important; /* flex-basis 대신 width 100% 강제 */
 
-  cursor: default;
+  /* 기본 상태: 피그마처럼 흰색 */
+  background-color: #fff !important;
 
   display: flex;
   flex-direction: column;
@@ -86,6 +87,11 @@ src/components/calendar/Calendar.css .calendar-container {
 
   margin: 0 !important;
   outline: none !important;
+}
+
+/* 날짜는 기본적으로 클릭 가능하므로 pointer */
+.react-calendar__tile:enabled {
+  cursor: pointer;
 }
 /* [테두리 정리] */
 /* (1) 각 행의 마지막 열(토요일)은 오른쪽 선 제거 */
@@ -106,28 +112,16 @@ src/components/calendar/Calendar.css .calendar-container {
   color: inherit !important;
 }
 
-/* .react-calendar__tile:hover {
-  background-color: var(--color-brand-blue-100, #eef7fc);
-  border-color: var(--color-border-mid, #cbd5df);
-} */
+/* 변경: active 제외 */
+.react-calendar__tile:enabled:not(.react-calendar__tile--active):hover {
+  background-color: var(--color-brand-blue-100, #eef7fc) !important;
+}
 
 /* 선택된 날짜 스타일 (피그마 디자인) */
-/* .react-calendar__tile--active {
-  background-color: var(--color-brand-blue-400, #82bef5);
-  border-color: var(--color-brand-blue-400, #82bef5);
-  color: white;
+.react-calendar__tile--active {
+  background-color: var(--color-brand-blue-200, #d5e8f9) !important;
   font-weight: 600;
-} */
-
-/* .react-calendar__tile--active:hover {
-  background-color: var(--color-brand-blue-300, #99ccff);
-  border-color: var(--color-brand-blue-300, #99ccff);
-} */
-
-/* .react-calendar__tile--now {
-  background-color: var(--color-surface-container-20, #e9ecf1);
-  border-color: var(--color-border-mid, #cbd5df);
-} */
+}
 
 /* 날짜 텍스트가 확실히 보이도록 */
 .calendar-date-text {
@@ -151,6 +145,24 @@ src/components/calendar/Calendar.css .calendar-container {
 .calendar-day-weekday {
   color: #001f33;
 }
+/* readonly(tileDisabled)로 인해 disabled가 되어도 날짜 색상은 유지 */
+.react-calendar__tile:disabled {
+  background-color: #fff !important;
+  opacity: 1 !important;
+  color: inherit !important; /* 아래 요일 클래스의 color가 그대로 먹도록 */
+  cursor: default;
+}
+
+/* 혹시 disabled에서 요일 클래스 색이 또 덮이는 경우 대비(안전빵) */
+.react-calendar__tile:disabled.calendar-day-weekday {
+  color: #001f33 !important; /* 평일: 검정 */
+}
+.react-calendar__tile:disabled.calendar-day-saturday {
+  color: #82bef5 !important; /* 토요일: 파랑 */
+}
+.react-calendar__tile:disabled.calendar-day-sunday {
+  color: #ff0000 !important; /* 일요일: 빨강 */
+}
 
 .calendar-day-other-month {
   color: var(--color-text-low, #cbd5df);
@@ -158,34 +170,6 @@ src/components/calendar/Calendar.css .calendar-container {
   /* ▼ 아래 두 줄을 추가하세요 */
   pointer-events: none; /* 마우스 이벤트를 아예 무시 (클릭 불가) */
   cursor: default; /* 마우스 커서 모양 기본으로 변경 */
-  /* border-color: var(--color-border-low, #e9ecf1); */
-}
-
-/* 선택된 날짜 - 요일 색상 무시하고 흰색으로 */
-/* .react-calendar__tile--active.calendar-day-sunday,
-.react-calendar__tile--active.calendar-day-saturday,
-.react-calendar__tile--active.calendar-day-weekday {
-  color: white;
-} */
-
-/* 선택된 날짜가 다른 달인 경우 */
-/* .react-calendar__tile--active.calendar-day-other-month {
-  opacity: 1;
-  color: white;
-} */
-
-/* 모든 상태(Hover, Active, Focus, Today)에서 스타일 초기화 */
-.react-calendar__tile:enabled:hover,
-.react-calendar__tile:enabled:focus,
-.react-calendar__tile--active,
-.react-calendar__tile--now {
-  /* 배경 흰색 고정 */
-  background: white !important;
-  /* 테두리 유지 */
-  border-right: 2px solid var(--color-border-high, #7d9ab2) !important;
-  border-bottom: 2px solid var(--color-border-high, #7d9ab2) !important;
-  /* 글자색 원래대로 유지 (요일별 색상 따름) */
-  /* color: inherit !important; */
 }
 
 /* 선택된 날짜라도 투명도 유지 (지난달/다음달 날짜) */
