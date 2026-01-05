@@ -2,24 +2,11 @@
 import { useState } from "react";
 import RadioButton from "../common/Button/RadioButton";
 import { BtnBasic } from "../common/Button/Btn";
-import { friendListMock } from "@/mockData/friendList";
-import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
 
-type PrivacyOption = "public" | "partial" | "private";
+type PrivacyOption = "public" | "friend" | "private";
 
 const SettngModal = () => {
   const [privacy, setPrivacy] = useState<PrivacyOption>("public");
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [selectedFriends, setSelectedFriends] = useState<number[]>([]);
-
-  // 친구 선택/해제 핸들러 => 실제로는 API 호출로 대체
-  const handleFriendClick = (friendId: number) => {
-    setSelectedFriends((prev) =>
-      prev.includes(friendId)
-        ? prev.filter((id) => id !== friendId)
-        : [...prev, friendId]
-    );
-  };
 
   return (
     <div
@@ -41,41 +28,13 @@ const SettngModal = () => {
             }}
           />
           <RadioButton
-            label="부분 공개"
-            checked={privacy === "partial"}
+            label="친구 공개"
+            checked={privacy === "friend"}
             onClick={() => {
-              setPrivacy("partial");
-              console.log("부분 공개");
+              setPrivacy("friend");
+              console.log("친구 공개");
             }}
-            showDropdown={true}
-            isDropdownOpen={isDropdownOpen}
-            onDropdownClick={() => setIsDropdownOpen((prev) => !prev)}
           />
-          {isDropdownOpen && (
-            <div
-              className="h-22 w-full flex flex-col gap-3 overflow-y-auto rounded-lg bg-surface-bg"
-              style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-              }}
-            >
-              {friendListMock.map((friend) => (
-                <div
-                  key={friend.id}
-                  onClick={() => handleFriendClick(friend.id)}
-                  className="flex items-center h-5 pl-7 cursor-pointer"
-                >
-                  <CheckboxIcon
-                    checked={selectedFriends.includes(friend.id)}
-                    size={20}
-                  />
-                  <span className="typo-body2 text-color-high">
-                    {friend.nickname}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
           <RadioButton
             label="비공개"
             checked={privacy === "private"}
