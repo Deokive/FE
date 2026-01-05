@@ -109,7 +109,9 @@ const Calendar = ({
           onClick={(e) => {
             e.stopPropagation();
             // ✅ 좌클릭 액션
+            if (isReadonly) return;
             onChange(date);
+
             console.log(
               "좌클릭:",
               String(date.getFullYear()) +
@@ -124,6 +126,9 @@ const Calendar = ({
           onContextMenu={(e) => {
             e.preventDefault(); // ✅ 브라우저 우클릭 메뉴 막기
             e.stopPropagation();
+            if (isReadonly) return;
+            onChange(date);
+
             // ✅ 우클릭 액션
             console.log(
               "우클릭:",

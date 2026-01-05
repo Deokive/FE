@@ -112,6 +112,14 @@ src/components/calendar/Calendar.css .calendar-container {
   color: inherit !important;
 }
 
+/* 오늘 표시 제거: 기본 타일과 완전히 동일하게 */
+.react-calendar__tile--now {
+  background: #fff !important;
+  box-shadow: none !important;
+  font-weight: inherit !important;
+  color: inherit !important;
+}
+
 /* 변경: active 제외 */
 .react-calendar__tile:enabled:not(.react-calendar__tile--active):hover {
   background-color: var(--color-brand-blue-100, #eef7fc) !important;
