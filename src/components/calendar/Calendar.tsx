@@ -4,9 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ReactCalendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Calendar.css"; // 커스텀 CSS
-
-type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
+import AdditionalModal from "./modal/AdditionalModal";
 
 interface CalendarProps {
   /** 날짜별 라벨 데이터 (키: "YYYY-MM-DD" 형식, 값: 라벨 텍스트 배열) */
@@ -17,6 +15,9 @@ interface CalendarProps {
   stickerImage?: string;
   mode?: "interactive" | "readonly";
 }
+
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 const labelColors = ["#B9E2B6", "#99CCFF", "#D2D2FF", "#FFD1DC"];
 
@@ -31,9 +32,16 @@ const Calendar = ({
   // 피그마처럼 초기에는 선택(Active) 상태가 없도록 null로 시작
   const [value, onChange] = useState<Value>(null);
   const [activeDate, setActiveDate] = useState(new Date());
+  // ✅ 우클릭 모달 위치(달력 래퍼 기준 좌표)
+  const [additionalPos, setAdditionalPos] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [isAdditionalModalOpen, setIsAdditionalModalOpen] = useState(false);
 
   const calendarRootRef = useRef<HTMLDivElement | null>(null); // ✅ 추가
 
+  // ✅ 달력 바깥 클릭 시 active 해제 + 우클릭 모달 닫기
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const root = calendarRootRef.current;
@@ -45,6 +53,8 @@ const Calendar = ({
       if (!isInside) {
         // ✅ 달력 바깥 클릭이면 active 해제
         onChange(null);
+        setAdditionalPos(null);
+        setIsAdditionalModalOpen(false);
       }
     };
 
@@ -111,6 +121,8 @@ const Calendar = ({
             // ✅ 좌클릭 액션
             if (isReadonly) return;
             onChange(date);
+            setAdditionalPos(null);
+            setIsAdditionalModalOpen(false);
 
             console.log(
               "좌클릭:",
@@ -128,6 +140,20 @@ const Calendar = ({
             e.stopPropagation();
             if (isReadonly) return;
             onChange(date);
+            const root = calendarRootRef.current;
+            if (!root) return;
+
+            const rootRect = root.getBoundingClientRect();
+            const tileRect = (
+              e.currentTarget as HTMLElement
+            ).getBoundingClientRect();
+            // ✅ 달력 래퍼 기준으로 위치 계산 (타일 오른쪽/위쪽 근처에 띄우는 예시)
+            setAdditionalPos({
+              x: tileRect.right - rootRect.left - 85,
+              y: tileRect.top - rootRect.top + 52,
+            });
+
+            setIsAdditionalModalOpen(true);
 
             // ✅ 우클릭 액션
             console.log(
@@ -202,7 +228,10 @@ const Calendar = ({
   };
 
   return (
-    <div ref={calendarRootRef} className="flex flex-col items-start mb-10">
+    <div
+      ref={calendarRootRef}
+      className="flex flex-col items-start mb-10 relative"
+    >
       {/* 커스텀 헤더 */}
       <div className="flex items-start justify-center gap-[40px] py-[24px]">
         <button
@@ -259,6 +288,26 @@ const Calendar = ({
           }}
         />
       </div>
+      {isAdditionalModalOpen && additionalPos && (
+        <div
+          style={{
+            position: "absolute",
+            left: additionalPos.x,
+            top: additionalPos.y,
+            zIndex: 999999, // ✅ 최상단
+          }}
+          onMouseDown={(e) => e.stopPropagation()}
+        >
+          <AdditionalModal
+            open
+            date={value as Date}
+            onClose={() => {
+              setIsAdditionalModalOpen(false);
+              setAdditionalPos(null);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
