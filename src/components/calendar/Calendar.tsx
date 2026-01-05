@@ -1,6 +1,6 @@
 // src/components/Calendar.tsx
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactCalendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Calendar.css"; // 커스텀 CSS
@@ -31,6 +31,26 @@ const Calendar = ({
   // 피그마처럼 초기에는 선택(Active) 상태가 없도록 null로 시작
   const [value, onChange] = useState<Value>(null);
   const [activeDate, setActiveDate] = useState(new Date());
+
+  const calendarRootRef = useRef<HTMLDivElement | null>(null); // ✅ 추가
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const root = calendarRootRef.current;
+      if (!root) return;
+
+      const target = e.target as Node | null;
+      const isInside = !!target && root.contains(target);
+
+      if (!isInside) {
+        // ✅ 달력 바깥 클릭이면 active 해제
+        onChange(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleNextMonth = () => {
     const nextMonth = new Date(
@@ -83,7 +103,39 @@ const Calendar = ({
       const labels = labelData?.[dateString] || [];
       const sticker = stickerData?.[dateString] || "";
       return (
-        <div className="flex flex-col items-start justify-start w-full h-full gap-1">
+        <div
+          className="flex flex-col items-start justify-start w-full h-full gap-1"
+          // 좌클릭 시 일정 보기 api 호출
+          onClick={(e) => {
+            e.stopPropagation();
+            // ✅ 좌클릭 액션
+            onChange(date);
+            console.log(
+              "좌클릭:",
+              String(date.getFullYear()) +
+                "년 " +
+                String(date.getMonth() + 1).padStart(2, "0") +
+                "월 " +
+                String(date.getDate()).padStart(2, "0") +
+                "일에 일정 보기 api 호출"
+            );
+          }}
+          // 우클릭 시 일정 추가 api 호출
+          onContextMenu={(e) => {
+            e.preventDefault(); // ✅ 브라우저 우클릭 메뉴 막기
+            e.stopPropagation();
+            // ✅ 우클릭 액션
+            console.log(
+              "우클릭:",
+              String(date.getFullYear()) +
+                "년 " +
+                String(date.getMonth() + 1).padStart(2, "0") +
+                "월 " +
+                String(date.getDate()).padStart(2, "0") +
+                "일에 일정 추가 api 호출"
+            );
+          }}
+        >
           {/* 1. 커스텀 날짜 숫자 (우측 상단 배치 등 CSS로 제어) */}
           <div className="custom-date-number w-full h-[36px] px-[16px] text-right typo-h2">
             {date.getDate()}
@@ -131,6 +183,7 @@ const Calendar = ({
     }
     return null;
   };
+
   //여기서 API 호출
   const handleClickDate = (date: Date) => {
     console.log(
@@ -144,7 +197,7 @@ const Calendar = ({
   };
 
   return (
-    <div className="flex flex-col items-start pb-10">
+    <div ref={calendarRootRef} className="flex flex-col items-start mb-10">
       {/* 커스텀 헤더 */}
       <div className="flex items-start justify-center gap-[40px] py-[24px]">
         <button
@@ -169,7 +222,7 @@ const Calendar = ({
         <ReactCalendar
           tileDisabled={isReadonly ? () => true : undefined} // ✅ 타일 전부 클릭/포커스 불가
           /** 날짜 클릭 시 실행되는 콜백 함수 */
-          onClickDay={handleClickDate}
+          // onClickDay={handleClickDate}
           /** 선택된 날짜가 변경될 때 호출되는 콜백 함수 */
           onChange={onChange}
           /** 현재 선택된 날짜 값 */
