@@ -1,13 +1,24 @@
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const CalendarTag = () => {
+type CalendarTagProps = {
+  onTagChange?: (data: { tags: string[] }) => void;
+};
+
+const CalendarTag = ({ onTagChange }: CalendarTagProps) => {
   const [tag, setTag] = useState("");
   const [tags, setTags] = useState<string[]>(["태그1", "태그2", "태그3"]);
 
+  // ✅ 태그가 변경될 때마다 부모에게 알림
+  useEffect(() => {
+    onTagChange?.({ tags });
+  }, [tags, onTagChange]);
+
   const handleAddTag = () => {
-    if (tag.trim() !== "") {
-      setTags([...tags, tag]);
+    const trimmedTag = tag.trim();
+    // ✅ 빈 값이 아니고, 이미 존재하는 태그가 아닐 때만 추가
+    if (trimmedTag !== "" && !tags.includes(trimmedTag)) {
+      setTags([...tags, trimmedTag]);
       setTag("");
     }
   };
@@ -28,6 +39,11 @@ const CalendarTag = () => {
           onChange={(e) => setTag(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
+              // ✅ 한글 조합 중이면 무시 (IME 문제 해결)
+              if (e.nativeEvent.isComposing) return;
+              // ✅ form submit 방지 & 이벤트 버블링 방지
+              e.preventDefault();
+              e.stopPropagation();
               handleAddTag();
             }
           }}

@@ -5,7 +5,11 @@ type Color = {
   color: string;
 };
 
-const ColorChange = () => {
+type ColorChangeProps = {
+  onColorChange?: (color: Color | null) => void;
+};
+
+const ColorChange = ({ onColorChange }: ColorChangeProps) => {
   const colors: Color[] = [
     { name: "pink", color: "#FFDFE7" },
     { name: "red", color: "#FFABAB" },
@@ -20,6 +24,7 @@ const ColorChange = () => {
 
   const handleColorChange = (color: Color) => {
     setSelectedColor(color);
+    onColorChange?.(color); // ✅ 부모에게 알림
   };
 
   return (
