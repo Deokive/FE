@@ -43,9 +43,11 @@ const Event = ({ title, onClose, startDate, editData }: EventProps) => {
     <div className="flex flex-col gap-12 items-start">
       {/* 일정 이름 */}
       <div className="w-full flex items-center justify-between">
-        <p className="typo-h1 text-color-mid text-left ">
-          | {title || "일정 이름"}
-        </p>
+        {eventTitle ? (
+          <p className="typo-h1 text-color-highest text-left ">{eventTitle}</p>
+        ) : (
+          <p className="typo-h1 text-color-mid text-left ">| 일정 이름</p>
+        )}
         <X
           className="w-12 h-12 text-color-highest cursor-pointer"
           onClick={onClose}
