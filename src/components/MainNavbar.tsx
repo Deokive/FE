@@ -1,3 +1,4 @@
+import Logo from "@/assets/Icon/Logo";
 import { NavLink } from "react-router-dom";
 
 const MainNavbar = () => {
@@ -10,9 +11,7 @@ const MainNavbar = () => {
       <div className="flex items-center gap-10">
         {/* 왼쪽 그룹 */}
         <ul className="flex h-10 items-center gap-10">
-          <div className="w-[100px] py-[10px] bg-white text-center typo-body2">
-            Logo
-          </div>
+          <Logo />
           <li>
             <NavLink to="/" className={linkClass}>
               Home

@@ -48,7 +48,7 @@ const EventModal = ({ open, onClose, type }: EventModalProps) => {
         onMouseDown={(e) => e.stopPropagation()}
       >
         {type === "event" && <Event onClose={onClose} />}
-        {type === "sticker" && <Sticker />}
+        {type === "sticker" && <Sticker onClose={onClose} />}
         {type === "sports" && <Sports onClose={onClose} />}
       </div>
     </div>
