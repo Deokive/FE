@@ -8,6 +8,7 @@ type CalendarTagProps = {
 const CalendarTag = ({ onTagChange }: CalendarTagProps) => {
   const [tag, setTag] = useState("");
   const [tags, setTags] = useState<string[]>(["태그1", "태그2", "태그3"]);
+  const [error, setError] = useState<string | null>(null); // ✅ 에러 state 추가
 
   // ✅ 태그가 변경될 때마다 부모에게 알림
   useEffect(() => {
@@ -16,11 +17,18 @@ const CalendarTag = ({ onTagChange }: CalendarTagProps) => {
 
   const handleAddTag = () => {
     const trimmedTag = tag.trim();
-    // ✅ 빈 값이 아니고, 이미 존재하는 태그가 아닐 때만 추가
-    if (trimmedTag !== "" && !tags.includes(trimmedTag)) {
-      setTags([...tags, trimmedTag]);
-      setTag("");
+
+    if (trimmedTag === "") return;
+
+    // ✅ 중복 검사
+    if (tags.includes(trimmedTag)) {
+      setError("이미 등록된 태그입니다.");
+      return;
     }
+
+    setTags([...tags, trimmedTag]);
+    setTag("");
+    setError(null); // ✅ 성공 시 에러 초기화
   };
 
   const handleDeleteTag = (tag: string) => {
@@ -29,25 +37,37 @@ const CalendarTag = ({ onTagChange }: CalendarTagProps) => {
 
   return (
     <div className="w-165 flex flex-col itmes-center gap-5">
-      <div className="w-full flex items-center justify-between">
-        <p className="py-1.5 typo-h2-semibold text-color-highest">태그 설정</p>
-        <input
-          className="w-[551px] h-10 border-2 border-border-mid rounded-lg 
-        bg-surface-bg px-4 typo-body1 text-color-highest placeholder:text-color-mid"
-          placeholder="태그명 입력"
-          value={tag}
-          onChange={(e) => setTag(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              // ✅ 한글 조합 중이면 무시 (IME 문제 해결)
-              if (e.nativeEvent.isComposing) return;
-              // ✅ form submit 방지 & 이벤트 버블링 방지
-              e.preventDefault();
-              e.stopPropagation();
-              handleAddTag();
-            }
-          }}
-        />
+      <div className="w-full flex flex-col items-end gap-1">
+        <div className="w-full flex items-center justify-between">
+          <p className="py-1.5 typo-h2-semibold text-color-highest">
+            태그 설정
+          </p>
+          <input
+            className={`w-[551px] h-10 border-2 rounded-lg 
+              bg-surface-bg px-4 typo-body1 text-color-highest focus:outline-none placeholder:text-color-mid
+              ${
+                error
+                  ? "border-2 border-[#FF0000]"
+                  : "border-2 border-border-mid"
+              }`} // ✅ 에러 시 빨간 테두리
+            placeholder="태그명 입력"
+            value={tag}
+            onChange={(e) => {
+              setTag(e.target.value);
+              setError(null); // ✅ 입력 시 에러 초기화
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                if (e.nativeEvent.isComposing) return;
+                e.preventDefault();
+                e.stopPropagation();
+                handleAddTag();
+              }
+            }}
+          />
+        </div>
+        {/* ✅ 에러 메시지 표시 */}
+        {error && <p className="typo-body2 text-[#FF0000]">{error}</p>}
       </div>
       <div className="w-165 flex flex-wrap items-center gap-2">
         {tags.map((tag) => (
