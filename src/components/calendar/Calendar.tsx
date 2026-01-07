@@ -5,6 +5,7 @@ import ReactCalendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Calendar.css"; // 커스텀 CSS
 import AdditionalModal from "./modal/AdditionalModal";
+import EventModal from "./modal/EventModal";
 
 interface CalendarProps {
   /** 날짜별 라벨 데이터 (키: "YYYY-MM-DD" 형식, 값: 라벨 텍스트 배열) */
@@ -18,6 +19,7 @@ interface CalendarProps {
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
+type ModalType = "event" | "sticker" | "sports" | null;
 
 const labelColors = ["#B9E2B6", "#99CCFF", "#D2D2FF", "#FFD1DC"];
 
@@ -38,6 +40,9 @@ const Calendar = ({
     y: number;
   } | null>(null);
   const [isAdditionalModalOpen, setIsAdditionalModalOpen] = useState(false);
+
+  const [eventModalOpen, setEventModalOpen] = useState(false);
+  const [eventModalType, setEventModalType] = useState<ModalType>(null);
 
   const calendarRootRef = useRef<HTMLDivElement | null>(null); // ✅ 추가
 
@@ -305,6 +310,38 @@ const Calendar = ({
               setIsAdditionalModalOpen(false);
               setAdditionalPos(null);
             }}
+            onEventModalOpen={() => {
+              setIsAdditionalModalOpen(false);
+              setEventModalType("event");
+              setEventModalOpen(true);
+            }}
+            onStickerModalOpen={() => {
+              setIsAdditionalModalOpen(false);
+              setEventModalType("sticker");
+              setEventModalOpen(true);
+            }}
+            onSportsModalOpen={() => {
+              setIsAdditionalModalOpen(false);
+              setEventModalType("sports");
+              setEventModalOpen(true);
+            }}
+          />
+        </div>
+      )}
+      {eventModalOpen && (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            zIndex: 999999, // ✅ 최상단
+          }}
+        >
+          {/* 이벤트 등록 모달 */}
+          <EventModal
+            open={eventModalOpen}
+            onClose={() => setEventModalOpen(false)}
+            type={eventModalType}
           />
         </div>
       )}

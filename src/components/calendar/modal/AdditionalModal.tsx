@@ -4,12 +4,18 @@ type AdditionalModalProps = {
   open: boolean;
   onClose: () => void;
   date?: Date;
+  onEventModalOpen: () => void;
+  onStickerModalOpen: () => void;
+  onSportsModalOpen: () => void;
 };
 
 const AdditionalModal = ({
   open = false,
   onClose,
   date,
+  onEventModalOpen,
+  onStickerModalOpen,
+  onSportsModalOpen,
 }: AdditionalModalProps) => {
   if (!open) return null;
 
@@ -29,6 +35,7 @@ const AdditionalModal = ({
           <button
             className="flex gap-2 items-center pl-1 py-1 hover:bg-brand-blue-100 active:bg-brand-blue-200"
             onClick={() => {
+              onEventModalOpen();
               console.log("이벤트 등록", date);
             }}
           >
@@ -38,6 +45,7 @@ const AdditionalModal = ({
           <button
             className="flex gap-2 items-center pl-1 py-1 hover:bg-brand-blue-100 active:bg-brand-blue-200"
             onClick={() => {
+              onStickerModalOpen();
               console.log("스티커 추가", date);
             }}
           >
@@ -47,6 +55,7 @@ const AdditionalModal = ({
           <button
             className="flex gap-2 items-center pl-1 py-1 hover:bg-brand-blue-100 active:bg-brand-blue-200"
             onClick={() => {
+              onSportsModalOpen();
               console.log("스포츠 경기 기록", date);
             }}
           >
