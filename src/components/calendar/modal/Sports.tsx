@@ -1,10 +1,13 @@
 import { X } from "lucide-react";
+import CalendarDate from "../CalendarDate";
+import CalendarTag from "../CalendarTag";
 
 type SportsProps = {
   onClose: () => void;
+  startDate: Date | null;
 };
 
-const Sports = ({ onClose }: SportsProps) => {
+const Sports = ({ onClose, startDate }: SportsProps) => {
   return (
     <div className="flex flex-col gap-4 items-start">
       {/* 일정 이름 */}
@@ -16,7 +19,9 @@ const Sports = ({ onClose }: SportsProps) => {
         />
       </div>
       {/* 일정 기간 */}
+      <CalendarDate startDateValue={startDate} />
       {/* 태그 설정 */}
+      <CalendarTag />
       {/* 색상설정 */}
       {/* 확인버튼 */}
     </div>

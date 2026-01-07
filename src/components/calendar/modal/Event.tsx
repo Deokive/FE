@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import CalendarDate from "../CalendarDate";
+import CalendarTag from "../CalendarTag";
 
 type EventProps = {
   onClose: () => void;
@@ -20,6 +21,7 @@ const Event = ({ onClose, startDate }: EventProps) => {
       {/* 일정 기간 */}
       <CalendarDate startDateValue={startDate} />
       {/* 태그 설정 */}
+      <CalendarTag />
       {/* 색상설정 */}
       {/* 확인버튼 */}
     </div>

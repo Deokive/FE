@@ -50,7 +50,9 @@ const EventModal = ({ open, onClose, type, startDate }: EventModalProps) => {
       >
         {type === "event" && <Event onClose={onClose} startDate={startDate} />}
         {type === "sticker" && <Sticker onClose={onClose} />}
-        {type === "sports" && <Sports onClose={onClose} />}
+        {type === "sports" && (
+          <Sports onClose={onClose} startDate={startDate} />
+        )}
       </div>
     </div>
   );
