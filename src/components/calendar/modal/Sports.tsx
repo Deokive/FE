@@ -23,6 +23,7 @@ const Sports = ({ onClose, startDate }: SportsProps) => {
       {/* 태그 설정 */}
       <CalendarTag />
       {/* 색상설정 */}
+      {/* 경기결과 */}
       {/* 확인버튼 */}
     </div>
   );
