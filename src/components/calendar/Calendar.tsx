@@ -7,6 +7,7 @@ import "./Calendar.css"; // 커스텀 CSS
 import AdditionalModal from "./modal/AdditionalModal";
 import EventModal from "./modal/EventModal";
 import type { LabelData } from "@/types/calendar";
+import EventListModal from "./modal/EventListModal";
 
 interface CalendarProps {
   /** 날짜별 라벨 데이터 (키: "YYYY-MM-DD" 형식, 값: 라벨 텍스트 배열) */
@@ -44,6 +45,8 @@ const Calendar = ({
   const [eventModalType, setEventModalType] = useState<isSportType>(null); //스포츠 타입 여부 null: 스티커 타입
   const [clickDate, setClickDate] = useState<Date | null>(null);
   const [editLabelData, setEditLabelData] = useState<LabelData | null>(null); // ✅ 수정할 라벨 데이터
+  const [isEventListModalOpen, setIsEventListModalOpen] = useState(false); //이벤트 목록 모달 열림 여부
+  const [selectedDateEvents, setSelectedDateEvents] = useState<LabelData[]>([]); //선택된 날짜의 이벤트 목록
 
   const calendarRootRef = useRef<HTMLDivElement | null>(null); // ✅ 추가
 
@@ -128,6 +131,7 @@ const Calendar = ({
 
       //스티커 더미 데이터 매칭
       const sticker = stickerData?.[dateString] || "";
+
       return (
         <div
           className="flex flex-col items-start justify-start w-full h-full gap-1"
@@ -140,16 +144,16 @@ const Calendar = ({
             setAdditionalPos(null);
             setIsAdditionalModalOpen(false);
             setClickDate(date);
+            // ✅ 해당 날짜의 이벤트 필터링하여 모달 열기
+            const dateString = `${date.getFullYear()}-${String(
+              date.getMonth() + 1
+            ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+            const dayEvents =
+              labelData?.filter((l) => l.date === dateString) || [];
+            setSelectedDateEvents(dayEvents);
+            setIsEventListModalOpen(true);
 
-            console.log(
-              "좌클릭:",
-              String(date.getFullYear()) +
-                "년 " +
-                String(date.getMonth() + 1).padStart(2, "0") +
-                "월 " +
-                String(date.getDate()).padStart(2, "0") +
-                "일에 일정 보기 api 호출"
-            );
+            console.log("좌클릭:", dateString, "일정:", dayEvents);
           }}
           // 우클릭 시 일정 추가 api 호출
           onContextMenu={(e) => {
@@ -374,6 +378,14 @@ const Calendar = ({
             editData={editLabelData}
           />
         </div>
+      )}
+      {isEventListModalOpen && (
+        <EventListModal
+          open={isEventListModalOpen}
+          onClose={() => setIsEventListModalOpen(false)}
+          date={clickDate}
+          label={selectedDateEvents}
+        />
       )}
     </div>
   );

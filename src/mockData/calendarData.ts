@@ -23,8 +23,8 @@ export type SportInfo = {
 export type LabelData = {
   title: string; //일정 이름
   date: string; //날짜
-  time: string; //시간
-  hasTime: boolean; //하루종일 버튼 체크 여부
+  time?: string; //시간
+  hasTime: boolean; //하루종일 버튼 체크 여부 false: 하루종일, true: 시간 선택
   color: ColorData;
   sportInfo?: SportInfo; //스포츠 정보
   hashtags?: string[]; //태그
@@ -35,8 +35,7 @@ const defaultLabelData: LabelData[] = [
   {
     title: "야구경기 관람",
     date: "2026-01-03",
-    time: "12:00",
-    hasTime: true,
+    hasTime: false,
     color: colors[0],
     sportInfo: {
       team1: "한화 이글스",
@@ -66,11 +65,28 @@ const defaultLabelData: LabelData[] = [
   {
     date: "2026-01-04",
     title: "콘서트 관람",
-    time: "19:00",
-    hasTime: true,
+    hasTime: false,
     color: colors[1],
     hashtags: ["콘서트", "라이브", "블랙핑크"],
     isSportType: false,
+  },
+  {
+    date: "2026-01-05",
+    title: "콘서트 관람",
+    time: "18:00",
+    hasTime: true,
+    color: colors[5],
+    hashtags: ["콘서트", "라이브", "블랙핑크", "아이돌"],
+    isSportType: false,
+  },
+  {
+    date: "2026-01-06",
+    title: "데이트",
+    time: "21:00",
+    hasTime: true,
+    color: colors[3],
+    hashtags: ["데이트", "커플"],
+    isSportType: true,
   },
 ];
 

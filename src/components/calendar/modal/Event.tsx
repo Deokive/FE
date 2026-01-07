@@ -7,13 +7,12 @@ import { useState } from "react";
 import type { ColorData, DateData, LabelData } from "@/types/calendar";
 
 type EventProps = {
-  title?: string;
   onClose: () => void;
   startDate: Date | null;
   editData?: LabelData | null;
 };
 
-const Event = ({ title, onClose, startDate, editData }: EventProps) => {
+const Event = ({ onClose, startDate, editData }: EventProps) => {
   const isEditMode = !!editData;
 
   // ✅ editData가 있으면 해당 데이터로 초기화

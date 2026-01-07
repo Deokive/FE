@@ -32,6 +32,7 @@ const EventModal = ({
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
+
   // 페이지 스크롤 잠굼
   useEffect(() => {
     if (!open) return;
