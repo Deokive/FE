@@ -1,4 +1,4 @@
-import { Trash2, X } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import type { LabelData } from "@/types/calendar";
 import { useEffect, useState } from "react";
 import { BtnBasic } from "@/components/common/Button/Btn";

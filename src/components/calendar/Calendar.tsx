@@ -120,14 +120,7 @@ const Calendar = ({
       ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
       //라벨 더미 데이터 매칭
-      const label = labelData?.find((label) => label.date === dateString);
-      const title = label?.title || "";
-      const time = label?.time || "";
-      const hasTime = label?.hasTime || false;
-      const color = label?.color || null;
-      const sportInfo = label?.sportInfo || null;
-      const hashtags = label?.hashtags || [];
-      const isSportType = label?.isSportType || false;
+      // const label = labelData?.find((label) => label.date === dateString);
 
       //스티커 더미 데이터 매칭
       const sticker = stickerData?.[dateString] || "";
@@ -250,16 +243,16 @@ const Calendar = ({
   };
 
   //여기서 API 호출
-  const handleClickDate = (date: Date) => {
-    console.log(
-      String(date.getFullYear()) +
-        "년 " +
-        String(date.getMonth() + 1).padStart(2, "0") +
-        "월 " +
-        String(date.getDate()).padStart(2, "0") +
-        "일에 일정 추가 api 호출"
-    );
-  };
+  // const handleClickDate = (date: Date) => {
+  //   console.log(
+  //     String(date.getFullYear()) +
+  //       "년 " +
+  //       String(date.getMonth() + 1).padStart(2, "0") +
+  //       "월 " +
+  //       String(date.getDate()).padStart(2, "0") +
+  //       "일에 일정 추가 api 호출"
+  //   );
+  // };
 
   return (
     <div
