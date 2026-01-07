@@ -6,10 +6,11 @@ import "react-calendar/dist/Calendar.css";
 import "./Calendar.css"; // 커스텀 CSS
 import AdditionalModal from "./modal/AdditionalModal";
 import EventModal from "./modal/EventModal";
+import type { LabelData } from "@/mockData/calendarData";
 
 interface CalendarProps {
   /** 날짜별 라벨 데이터 (키: "YYYY-MM-DD" 형식, 값: 라벨 텍스트 배열) */
-  labelData?: Record<string, string[]>;
+  labelData?: LabelData[];
   /** 날짜별 스티커 데이터 (키: "YYYY-MM-DD" 형식, 값: 스티커 ID 또는 식별자) */
   stickerData?: Record<string, string>; //스티커는 날짜당 한개로 생각해서 string으로 처리
   /** 스티커 이미지 URL (스티커 영역에 표시할 이미지) */
@@ -19,9 +20,9 @@ interface CalendarProps {
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
-type ModalType = "event" | "sticker" | "sports" | null;
 
-const labelColors = ["#B9E2B6", "#99CCFF", "#D2D2FF", "#FFD1DC"];
+type ModalType = "event" | "sticker" | "sports" | null;
+type isSportType = true | false | null; //스포츠 타입 여부
 
 const Calendar = ({
   labelData,
@@ -42,8 +43,9 @@ const Calendar = ({
   const [isAdditionalModalOpen, setIsAdditionalModalOpen] = useState(false);
 
   const [eventModalOpen, setEventModalOpen] = useState(false);
-  const [eventModalType, setEventModalType] = useState<ModalType>(null);
+  const [eventModalType, setEventModalType] = useState<isSportType>(null); //스포츠 타입 여부 null: 스티커 타입
   const [clickDate, setClickDate] = useState<Date | null>(null);
+  const [editLabelData, setEditLabelData] = useState<LabelData | null>(null); // ✅ 수정할 라벨 데이터
 
   const calendarRootRef = useRef<HTMLDivElement | null>(null); // ✅ 추가
 
@@ -115,8 +117,18 @@ const Calendar = ({
       const dateString = `${date.getFullYear()}-${String(
         date.getMonth() + 1
       ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
       //라벨 더미 데이터 매칭
-      const labels = labelData?.[dateString] || [];
+      const label = labelData?.find((label) => label.date === dateString);
+      const title = label?.title || "";
+      const time = label?.time || "";
+      const hasTime = label?.hasTime || false;
+      const color = label?.color || null;
+      const sportInfo = label?.sportInfo || null;
+      const hashtags = label?.hashtags || [];
+      const isSportType = label?.isSportType || false;
+
+      //스티커 더미 데이터 매칭
       const sticker = stickerData?.[dateString] || "";
       return (
         <div
@@ -182,24 +194,36 @@ const Calendar = ({
 
           {/* 2. 라벨 영역 */}
           <div className="w-full flex flex-col items-start gap-[10px]">
-            {labels.map((text, idx) => (
-              <div
-                key={idx}
-                className="w-full typo-body1 text-left px-2 py-1 rounded-[4px] text-color-highest truncate"
-                style={{
-                  backgroundColor:
-                    idx % 4 === 0
-                      ? labelColors[0]
-                      : idx % 4 === 1
-                      ? labelColors[1]
-                      : idx % 4 === 2
-                      ? labelColors[2]
-                      : labelColors[3],
-                }}
-              >
-                {text}
-              </div>
-            ))}
+            {labelData
+              ?.filter((l) => l.date === dateString) // ✅ 해당 날짜만 필터링
+              .map((label, idx) => (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (isReadonly) return;
+
+                    if (label) {
+                      setEditLabelData(label);
+                      setEventModalType(isSportType);
+                      setEventModalOpen(true);
+                    }
+
+                    console.log(
+                      "라벨 클릭:",
+                      label.title,
+                      "라벨 데이터:",
+                      label
+                    );
+                  }}
+                  key={idx}
+                  className="w-full typo-body1 text-left px-2 py-1 rounded-[4px] text-color-highest truncate cursor-pointer hover:opacity-80"
+                  style={{
+                    backgroundColor: label.color?.color,
+                  }}
+                >
+                  {label.title}
+                </div>
+              ))}
             {/* 예시: 1일인 경우 스티커 영역 표시 */}
             {sticker && (
               <div className="w-full h-[80px] bg-[#E9ECF1] rounded-[4px]">
@@ -315,17 +339,17 @@ const Calendar = ({
             }}
             onEventModalOpen={() => {
               setIsAdditionalModalOpen(false);
-              setEventModalType("event");
+              setEventModalType(false);
               setEventModalOpen(true);
             }}
             onStickerModalOpen={() => {
               setIsAdditionalModalOpen(false);
-              setEventModalType("sticker");
+              setEventModalType(null);
               setEventModalOpen(true);
             }}
             onSportsModalOpen={() => {
               setIsAdditionalModalOpen(false);
-              setEventModalType("sports");
+              setEventModalType(true);
               setEventModalOpen(true);
             }}
           />

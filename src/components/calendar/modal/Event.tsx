@@ -7,11 +7,12 @@ import { useState } from "react";
 import type { ColorData, DateData } from "@/types/calendar";
 
 type EventProps = {
+  title?: string;
   onClose: () => void;
   startDate: Date | null;
 };
 
-const Event = ({ onClose, startDate }: EventProps) => {
+const Event = ({ title, onClose, startDate }: EventProps) => {
   // ✅ 자식 컴포넌트들의 데이터를 저장할 state
   const [dateData, setDateData] = useState<DateData>({
     startDate: startDate,
@@ -37,7 +38,9 @@ const Event = ({ onClose, startDate }: EventProps) => {
     <div className="flex flex-col gap-12 items-start">
       {/* 일정 이름 */}
       <div className="w-full flex items-center justify-between">
-        <p className="typo-h1 text-color-mid text-left ">| 일정 이름</p>
+        <p className="typo-h1 text-color-mid text-left ">
+          | {title || "일정 이름"}
+        </p>
         <X
           className="w-12 h-12 text-color-highest cursor-pointer"
           onClick={onClose}

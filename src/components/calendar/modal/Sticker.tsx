@@ -15,6 +15,7 @@ const Sticker = ({ onClose }: StickerProps) => {
           onClick={onClose}
         />
       </div>
+      <p className="typo-body1 text-color-mid text-left">추후 추가 예정</p>
       {/* 일정 기간 */}
     </div>
   );

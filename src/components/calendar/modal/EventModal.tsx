@@ -3,7 +3,7 @@ import Event from "./Event";
 import Sports from "./Sports";
 import Sticker from "./Sticker";
 
-type ModalType = "event" | "sticker" | "sports" | null;
+type ModalType = true | false | null;
 
 interface EventModalProps {
   open: boolean;
@@ -48,11 +48,9 @@ const EventModal = ({ open, onClose, type, startDate }: EventModalProps) => {
         className="absolute w-200 flex flex-col pl-20 py-[54px] pr-15 gap-12 rounded-xl bg-white"
         onMouseDown={(e) => e.stopPropagation()}
       >
-        {type === "event" && <Event onClose={onClose} startDate={startDate} />}
-        {type === "sticker" && <Sticker onClose={onClose} />}
-        {type === "sports" && (
-          <Sports onClose={onClose} startDate={startDate} />
-        )}
+        {type === false && <Event onClose={onClose} startDate={startDate} />}
+        {type === true && <Sports onClose={onClose} startDate={startDate} />}
+        {type === null && <Sticker onClose={onClose} />}
       </div>
     </div>
   );

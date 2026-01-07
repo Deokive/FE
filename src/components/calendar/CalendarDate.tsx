@@ -13,7 +13,7 @@ type CalendarDateProps = {
 
 const CalendarDate = ({ startDateValue, onDateChange }: CalendarDateProps) => {
   const [startDate, setStartDate] = useState<Date | null>(startDateValue);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(startDateValue);
   const [isAllDay, setIsAllDay] = useState<boolean>(false);
 
   // ✅ 값이 변경될 때마다 부모에게 알림
