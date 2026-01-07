@@ -9,7 +9,7 @@ type SportsProps = {
 
 const Sports = ({ onClose, startDate }: SportsProps) => {
   return (
-    <div className="flex flex-col gap-4 items-start">
+    <div className="flex flex-col gap-12 items-start">
       {/* 일정 이름 */}
       <div className="w-full flex items-center justify-between">
         <p className="typo-h1 text-color-highest text-left">스포츠 결과 기록</p>
