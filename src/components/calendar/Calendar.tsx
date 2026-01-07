@@ -43,6 +43,7 @@ const Calendar = ({
 
   const [eventModalOpen, setEventModalOpen] = useState(false);
   const [eventModalType, setEventModalType] = useState<ModalType>(null);
+  const [clickDate, setClickDate] = useState<Date | null>(null);
 
   const calendarRootRef = useRef<HTMLDivElement | null>(null); // ✅ 추가
 
@@ -128,6 +129,7 @@ const Calendar = ({
             onChange(date);
             setAdditionalPos(null);
             setIsAdditionalModalOpen(false);
+            setClickDate(date);
 
             console.log(
               "좌클릭:",
@@ -159,7 +161,7 @@ const Calendar = ({
             });
 
             setIsAdditionalModalOpen(true);
-
+            setClickDate(date);
             // ✅ 우클릭 액션
             console.log(
               "우클릭:",
@@ -168,7 +170,8 @@ const Calendar = ({
                 String(date.getMonth() + 1).padStart(2, "0") +
                 "월 " +
                 String(date.getDate()).padStart(2, "0") +
-                "일에 일정 추가 api 호출"
+                "일에 일정 추가 api 호출",
+              clickDate
             );
           }}
         >
@@ -342,6 +345,7 @@ const Calendar = ({
             open={eventModalOpen}
             onClose={() => setEventModalOpen(false)}
             type={eventModalType}
+            startDate={clickDate}
           />
         </div>
       )}

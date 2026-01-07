@@ -3,9 +3,10 @@ import CalendarDate from "../CalendarDate";
 
 type EventProps = {
   onClose: () => void;
+  startDate: Date | null;
 };
 
-const Event = ({ onClose }: EventProps) => {
+const Event = ({ onClose, startDate }: EventProps) => {
   return (
     <div className="flex flex-col gap-12 items-start">
       {/* 일정 이름 */}
@@ -17,7 +18,7 @@ const Event = ({ onClose }: EventProps) => {
         />
       </div>
       {/* 일정 기간 */}
-      <CalendarDate />
+      <CalendarDate startDateValue={startDate} />
       {/* 태그 설정 */}
       {/* 색상설정 */}
       {/* 확인버튼 */}

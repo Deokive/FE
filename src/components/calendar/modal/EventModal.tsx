@@ -9,9 +9,10 @@ interface EventModalProps {
   open: boolean;
   onClose: () => void;
   type: ModalType;
+  startDate: Date | null;
 }
 
-const EventModal = ({ open, onClose, type }: EventModalProps) => {
+const EventModal = ({ open, onClose, type, startDate }: EventModalProps) => {
   // ESC로 닫기
   useEffect(() => {
     if (!open) return;
@@ -47,7 +48,7 @@ const EventModal = ({ open, onClose, type }: EventModalProps) => {
         className="absolute w-200 flex flex-col pl-20 py-[54px] pr-15 gap-12 rounded-xl bg-white"
         onMouseDown={(e) => e.stopPropagation()}
       >
-        {type === "event" && <Event onClose={onClose} />}
+        {type === "event" && <Event onClose={onClose} startDate={startDate} />}
         {type === "sticker" && <Sticker onClose={onClose} />}
         {type === "sports" && <Sports onClose={onClose} />}
       </div>

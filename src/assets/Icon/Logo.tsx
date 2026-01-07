@@ -7,7 +7,7 @@ const Logo = () => {
       viewBox="0 0 180 32"
       fill="none"
     >
-      <g clip-path="url(#clip0_1002_28345)">
+      <g clipPath="url(#clip0_1002_28345)">
         <g filter="url(#filter0_d_1002_28345)">
           <path
             d="M3 2.56757C3 1.70182 3.70182 1 4.56757 1H13.5762C13.9582 1 14.327 1.13945 14.6133 1.39215L17.0556 3.54704C17.342 3.79974 17.7108 3.93919 18.0927 3.93919H39.4459C40.3117 3.93919 41.0135 4.64101 41.0135 5.50676V26.5109C41.0135 26.8669 40.8924 27.2122 40.67 27.4902L39.1328 29.4117C38.8353 29.7835 38.3849 30 37.9087 30H4.56757C3.70182 30 3 29.2982 3 28.4324V2.56757Z"
@@ -18,8 +18,8 @@ const Logo = () => {
             fill="#99CCFF"
           />
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M43.1732 9.96032C44.1786 9.97045 44.9146 10.9112 44.6825 11.8895L40.9424 27.6509C40.866 27.9726 40.6901 28.262 40.4395 28.4776L39.1103 29.6207C38.826 29.8653 38.4632 29.9996 38.0881 29.9996L4.56148 30C3.69914 30 2.99995 29.3009 3.00003 28.4386C3.00005 28.3044 3.01753 28.1707 3.0517 28.0409L7.59519 10.7896C7.77801 10.0955 8.40903 9.61409 9.12679 9.62124L26.15 9.79078L43.1732 9.96032ZM7.12217 26.2923C6.58113 26.2924 6.14244 26.7074 6.14244 27.2193C6.1425 27.731 6.58117 28.1461 7.12217 28.1462C7.66322 28.1462 8.10184 27.7311 8.1019 27.2193C8.1019 26.7074 7.66326 26.2923 7.12217 26.2923ZM11.0411 26.2923C10.5 26.2924 10.0614 26.7074 10.0614 27.2193C10.0614 27.731 10.5001 28.1461 11.0411 28.1462C11.5821 28.1462 12.0208 27.7311 12.0208 27.2193C12.0208 26.7074 11.5822 26.2923 11.0411 26.2923ZM14.96 26.2923C14.419 26.2924 13.9803 26.7074 13.9803 27.2193C13.9803 27.731 14.419 28.1461 14.96 28.1462C15.5011 28.1462 15.9397 27.7311 15.9397 27.2193C15.9397 26.7074 15.5011 26.2923 14.96 26.2923Z"
             fill="#EEF7FC"
           />
@@ -65,9 +65,9 @@ const Logo = () => {
           width="61.7266"
           height="49"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -101,8 +101,8 @@ const Logo = () => {
           y2="19.7002"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="#D5E8F9" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="#D5E8F9" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_1002_28345"
@@ -112,8 +112,8 @@ const Logo = () => {
           y2="10.2313"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="#D5E8F9" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="#D5E8F9" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_1002_28345"
@@ -123,8 +123,8 @@ const Logo = () => {
           y2="15.1634"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="#D5E8F9" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="#D5E8F9" />
         </linearGradient>
         <linearGradient
           id="paint3_linear_1002_28345"
@@ -134,8 +134,8 @@ const Logo = () => {
           y2="15.2326"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="#D5E8F9" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="#D5E8F9" />
         </linearGradient>
         <linearGradient
           id="paint4_linear_1002_28345"
@@ -145,8 +145,8 @@ const Logo = () => {
           y2="8.52386"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="#D5E8F9" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="#D5E8F9" />
         </linearGradient>
         <linearGradient
           id="paint5_linear_1002_28345"
@@ -156,8 +156,8 @@ const Logo = () => {
           y2="8.51105"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="#D5E8F9" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="#D5E8F9" />
         </linearGradient>
         <linearGradient
           id="paint6_linear_1002_28345"
@@ -167,8 +167,8 @@ const Logo = () => {
           y2="15.2544"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="#D5E8F9" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="#D5E8F9" />
         </linearGradient>
         <linearGradient
           id="paint7_linear_1002_28345"
@@ -178,8 +178,8 @@ const Logo = () => {
           y2="15.1556"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="#D5E8F9" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="#D5E8F9" />
         </linearGradient>
         <clipPath id="clip0_1002_28345">
           <rect width="180" height="32" fill="white" />
