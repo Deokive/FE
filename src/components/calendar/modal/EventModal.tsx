@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Event from "./Event";
 import Sports from "./Sports";
 import Sticker from "./Sticker";
@@ -11,6 +12,16 @@ interface EventModalProps {
 }
 
 const EventModal = ({ open, onClose, type }: EventModalProps) => {
+  useEffect(() => {
+    if (!open) return;
+
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden"; // ✅ 페이지 스크롤 잠금
+
+    return () => {
+      document.body.style.overflow = prev; // ✅ 원복
+    };
+  }, [open]);
   if (!open) return null;
 
   return (
