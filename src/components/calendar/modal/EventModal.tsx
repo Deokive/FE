@@ -12,6 +12,18 @@ interface EventModalProps {
 }
 
 const EventModal = ({ open, onClose, type }: EventModalProps) => {
+  // ESC로 닫기
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, onClose]);
+  // 페이지 스크롤 잠굼
   useEffect(() => {
     if (!open) return;
 
@@ -22,6 +34,7 @@ const EventModal = ({ open, onClose, type }: EventModalProps) => {
       document.body.style.overflow = prev; // ✅ 원복
     };
   }, [open]);
+
   if (!open) return null;
 
   return (
@@ -31,13 +44,12 @@ const EventModal = ({ open, onClose, type }: EventModalProps) => {
     >
       {/* ✅ 실제 모달 박스 (여기 클릭은 닫히지 않게) */}
       <div
-        className="absolute w-200 flex flex-col items-end pl-20 py-[54px] pr-15 gap-12 rounded-xl bg-white"
+        className="absolute w-200 flex flex-col pl-20 py-[54px] pr-15 gap-12 rounded-xl bg-white"
         onMouseDown={(e) => e.stopPropagation()}
       >
-        안녕
-        {type === "event" && <Event />}
+        {type === "event" && <Event onClose={onClose} />}
         {type === "sticker" && <Sticker />}
-        {type === "sports" && <Sports />}
+        {type === "sports" && <Sports onClose={onClose} />}
       </div>
     </div>
   );
