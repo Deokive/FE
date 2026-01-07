@@ -1,3 +1,4 @@
+import type { ColorData } from "@/types/calendar";
 import { useState } from "react";
 
 type Color = {
@@ -6,10 +7,11 @@ type Color = {
 };
 
 type ColorChangeProps = {
+  initialColor?: ColorData | null; // ✅ 추가
   onColorChange?: (color: Color | null) => void;
 };
 
-const ColorChange = ({ onColorChange }: ColorChangeProps) => {
+const ColorChange = ({ initialColor, onColorChange }: ColorChangeProps) => {
   const colors: Color[] = [
     { name: "pink", color: "#FFDFE7" },
     { name: "red", color: "#FFABAB" },
@@ -20,7 +22,13 @@ const ColorChange = ({ onColorChange }: ColorChangeProps) => {
     { name: "purple", color: "#DFDFFF" },
     { name: "gray", color: "#DFDCDC" },
   ];
-  const [selectedColor, setSelectedColor] = useState<Color | null>(null); //기본 색은 blue
+  // ✅ 초기값으로 선택된 색상 설정
+  const [selectedColor, setSelectedColor] = useState<Color | null>(() => {
+    if (initialColor) {
+      return colors.find((c) => c.color === initialColor.color) || null;
+    }
+    return null;
+  });
 
   const handleColorChange = (color: Color) => {
     setSelectedColor(color);

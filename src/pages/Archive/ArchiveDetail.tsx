@@ -10,6 +10,7 @@ import Calendar from "@/components/calendar/Calendar";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
 import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
+import type { LabelData } from "@/types/calendar";
 import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
 
@@ -38,7 +39,7 @@ const ArchiveDetail = () => {
           />
           {/* 아카이브 달력 */}
           <Calendar
-            labelData={labelDataMock}
+            labelData={labelDataMock as LabelData[]}
             stickerData={stickerDataMock}
             mode="interactive"
           />

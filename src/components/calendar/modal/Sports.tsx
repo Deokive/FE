@@ -4,11 +4,12 @@ import CalendarTag from "../CalendarTag";
 import ColorChange from "@/components/common/ColorChange";
 import { BtnBasic } from "@/components/common/Button/Btn";
 import { useState } from "react";
-import type { ColorData, DateData } from "@/types/calendar";
+import type { ColorData, DateData, LabelData } from "@/types/calendar";
 
 type SportsProps = {
   onClose: () => void;
   startDate: Date | null;
+  editData?: LabelData | null;
 };
 
 type ScoreData = {
@@ -18,25 +19,29 @@ type ScoreData = {
   score2: number;
 };
 
-const Sports = ({ onClose, startDate }: SportsProps) => {
-  // 자식 컴포넌트들의 데이터를 저장할 state
+const Sports = ({ onClose, startDate, editData }: SportsProps) => {
+  const isEditMode = !!editData;
+
+  // ✅ editData가 있으면 해당 데이터로 초기화
   const [dateData, setDateData] = useState<DateData>({
-    startDate: startDate,
+    startDate: editData ? new Date(editData.date) : startDate,
     endDate: null,
-    isAllDay: false,
+    isAllDay: editData ? !editData.hasTime : false,
   });
-  const [tags, setTags] = useState<string[]>([]);
-  const [color, setColor] = useState<ColorData>(null);
+
+  const [tags, setTags] = useState<string[]>(editData?.hashtags || []);
+  const [color, setColor] = useState<ColorData>(editData?.color || null);
   const [scoreData, setScoreData] = useState<ScoreData>({
-    teamName: "",
-    score: 0,
-    teamName2: "",
-    score2: 0,
+    teamName: editData?.sportInfo?.team1 || "",
+    score: editData?.sportInfo?.score1 || 0,
+    teamName2: editData?.sportInfo?.team2 || "",
+    score2: editData?.sportInfo?.score2 || 0,
   });
 
   // 실제 API 연결 로직 추가
   const handleConfirm = () => {
     console.log("========== 스포츠 결과 정보 ==========");
+    console.log("모드:", isEditMode ? "수정" : "등록");
     console.log("일정 시작:", dateData.startDate);
     console.log("일정 종료:", dateData.endDate);
     console.log("하루 종일:", dateData.isAllDay);
@@ -58,11 +63,19 @@ const Sports = ({ onClose, startDate }: SportsProps) => {
         />
       </div>
       {/* 일정 기간 */}
-      <CalendarDate startDateValue={startDate} onDateChange={setDateData} />
+      <CalendarDate
+        startDateValue={dateData.startDate}
+        onDateChange={setDateData}
+        initialTime={editData?.time} // ✅ 추가
+        initialIsAllDay={editData ? !editData.hasTime : false} // ✅ 추가
+      />
       {/* 태그 설정 */}
-      <CalendarTag onTagChange={(data) => setTags(data.tags)} />
+      <CalendarTag tags={tags} onTagChange={(data) => setTags(data.tags)} />
       {/* 색상설정 */}
-      <ColorChange onColorChange={(data) => setColor(data || null)} />
+      <ColorChange
+        initialColor={color}
+        onColorChange={(data) => setColor(data || null)}
+      />
       {/* 경기결과 */}
       <div className="w-165 flex gap-5 items-center">
         <p className="typo-h2-semibold text-color-highest">경기결과</p>

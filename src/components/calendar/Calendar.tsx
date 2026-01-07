@@ -6,7 +6,7 @@ import "react-calendar/dist/Calendar.css";
 import "./Calendar.css"; // 커스텀 CSS
 import AdditionalModal from "./modal/AdditionalModal";
 import EventModal from "./modal/EventModal";
-import type { LabelData } from "@/mockData/calendarData";
+import type { LabelData } from "@/types/calendar";
 
 interface CalendarProps {
   /** 날짜별 라벨 데이터 (키: "YYYY-MM-DD" 형식, 값: 라벨 텍스트 배열) */
@@ -20,9 +20,7 @@ interface CalendarProps {
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
-
-type ModalType = "event" | "sticker" | "sports" | null;
-type isSportType = true | false | null; //스포츠 타입 여부
+type isSportType = true | false | null; //스포츠 타입 여부, null: 스티커 타입
 
 const Calendar = ({
   labelData,
@@ -204,7 +202,7 @@ const Calendar = ({
 
                     if (label) {
                       setEditLabelData(label);
-                      setEventModalType(isSportType);
+                      setEventModalType(label.isSportType ? true : false);
                       setEventModalOpen(true);
                     }
 
@@ -339,16 +337,19 @@ const Calendar = ({
             }}
             onEventModalOpen={() => {
               setIsAdditionalModalOpen(false);
+              setEditLabelData(null); // ✅ 초기화 추가
               setEventModalType(false);
               setEventModalOpen(true);
             }}
             onStickerModalOpen={() => {
               setIsAdditionalModalOpen(false);
+              setEditLabelData(null); // ✅ 초기화 추가
               setEventModalType(null);
               setEventModalOpen(true);
             }}
             onSportsModalOpen={() => {
               setIsAdditionalModalOpen(false);
+              setEditLabelData(null); // ✅ 초기화 추가
               setEventModalType(true);
               setEventModalOpen(true);
             }}
@@ -370,6 +371,7 @@ const Calendar = ({
             onClose={() => setEventModalOpen(false)}
             type={eventModalType}
             startDate={clickDate}
+            editData={editLabelData}
           />
         </div>
       )}

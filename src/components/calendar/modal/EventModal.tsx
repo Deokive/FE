@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Event from "./Event";
 import Sports from "./Sports";
 import Sticker from "./Sticker";
+import type { LabelData } from "@/types/calendar";
 
 type ModalType = true | false | null;
 
@@ -10,9 +11,16 @@ interface EventModalProps {
   onClose: () => void;
   type: ModalType;
   startDate: Date | null;
+  editData?: LabelData | null;
 }
 
-const EventModal = ({ open, onClose, type, startDate }: EventModalProps) => {
+const EventModal = ({
+  open,
+  onClose,
+  type,
+  startDate,
+  editData,
+}: EventModalProps) => {
   // ESC로 닫기
   useEffect(() => {
     if (!open) return;
@@ -48,8 +56,12 @@ const EventModal = ({ open, onClose, type, startDate }: EventModalProps) => {
         className="absolute w-200 flex flex-col pl-20 py-[54px] pr-15 gap-12 rounded-xl bg-white"
         onMouseDown={(e) => e.stopPropagation()}
       >
-        {type === false && <Event onClose={onClose} startDate={startDate} />}
-        {type === true && <Sports onClose={onClose} startDate={startDate} />}
+        {type === false && (
+          <Event onClose={onClose} startDate={startDate} editData={editData} />
+        )}
+        {type === true && (
+          <Sports onClose={onClose} startDate={startDate} editData={editData} />
+        )}
         {type === null && <Sticker onClose={onClose} />}
       </div>
     </div>

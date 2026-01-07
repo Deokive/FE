@@ -2,18 +2,14 @@ import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type CalendarTagProps = {
+  tags?: string[];
   onTagChange?: (data: { tags: string[] }) => void;
 };
 
-const CalendarTag = ({ onTagChange }: CalendarTagProps) => {
+const CalendarTag = ({ tags, onTagChange }: CalendarTagProps) => {
   const [tag, setTag] = useState("");
-  const [tags, setTags] = useState<string[]>(["태그1", "태그2", "태그3"]);
+  const [tagsState, setTagsState] = useState<string[]>(tags || []);
   const [error, setError] = useState<string | null>(null); // ✅ 에러 state 추가
-
-  // ✅ 태그가 변경될 때마다 부모에게 알림
-  useEffect(() => {
-    onTagChange?.({ tags });
-  }, [tags, onTagChange]);
 
   const handleAddTag = () => {
     const trimmedTag = tag.trim();
@@ -21,18 +17,18 @@ const CalendarTag = ({ onTagChange }: CalendarTagProps) => {
     if (trimmedTag === "") return;
 
     // ✅ 중복 검사
-    if (tags.includes(trimmedTag)) {
+    if (tagsState.includes(trimmedTag)) {
       setError("이미 등록된 태그입니다.");
       return;
     }
 
-    setTags([...tags, trimmedTag]);
+    setTagsState([...tagsState, trimmedTag]);
     setTag("");
     setError(null); // ✅ 성공 시 에러 초기화
   };
 
   const handleDeleteTag = (tag: string) => {
-    setTags(tags.filter((t) => t !== tag));
+    setTagsState(tagsState.filter((t) => t !== tag));
   };
 
   return (
@@ -70,7 +66,7 @@ const CalendarTag = ({ onTagChange }: CalendarTagProps) => {
         {error && <p className="typo-body2 text-[#FF0000]">{error}</p>}
       </div>
       <div className="w-165 flex flex-wrap items-center gap-2">
-        {tags.map((tag) => (
+        {tagsState.map((tag) => (
           <div
             key={tag}
             className=" h-11 flex px-5 py-2.5 justify-center items-center gap-2.5 rounded-4xl bg-brand-blue-100"

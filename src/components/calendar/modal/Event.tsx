@@ -4,27 +4,32 @@ import CalendarTag from "../CalendarTag";
 import ColorChange from "@/components/common/ColorChange";
 import { BtnBasic } from "@/components/common/Button/Btn";
 import { useState } from "react";
-import type { ColorData, DateData } from "@/types/calendar";
+import type { ColorData, DateData, LabelData } from "@/types/calendar";
 
 type EventProps = {
   title?: string;
   onClose: () => void;
   startDate: Date | null;
+  editData?: LabelData | null;
 };
 
-const Event = ({ title, onClose, startDate }: EventProps) => {
-  // ✅ 자식 컴포넌트들의 데이터를 저장할 state
-  const [dateData, setDateData] = useState<DateData>({
-    startDate: startDate,
-    endDate: null,
-    isAllDay: false,
-  });
-  const [tags, setTags] = useState<string[]>([]);
-  const [color, setColor] = useState<ColorData>(null);
+const Event = ({ title, onClose, startDate, editData }: EventProps) => {
+  const isEditMode = !!editData;
 
-  // 실제 API 연결 로직 추가
+  // ✅ editData가 있으면 해당 데이터로 초기화
+  const [eventTitle, setEventTitle] = useState(editData?.title || "");
+  const [dateData, setDateData] = useState<DateData>({
+    startDate: editData ? new Date(editData.date) : startDate,
+    endDate: null,
+    isAllDay: editData ? !editData.hasTime : false,
+  });
+  const [tags, setTags] = useState<string[]>(editData?.hashtags || []);
+  const [color, setColor] = useState<ColorData>(editData?.color || null);
+
   const handleConfirm = () => {
     console.log("========== 일정 정보 ==========");
+    console.log("모드:", isEditMode ? "수정" : "등록");
+    console.log("일정 이름:", eventTitle);
     console.log("일정 시작:", dateData.startDate);
     console.log("일정 종료:", dateData.endDate);
     console.log("하루 종일:", dateData.isAllDay);
@@ -47,14 +52,24 @@ const Event = ({ title, onClose, startDate }: EventProps) => {
         />
       </div>
       {/* 일정 기간 */}
-      <CalendarDate startDateValue={startDate} onDateChange={setDateData} />
+      <CalendarDate
+        startDateValue={dateData.startDate}
+        onDateChange={setDateData}
+        initialTime={editData?.time} // ✅ 추가
+        initialIsAllDay={editData ? !editData.hasTime : false} // ✅ 추가
+      />
       {/* 태그 설정 */}
-      <CalendarTag onTagChange={(data) => setTags(data.tags)} />
+      <CalendarTag tags={tags} onTagChange={(data) => setTags(data.tags)} />
       {/* 색상설정 */}
-      <ColorChange onColorChange={(data) => setColor(data || null)} />
+      <ColorChange
+        initialColor={color}
+        onColorChange={(data) => setColor(data || null)}
+      />
       {/* 확인버튼 */}
       <div className="w-full flex justify-end">
-        <BtnBasic onClick={handleConfirm}>확인</BtnBasic>
+        <BtnBasic onClick={handleConfirm}>
+          {isEditMode ? "수정" : "확인"}
+        </BtnBasic>
       </div>
     </div>
   );

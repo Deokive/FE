@@ -35,16 +35,16 @@ const defaultLabelData: LabelData[] = [
   {
     title: "야구경기 관람",
     date: "2026-01-03",
-    time: "19:00",
+    time: "12:00",
     hasTime: true,
     color: colors[0],
     sportInfo: {
       team1: "한화 이글스",
-      team2: "LG 트윈스",
+      team2: "두산 베어스",
       score1: 5,
       score2: 3,
     },
-    hashtags: ["야구", "한화 이글스", "LG 트윈스"],
+    hashtags: ["야구", "한화 이글스", "두산 베어스"],
     isSportType: true,
   },
   {

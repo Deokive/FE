@@ -9,12 +9,34 @@ type CalendarDateProps = {
     endDate: Date | null;
     isAllDay: boolean;
   }) => void;
+  initialTime?: string;
+  initialIsAllDay?: boolean;
 };
 
-const CalendarDate = ({ startDateValue, onDateChange }: CalendarDateProps) => {
-  const [startDate, setStartDate] = useState<Date | null>(startDateValue);
-  const [endDate, setEndDate] = useState<Date | null>(startDateValue);
-  const [isAllDay, setIsAllDay] = useState<boolean>(false);
+const CalendarDate = ({
+  startDateValue,
+  onDateChange,
+  initialTime,
+  initialIsAllDay,
+}: CalendarDateProps) => {
+  // ✅ 날짜와 시간을 합쳐서 초기값 생성
+  const getInitialDate = (date: Date | null, time?: string): Date | null => {
+    if (!date) return null;
+    const newDate = new Date(date);
+    if (time) {
+      const [hours, minutes] = time.split(":").map(Number);
+      newDate.setHours(hours, minutes);
+    }
+    return newDate;
+  };
+
+  const [startDate, setStartDate] = useState<Date | null>(
+    getInitialDate(startDateValue, initialTime)
+  );
+  const [endDate, setEndDate] = useState<Date | null>(
+    getInitialDate(startDateValue, initialTime)
+  );
+  const [isAllDay, setIsAllDay] = useState<boolean>(initialIsAllDay || false);
 
   // ✅ 값이 변경될 때마다 부모에게 알림
   useEffect(() => {
