@@ -3,7 +3,9 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { ChevronLeft, Check } from "lucide-react";
-import SignupStepBar from "@/components/auth/SignupStepBar";
+import SignupStepBar from "@/components/auth/signup/SignupStepBar";
+import type { Agreement } from "@/types/auth/signup";
+import SignupStep1 from "@/components/auth/signup/signupStep1";
 
 // ✅ Step 2 스키마 (이메일, 비밀번호, 닉네임)
 const schema = z
@@ -29,13 +31,6 @@ const schema = z
 
 type FormFields = z.infer<typeof schema>;
 
-// ✅ 약관 동의 항목
-type Agreement = {
-  id: string; // 약관 아이디
-  label: string; // 약관 내용
-  required: boolean; // 필수 여부
-};
-
 const agreements: Agreement[] = [
   { id: "all", label: "전체 동의", required: false },
   { id: "terms", label: "[필수] 이용약관 동의", required: true },
@@ -46,7 +41,7 @@ const SignupPage = () => {
   const [step, setStep] = useState(1);
   const totalSteps = 3; // 총 단계 수
 
-  // ✅ Step 1: 약관 동의 상태
+  // Step 1: 약관 동의 상태
   const [checkedAgreements, setCheckedAgreements] = useState<
     Record<string, boolean>
   >({
@@ -54,6 +49,7 @@ const SignupPage = () => {
     terms: false,
     privacy: false,
   });
+  // Step 2: 이메일 리스트
 
   // ✅ Step 3: 인증 관련 상태
   const [isCodeSent, setIsCodeSent] = useState(false); // 인증번호 발송 여부
@@ -86,7 +82,6 @@ const SignupPage = () => {
         all: newValue,
         terms: newValue,
         privacy: newValue,
-        marketing: newValue,
       });
     } else {
       const newChecked = {
@@ -94,8 +89,7 @@ const SignupPage = () => {
         [id]: !checkedAgreements[id],
       };
       // 전체 동의 체크 상태 업데이트
-      newChecked.all =
-        newChecked.terms && newChecked.privacy && newChecked.marketing;
+      newChecked.all = newChecked.terms && newChecked.privacy;
       setCheckedAgreements(newChecked);
     }
   };
@@ -158,7 +152,13 @@ const SignupPage = () => {
 
         <div className="w-full px-30 py-16 rounded-xl bg-white flex flex-col items-center justify-center">
           {/* ✅ 폼 컨테이너 */}
-          {step === 1 && <div></div>}
+          {step === 1 && (
+            <SignupStep1
+              checkedAgreements={checkedAgreements}
+              onAgreementChange={handleAgreementChange}
+              onClick={handleNext}
+            />
+          )}
           {step === 2 && <div></div>}
           {step === 3 && <div></div>}
         </div>
