@@ -24,8 +24,6 @@ const publicRoutes: RouteObject[] = [
       { index: true, element: <Home /> },
       { path: "login", element: <LoginPage /> },
       { path: "signup", element: <SignupPage /> },
-      { path: "archive", element: <Archive /> },
-      { path: "archive/:id", element: <ArchiveDetail /> },
       { path: "feed", element: <Feed /> },
       { path: "feed/:id", element: <FeedDetail /> },
       { path: "community", element: <Community /> },
@@ -43,7 +41,9 @@ const privateRoutes: RouteObject[] = [
     children: [
       { index: true, element: <Home /> },
       { path: "archive", element: <Archive /> },
+      { path: "archive/:id", element: <ArchiveDetail /> },
       { path: "feed", element: <Feed /> },
+      { path: "feed/:id", element: <FeedDetail /> },
       { path: "community", element: <Community /> },
       { path: "community/new", element: <CommunityWrite /> },
       { path: "/community/:postId", element: <CommunityDetail /> },

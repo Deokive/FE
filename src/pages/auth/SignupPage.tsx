@@ -1,11 +1,14 @@
 import { z } from "zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { ChevronLeft, Check } from "lucide-react";
+import SignupStepBar from "@/components/auth/SignupStepBar";
 
+// ✅ Step 2 스키마 (이메일, 비밀번호, 닉네임)
 const schema = z
   .object({
-    name: z.string().min(2, { message: "이름을 입력해주세요." }),
-    email: z.email({ message: "이메일 형식이 올바르지 않습니다." }), //zod V4부터 z.email() 사용
+    email: z.string().email({ message: "이메일 형식이 올바르지 않습니다." }),
     password: z
       .string()
       .min(8, { message: "비밀번호는 8자 이상이어야 합니다." })
@@ -14,8 +17,11 @@ const schema = z
       .string()
       .min(8, { message: "비밀번호는 8자 이상이어야 합니다." })
       .max(16, { message: "비밀번호는 16자 이하이어야 합니다." }),
+    nickname: z.string().min(2, { message: "닉네임을 입력해주세요." }),
+    verificationCode: z
+      .string()
+      .min(6, { message: "인증번호 6자리를 입력해주세요." }),
   })
-  //완전히 바깥쪽에 refine 정의.
   .refine((data) => data.password === data.passwordCheck, {
     message: "비밀번호가 일치하지 않습니다.",
     path: ["passwordCheck"],
@@ -23,94 +29,424 @@ const schema = z
 
 type FormFields = z.infer<typeof schema>;
 
+// ✅ 약관 동의 항목
+type Agreement = {
+  id: string;
+  label: string;
+  required: boolean;
+};
+
+const agreements: Agreement[] = [
+  { id: "all", label: "전체 동의", required: false },
+  { id: "terms", label: "[필수] 이용약관 동의", required: true },
+  { id: "privacy", label: "[필수] 개인정보 수집 및 이용 동의", required: true },
+  { id: "marketing", label: "[선택] 마케팅 정보 수신 동의", required: false },
+];
+
 const SignupPage = () => {
+  const [step, setStep] = useState(1);
+  const totalSteps = 3;
+
+  // ✅ Step 1: 약관 동의 상태
+  const [checkedAgreements, setCheckedAgreements] = useState<
+    Record<string, boolean>
+  >({
+    all: false,
+    terms: false,
+    privacy: false,
+    marketing: false,
+  });
+
+  // ✅ Step 3: 인증 관련 상태
+  const [isCodeSent, setIsCodeSent] = useState(false);
+  const [timer, setTimer] = useState(0);
+
   const {
     register,
     handleSubmit,
+    trigger,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     defaultValues: {
-      name: "",
       email: "",
       password: "",
+      passwordCheck: "",
+      nickname: "",
+      verificationCode: "",
     },
     resolver: zodResolver(schema),
-    mode: "onBlur", //touched 되었는지 여부 확인
+    mode: "onBlur",
   });
 
+  const email = watch("email");
+
+  // ✅ 약관 동의 핸들러
+  const handleAgreementChange = (id: string) => {
+    if (id === "all") {
+      const newValue = !checkedAgreements.all;
+      setCheckedAgreements({
+        all: newValue,
+        terms: newValue,
+        privacy: newValue,
+        marketing: newValue,
+      });
+    } else {
+      const newChecked = {
+        ...checkedAgreements,
+        [id]: !checkedAgreements[id],
+      };
+      // 전체 동의 체크 상태 업데이트
+      newChecked.all =
+        newChecked.terms && newChecked.privacy && newChecked.marketing;
+      setCheckedAgreements(newChecked);
+    }
+  };
+
+  // ✅ 필수 약관 동의 여부 확인
+  const isRequiredAgreed = checkedAgreements.terms && checkedAgreements.privacy;
+
+  // ✅ 인증번호 발송
+  const handleSendCode = async () => {
+    const isEmailValid = await trigger("email");
+    if (!isEmailValid) return;
+
+    // TODO: API 호출 - 인증번호 발송
+    console.log("인증번호 발송:", email);
+    setIsCodeSent(true);
+    setTimer(180); // 3분 타이머
+
+    // 타이머 시작
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  // ✅ 타이머 포맷
+  const formatTimer = (seconds: number) => {
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    return `${min}:${sec.toString().padStart(2, "0")}`;
+  };
+
+  // ✅ 다음 단계로 이동
+  const handleNext = async () => {
+    if (step === 1) {
+      // Step 1: 필수 약관 동의 확인
+      if (isRequiredAgreed) {
+        setStep(2);
+      }
+    } else if (step === 2) {
+      // Step 2: 폼 유효성 검사
+      const isValid = await trigger([
+        "email",
+        "password",
+        "passwordCheck",
+        "nickname",
+      ]);
+      if (isValid) {
+        setStep(3);
+        // 인증번호 자동 발송
+        handleSendCode();
+      }
+    }
+  };
+
+  // ✅ 이전 단계로 이동
+  const handlePrev = () => {
+    setStep((prev) => Math.max(prev - 1, 1));
+  };
+
   const onSubmit: SubmitHandler<FormFields> = (data) => {
-    const { passwordCheck, ...rest } = data;
-    console.log(rest);
+    const { passwordCheck, verificationCode, ...rest } = data;
+    console.log("회원가입 데이터:", rest);
+    console.log("인증번호:", verificationCode);
+    // TODO: API 호출 - 회원가입
   };
 
   return (
-    <form
-      onSubmit={(e) => void handleSubmit(onSubmit)(e)}
-      className="flex flex-col items-center justify-center h-screen gap-4"
-    >
-      <div className="flex flex-col gap-3 w-[300px]">
-        <input
-          {...register("name")}
-          name="name"
-          type={"text"}
-          className={`border border-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm
-            ${errors.name ? "border-red-500 bg-red-200" : "border-gray-300"}`}
-          placeholder="이름"
-        />
-        {errors.name && (
-          <div className="text-red-500 text-sm">{errors.name.message}</div>
-        )}
-        <input
-          {...register("email")}
-          name="email"
-          type={"text"}
-          className={`border border-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm
-            ${errors.email ? "border-red-500 bg-red-200" : "border-gray-300"}`}
-          placeholder="이메일"
-        />
-        {errors.email && (
-          <div className="text-red-500 text-sm">{errors.email.message}</div>
-        )}
-        <input
-          {...register("password")}
-          name="password"
-          type={"password"}
-          className={`border border-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm
-            ${
-              errors.password ? "border-red-500 bg-red-200" : "border-gray-300"
-            }`}
-          placeholder="비밀번호"
-        />
-        {errors.password && (
-          <div className="text-red-500 text-sm">{errors.password.message}</div>
-        )}
-        <input
-          {...register("passwordCheck")}
-          name="passwordCheck"
-          type={"password"}
-          className={`border border-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm
-            ${
-              errors.passwordCheck
-                ? "border-red-500 bg-red-200"
-                : "border-gray-300"
-            }`}
-          placeholder="비밀번호 확인"
-        />
-        {errors.passwordCheck && (
-          <div className="text-red-500 text-sm">
-            {errors.passwordCheck.message}
+    <div className="max-w-[951px] mx-auto my-15 flex flex-col items-center justify-center gap-15">
+      {/* 헤더 */}
+      <p className="typo-h1 text-color-highest">회원가입</p>
+      {/* 단계 표시 */}
+      {/* ✅ Step Bar 컴포넌트 사용 */}
+      <SignupStepBar currentStep={step} />
+
+      <div className="w-[450px] bg-white rounded-2xl shadow-lg p-10">
+        {/* ✅ 헤더 */}
+        <div className="flex items-center justify-between mb-8">
+          {step > 1 ? (
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="p-2 hover:bg-surface-container-10 rounded-full transition-colors"
+            >
+              <ChevronLeft className="w-6 h-6 text-color-high" />
+            </button>
+          ) : (
+            <div className="w-10" />
+          )}
+          <h1 className="typo-h1 text-color-highest">회원가입</h1>
+          <div className="w-10" />
+        </div>
+
+        {/* ✅ 진행 바 */}
+        <div className="flex items-center gap-2 mb-8">
+          {[1, 2, 3].map((s) => (
+            <div
+              key={s}
+              className={`h-1 flex-1 rounded-full transition-colors ${
+                s <= step ? "bg-brand-blue-500" : "bg-border-low"
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* ✅ 단계 표시 */}
+        <p className="typo-body2 text-color-mid mb-6">
+          Step {step} / {totalSteps}
+        </p>
+
+        <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
+          {/* ✅ Step 1: 약관 동의 */}
+          {step === 1 && (
+            <div className="flex flex-col gap-4">
+              <h2 className="typo-h2-semibold text-color-highest mb-2">
+                서비스 이용약관에 동의해주세요
+              </h2>
+              <div className="flex flex-col gap-3">
+                {agreements.map((agreement) => (
+                  <div
+                    key={agreement.id}
+                    className={`flex items-center gap-3 p-4 rounded-lg cursor-pointer transition-colors ${
+                      agreement.id === "all"
+                        ? "bg-brand-blue-100 border border-brand-blue-300"
+                        : "bg-surface-container-10 hover:bg-surface-container-20"
+                    }`}
+                    onClick={() => handleAgreementChange(agreement.id)}
+                  >
+                    <div
+                      className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors ${
+                        checkedAgreements[agreement.id]
+                          ? "bg-brand-blue-500"
+                          : "bg-white border-2 border-border-mid"
+                      }`}
+                    >
+                      {checkedAgreements[agreement.id] && (
+                        <Check className="w-4 h-4 text-white" />
+                      )}
+                    </div>
+                    <span
+                      className={`typo-body1 ${
+                        agreement.id === "all"
+                          ? "text-color-highest font-semibold"
+                          : "text-color-high"
+                      }`}
+                    >
+                      {agreement.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ✅ Step 2: 이메일, 비밀번호, 닉네임 */}
+          {step === 2 && (
+            <div className="flex flex-col gap-4">
+              <h2 className="typo-h2-semibold text-color-highest mb-2">
+                계정 정보를 입력해주세요
+              </h2>
+              <div className="flex flex-col gap-2">
+                <label className="typo-body2 text-color-high">이메일</label>
+                <input
+                  {...register("email")}
+                  type="email"
+                  className={`w-full h-12 px-4 border rounded-lg typo-body1 text-color-highest
+                    placeholder:text-color-mid focus:outline-none focus:border-brand-blue-500
+                    ${
+                      errors.email
+                        ? "border-red-500 bg-red-50"
+                        : "border-border-mid"
+                    }`}
+                  placeholder="이메일을 입력해주세요"
+                />
+                {errors.email && (
+                  <p className="typo-body2 text-red-500">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="typo-body2 text-color-high">비밀번호</label>
+                <input
+                  {...register("password")}
+                  type="password"
+                  className={`w-full h-12 px-4 border rounded-lg typo-body1 text-color-highest
+                    placeholder:text-color-mid focus:outline-none focus:border-brand-blue-500
+                    ${
+                      errors.password
+                        ? "border-red-500 bg-red-50"
+                        : "border-border-mid"
+                    }`}
+                  placeholder="비밀번호 (8~16자)"
+                />
+                {errors.password && (
+                  <p className="typo-body2 text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="typo-body2 text-color-high">
+                  비밀번호 확인
+                </label>
+                <input
+                  {...register("passwordCheck")}
+                  type="password"
+                  className={`w-full h-12 px-4 border rounded-lg typo-body1 text-color-highest
+                    placeholder:text-color-mid focus:outline-none focus:border-brand-blue-500
+                    ${
+                      errors.passwordCheck
+                        ? "border-red-500 bg-red-50"
+                        : "border-border-mid"
+                    }`}
+                  placeholder="비밀번호를 다시 입력해주세요"
+                />
+                {errors.passwordCheck && (
+                  <p className="typo-body2 text-red-500">
+                    {errors.passwordCheck.message}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="typo-body2 text-color-high">닉네임</label>
+                <input
+                  {...register("nickname")}
+                  type="text"
+                  className={`w-full h-12 px-4 border rounded-lg typo-body1 text-color-highest
+                    placeholder:text-color-mid focus:outline-none focus:border-brand-blue-500
+                    ${
+                      errors.nickname
+                        ? "border-red-500 bg-red-50"
+                        : "border-border-mid"
+                    }`}
+                  placeholder="닉네임을 입력해주세요"
+                />
+                {errors.nickname && (
+                  <p className="typo-body2 text-red-500">
+                    {errors.nickname.message}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ✅ Step 3: 인증번호 입력 */}
+          {step === 3 && (
+            <div className="flex flex-col gap-4">
+              <h2 className="typo-h2-semibold text-color-highest mb-2">
+                이메일 인증을 완료해주세요
+              </h2>
+              <p className="typo-body1 text-color-mid">
+                <span className="text-brand-blue-500 font-semibold">
+                  {email}
+                </span>
+                으로 인증번호를 발송했습니다.
+              </p>
+              <div className="flex flex-col gap-2">
+                <label className="typo-body2 text-color-high">인증번호</label>
+                <div className="flex gap-3">
+                  <input
+                    {...register("verificationCode")}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    className={`flex-1 h-12 px-4 border rounded-lg typo-body1 text-color-highest
+                      placeholder:text-color-mid focus:outline-none focus:border-brand-blue-500
+                      ${
+                        errors.verificationCode
+                          ? "border-red-500 bg-red-50"
+                          : "border-border-mid"
+                      }`}
+                    placeholder="인증번호 6자리"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSendCode}
+                    disabled={timer > 0}
+                    className="px-4 h-12 bg-surface-container-20 text-color-high typo-body1 rounded-lg
+                      hover:bg-surface-container-30 transition-colors
+                      disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {timer > 0 ? formatTimer(timer) : "재발송"}
+                  </button>
+                </div>
+                {errors.verificationCode && (
+                  <p className="typo-body2 text-red-500">
+                    {errors.verificationCode.message}
+                  </p>
+                )}
+              </div>
+              <p className="typo-body2 text-color-mid">
+                인증번호가 오지 않았나요?{" "}
+                <button
+                  type="button"
+                  onClick={handleSendCode}
+                  disabled={timer > 0}
+                  className="text-brand-blue-500 underline disabled:opacity-50"
+                >
+                  재발송
+                </button>
+              </p>
+            </div>
+          )}
+
+          {/* ✅ 버튼 영역 */}
+          <div className="mt-8">
+            {step === 1 && (
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={!isRequiredAgreed}
+                className="w-full h-12 bg-brand-blue-500 text-white typo-h2-semibold rounded-lg
+                  hover:bg-brand-blue-600 transition-colors
+                  disabled:bg-gray-300 disabled:cursor-not-allowed"
+              >
+                다음
+              </button>
+            )}
+            {step === 2 && (
+              <button
+                type="button"
+                onClick={handleNext}
+                className="w-full h-12 bg-brand-blue-500 text-white typo-h2-semibold rounded-lg
+                  hover:bg-brand-blue-600 transition-colors"
+              >
+                다음
+              </button>
+            )}
+            {step === 3 && (
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full h-12 bg-brand-blue-500 text-white typo-h2-semibold rounded-lg
+                  hover:bg-brand-blue-600 transition-colors
+                  disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "처리 중..." : "회원가입 완료"}
+              </button>
+            )}
           </div>
-        )}
-        <button
-          type="submit"
-          // onClick={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
-          className={`w-full bg-[#807bff] text-white hover:bg-[#6666ff] h-[40px] rounded-sm cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed`}
-        >
-          Signup
-        </button>
+        </form>
       </div>
-    </form>
+    </div>
   );
 };
 
