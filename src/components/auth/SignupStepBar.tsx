@@ -30,7 +30,7 @@ const SignupStepBar = ({ currentStep, totalSteps = 3 }: SignupStepBarProps) => {
               {/* 바깥 원 (반투명) */}
               <div
                 className={`absolute inset-0 rounded-full transition-colors ${
-                  currentStep >= item.step
+                  currentStep == item.step
                     ? "bg-brand-blue-300/25"
                     : "bg-surface-container-40/25"
                 }`}
@@ -38,7 +38,7 @@ const SignupStepBar = ({ currentStep, totalSteps = 3 }: SignupStepBarProps) => {
               {/* 안쪽 원 (불투명) */}
               <div
                 className={`relative w-9 h-9 rounded-full flex items-center justify-center typo-h2-semibold transition-colors ${
-                  currentStep >= item.step
+                  currentStep == item.step
                     ? "bg-brand-blue-400 text-white"
                     : "bg-surface-container-30 text-white"
                 }`}
@@ -58,12 +58,11 @@ const SignupStepBar = ({ currentStep, totalSteps = 3 }: SignupStepBarProps) => {
               />
             )}
           </div>
-
           {/* 라벨 내용 */}
           <div className="w-full">
             <p
               className={`w-full typo-h2-semibold text-left ${
-                currentStep >= item.step
+                currentStep == item.step
                   ? "text-color-primary"
                   : "text-color-low"
               }`}
