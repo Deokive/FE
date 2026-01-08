@@ -57,11 +57,7 @@ const SignupStepBar = ({ currentStep, totalSteps = 3 }: SignupStepBarProps) => {
                   viewBox="0 0 711 1"
                   fill="none"
                 >
-                  <path
-                    d="M0 0.5H711"
-                    stroke="#7D9AB2"
-                    stroke-dasharray="2 2"
-                  />
+                  <path d="M0 0.5H711" stroke="#7D9AB2" strokeDasharray="2 2" />
                 </svg>
               </div>
             )}

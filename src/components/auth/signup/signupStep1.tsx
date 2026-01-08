@@ -59,7 +59,7 @@ const SignupStep1 = ({
                     <path
                       d="M0 0.5H711"
                       stroke="#7D9AB2"
-                      stroke-dasharray="2 2"
+                      strokeDasharray="2 2"
                     />
                   </svg>
                 </div>

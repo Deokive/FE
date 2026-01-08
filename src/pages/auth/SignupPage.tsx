@@ -6,9 +6,10 @@ import { ChevronLeft, Check } from "lucide-react";
 import SignupStepBar from "@/components/auth/signup/SignupStepBar";
 import type { Agreement } from "@/types/auth/signup";
 import SignupStep1 from "@/components/auth/signup/signupStep1";
+import SignupStep2 from "@/components/auth/signup/signupStep2";
 
 // ✅ Step 2 스키마 (이메일, 비밀번호, 닉네임)
-const schema = z
+export const schema = z
   .object({
     email: z.string().email({ message: "이메일 형식이 올바르지 않습니다." }),
     password: z
@@ -29,7 +30,7 @@ const schema = z
     path: ["passwordCheck"],
   });
 
-type FormFields = z.infer<typeof schema>;
+export type FormFields = z.infer<typeof schema>;
 
 const agreements: Agreement[] = [
   { id: "all", label: "전체 동의", required: false },
@@ -160,7 +161,7 @@ const SignupPage = () => {
                 onClick={handleNext}
               />
             )}
-            {step === 2 && <div></div>}
+            {step === 2 && <SignupStep2 register={register} errors={errors} />}
             {step === 3 && <div></div>}
           </form>
         </div>
@@ -245,95 +246,7 @@ const SignupPage = () => {
             )}
 
             {/* ✅ Step 2: 이메일, 비밀번호, 닉네임 */}
-            {step === 2 && (
-              <div className="flex flex-col gap-4">
-                <h2 className="typo-h2-semibold text-color-highest mb-2">
-                  계정 정보를 입력해주세요
-                </h2>
-                <div className="flex flex-col gap-2">
-                  <label className="typo-body2 text-color-high">이메일</label>
-                  <input
-                    {...register("email")}
-                    type="email"
-                    className={`w-full h-12 px-4 border rounded-lg typo-body1 text-color-highest
-                    placeholder:text-color-mid focus:outline-none focus:border-brand-blue-500
-                    ${
-                      errors.email
-                        ? "border-red-500 bg-red-50"
-                        : "border-border-mid"
-                    }`}
-                    placeholder="이메일을 입력해주세요"
-                  />
-                  {errors.email && (
-                    <p className="typo-body2 text-red-500">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="typo-body2 text-color-high">비밀번호</label>
-                  <input
-                    {...register("password")}
-                    type="password"
-                    className={`w-full h-12 px-4 border rounded-lg typo-body1 text-color-highest
-                    placeholder:text-color-mid focus:outline-none focus:border-brand-blue-500
-                    ${
-                      errors.password
-                        ? "border-red-500 bg-red-50"
-                        : "border-border-mid"
-                    }`}
-                    placeholder="비밀번호 (8~16자)"
-                  />
-                  {errors.password && (
-                    <p className="typo-body2 text-red-500">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="typo-body2 text-color-high">
-                    비밀번호 확인
-                  </label>
-                  <input
-                    {...register("passwordCheck")}
-                    type="password"
-                    className={`w-full h-12 px-4 border rounded-lg typo-body1 text-color-highest
-                    placeholder:text-color-mid focus:outline-none focus:border-brand-blue-500
-                    ${
-                      errors.passwordCheck
-                        ? "border-red-500 bg-red-50"
-                        : "border-border-mid"
-                    }`}
-                    placeholder="비밀번호를 다시 입력해주세요"
-                  />
-                  {errors.passwordCheck && (
-                    <p className="typo-body2 text-red-500">
-                      {errors.passwordCheck.message}
-                    </p>
-                  )}
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="typo-body2 text-color-high">닉네임</label>
-                  <input
-                    {...register("nickname")}
-                    type="text"
-                    className={`w-full h-12 px-4 border rounded-lg typo-body1 text-color-highest
-                    placeholder:text-color-mid focus:outline-none focus:border-brand-blue-500
-                    ${
-                      errors.nickname
-                        ? "border-red-500 bg-red-50"
-                        : "border-border-mid"
-                    }`}
-                    placeholder="닉네임을 입력해주세요"
-                  />
-                  {errors.nickname && (
-                    <p className="typo-body2 text-red-500">
-                      {errors.nickname.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
+            {step === 2 && <div></div>}
 
             {/* ✅ Step 3: 인증번호 입력 */}
             {step === 3 && (
