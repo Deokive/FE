@@ -1,27 +1,75 @@
 // src/components/Calendar.tsx
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactCalendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Calendar.css"; // 커스텀 CSS
-
-type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
+import AdditionalModal from "./modal/AdditionalModal";
+import EventModal from "./modal/EventModal";
+import type { LabelData } from "@/types/calendar";
+import EventListModal from "./modal/EventListModal";
 
 interface CalendarProps {
   /** 날짜별 라벨 데이터 (키: "YYYY-MM-DD" 형식, 값: 라벨 텍스트 배열) */
-  labelData?: Record<string, string[]>;
+  labelData?: LabelData[];
   /** 날짜별 스티커 데이터 (키: "YYYY-MM-DD" 형식, 값: 스티커 ID 또는 식별자) */
   stickerData?: Record<string, string>; //스티커는 날짜당 한개로 생각해서 string으로 처리
   /** 스티커 이미지 URL (스티커 영역에 표시할 이미지) */
   stickerImage?: string;
+  mode?: "interactive" | "readonly";
 }
 
-const labelColors = ["#B9E2B6", "#99CCFF", "#D2D2FF", "#FFD1DC"];
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
+type isSportType = true | false | null; //스포츠 타입 여부, null: 스티커 타입
 
-const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
-  const [value, onChange] = useState<Value>(new Date());
+const Calendar = ({
+  labelData,
+  stickerData,
+  stickerImage,
+  mode = "interactive",
+}: CalendarProps) => {
+  const isReadonly = mode === "readonly";
+
+  // 피그마처럼 초기에는 선택(Active) 상태가 없도록 null로 시작
+  const [value, onChange] = useState<Value>(null);
   const [activeDate, setActiveDate] = useState(new Date());
+  // ✅ 우클릭 모달 위치(달력 래퍼 기준 좌표)
+  const [additionalPos, setAdditionalPos] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [isAdditionalModalOpen, setIsAdditionalModalOpen] = useState(false);
+
+  const [eventModalOpen, setEventModalOpen] = useState(false);
+  const [eventModalType, setEventModalType] = useState<isSportType>(null); //스포츠 타입 여부 null: 스티커 타입
+  const [clickDate, setClickDate] = useState<Date | null>(null);
+  const [editLabelData, setEditLabelData] = useState<LabelData | null>(null); // ✅ 수정할 라벨 데이터
+  const [isEventListModalOpen, setIsEventListModalOpen] = useState(false); //이벤트 목록 모달 열림 여부
+  const [selectedDateEvents, setSelectedDateEvents] = useState<LabelData[]>([]); //선택된 날짜의 이벤트 목록
+
+  const calendarRootRef = useRef<HTMLDivElement | null>(null); // ✅ 추가
+
+  // ✅ 달력 바깥 클릭 시 active 해제 + 우클릭 모달 닫기
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const root = calendarRootRef.current;
+      if (!root) return;
+
+      const target = e.target as Node | null;
+      const isInside = !!target && root.contains(target);
+
+      if (!isInside) {
+        // ✅ 달력 바깥 클릭이면 active 해제
+        onChange(null);
+        setAdditionalPos(null);
+        setIsAdditionalModalOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleNextMonth = () => {
     const nextMonth = new Date(
@@ -70,11 +118,70 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
       const dateString = `${date.getFullYear()}-${String(
         date.getMonth() + 1
       ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
       //라벨 더미 데이터 매칭
-      const labels = labelData?.[dateString] || [];
+      // const label = labelData?.find((label) => label.date === dateString);
+
+      //스티커 더미 데이터 매칭
       const sticker = stickerData?.[dateString] || "";
+
       return (
-        <div className="flex flex-col items-start justify-start w-full h-full gap-1">
+        <div
+          className="flex flex-col items-start justify-start w-full h-full gap-1"
+          // 좌클릭 시 일정 보기 api 호출
+          onClick={(e) => {
+            e.stopPropagation();
+            // ✅ 좌클릭 액션
+            if (isReadonly) return;
+            onChange(date);
+            setAdditionalPos(null);
+            setIsAdditionalModalOpen(false);
+            setClickDate(date);
+            // ✅ 해당 날짜의 이벤트 필터링하여 모달 열기
+            const dateString = `${date.getFullYear()}-${String(
+              date.getMonth() + 1
+            ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+            const dayEvents =
+              labelData?.filter((l) => l.date === dateString) || [];
+            setSelectedDateEvents(dayEvents);
+            setIsEventListModalOpen(true);
+
+            console.log("좌클릭:", dateString, "일정:", dayEvents);
+          }}
+          // 우클릭 시 일정 추가 api 호출
+          onContextMenu={(e) => {
+            e.preventDefault(); // ✅ 브라우저 우클릭 메뉴 막기
+            e.stopPropagation();
+            if (isReadonly) return;
+            onChange(date);
+            const root = calendarRootRef.current;
+            if (!root) return;
+
+            const rootRect = root.getBoundingClientRect();
+            const tileRect = (
+              e.currentTarget as HTMLElement
+            ).getBoundingClientRect();
+            // ✅ 달력 래퍼 기준으로 위치 계산 (타일 오른쪽/위쪽 근처에 띄우는 예시)
+            setAdditionalPos({
+              x: tileRect.right - rootRect.left - 85,
+              y: tileRect.top - rootRect.top + 52,
+            });
+
+            setIsAdditionalModalOpen(true);
+            setClickDate(date);
+            // ✅ 우클릭 액션
+            console.log(
+              "우클릭:",
+              String(date.getFullYear()) +
+                "년 " +
+                String(date.getMonth() + 1).padStart(2, "0") +
+                "월 " +
+                String(date.getDate()).padStart(2, "0") +
+                "일에 일정 추가 api 호출",
+              clickDate
+            );
+          }}
+        >
           {/* 1. 커스텀 날짜 숫자 (우측 상단 배치 등 CSS로 제어) */}
           <div className="custom-date-number w-full h-[36px] px-[16px] text-right typo-h2">
             {date.getDate()}
@@ -82,24 +189,36 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
 
           {/* 2. 라벨 영역 */}
           <div className="w-full flex flex-col items-start gap-[10px]">
-            {labels.map((text, idx) => (
-              <div
-                key={idx}
-                className="w-full typo-body1 text-left px-2 py-1 rounded-[4px] text-color-highest truncate"
-                style={{
-                  backgroundColor:
-                    idx % 4 === 0
-                      ? labelColors[0]
-                      : idx % 4 === 1
-                      ? labelColors[1]
-                      : idx % 4 === 2
-                      ? labelColors[2]
-                      : labelColors[3],
-                }}
-              >
-                {text}
-              </div>
-            ))}
+            {labelData
+              ?.filter((l) => l.date === dateString) // ✅ 해당 날짜만 필터링
+              .map((label, idx) => (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (isReadonly) return;
+
+                    if (label) {
+                      setEditLabelData(label);
+                      setEventModalType(label.isSportType ? true : false);
+                      setEventModalOpen(true);
+                    }
+
+                    console.log(
+                      "라벨 클릭:",
+                      label.title,
+                      "라벨 데이터:",
+                      label
+                    );
+                  }}
+                  key={idx}
+                  className="w-full typo-body1 text-left px-2 py-1 rounded-[4px] text-color-highest truncate cursor-pointer hover:opacity-80"
+                  style={{
+                    backgroundColor: label.color?.color,
+                  }}
+                >
+                  {label.title}
+                </div>
+              ))}
             {/* 예시: 1일인 경우 스티커 영역 표시 */}
             {sticker && (
               <div className="w-full h-[80px] bg-[#E9ECF1] rounded-[4px]">
@@ -122,19 +241,24 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
     }
     return null;
   };
-  const handleClickDate = (date: Date) => {
-    console.log(
-      String(date.getFullYear()) +
-        "년 " +
-        String(date.getMonth() + 1).padStart(2, "0") +
-        "월 " +
-        String(date.getDate()).padStart(2, "0") +
-        "일에 일정 추가 api 호출"
-    );
-  };
+
+  //여기서 API 호출
+  // const handleClickDate = (date: Date) => {
+  //   console.log(
+  //     String(date.getFullYear()) +
+  //       "년 " +
+  //       String(date.getMonth() + 1).padStart(2, "0") +
+  //       "월 " +
+  //       String(date.getDate()).padStart(2, "0") +
+  //       "일에 일정 추가 api 호출"
+  //   );
+  // };
 
   return (
-    <div className="flex flex-col items-start pb-10">
+    <div
+      ref={calendarRootRef}
+      className="flex flex-col items-start mb-10 relative"
+    >
       {/* 커스텀 헤더 */}
       <div className="flex items-start justify-center gap-[40px] py-[24px]">
         <button
@@ -157,8 +281,9 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
       {/* 달력 */}
       <div className="calendar-container w-[1240px]">
         <ReactCalendar
+          tileDisabled={isReadonly ? () => true : undefined} // ✅ 타일 전부 클릭/포커스 불가
           /** 날짜 클릭 시 실행되는 콜백 함수 */
-          onClickDay={handleClickDate}
+          // onClickDay={handleClickDate}
           /** 선택된 날짜가 변경될 때 호출되는 콜백 함수 */
           onChange={onChange}
           /** 현재 선택된 날짜 값 */
@@ -190,6 +315,71 @@ const Calendar = ({ labelData, stickerData, stickerImage }: CalendarProps) => {
           }}
         />
       </div>
+      {isAdditionalModalOpen && additionalPos && (
+        <div
+          style={{
+            position: "absolute",
+            left: additionalPos.x,
+            top: additionalPos.y,
+            zIndex: 999999, // ✅ 최상단
+          }}
+          onMouseDown={(e) => e.stopPropagation()}
+        >
+          <AdditionalModal
+            open
+            date={value as Date}
+            onClose={() => {
+              setIsAdditionalModalOpen(false);
+              setAdditionalPos(null);
+            }}
+            onEventModalOpen={() => {
+              setIsAdditionalModalOpen(false);
+              setEditLabelData(null); // ✅ 초기화 추가
+              setEventModalType(false);
+              setEventModalOpen(true);
+            }}
+            onStickerModalOpen={() => {
+              setIsAdditionalModalOpen(false);
+              setEditLabelData(null); // ✅ 초기화 추가
+              setEventModalType(null);
+              setEventModalOpen(true);
+            }}
+            onSportsModalOpen={() => {
+              setIsAdditionalModalOpen(false);
+              setEditLabelData(null); // ✅ 초기화 추가
+              setEventModalType(true);
+              setEventModalOpen(true);
+            }}
+          />
+        </div>
+      )}
+      {eventModalOpen && (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            zIndex: 999999, // ✅ 최상단
+          }}
+        >
+          {/* 이벤트 등록 모달 */}
+          <EventModal
+            open={eventModalOpen}
+            onClose={() => setEventModalOpen(false)}
+            type={eventModalType}
+            startDate={clickDate}
+            editData={editLabelData}
+          />
+        </div>
+      )}
+      {isEventListModalOpen && (
+        <EventListModal
+          open={isEventListModalOpen}
+          onClose={() => setIsEventListModalOpen(false)}
+          date={clickDate}
+          label={selectedDateEvents}
+        />
+      )}
     </div>
   );
 };

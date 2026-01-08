@@ -52,7 +52,11 @@ const FeedDetail = () => {
           createdAt={feed?.createdAt}
         />
         {/* 아카이브 달력 */}
-        <Calendar labelData={labelDataMock} stickerData={stickerDataMock} />
+        <Calendar
+          labelData={labelDataMock}
+          stickerData={stickerDataMock}
+          mode="readonly"
+        />
         {/* 덕질 일기 */}
         <ArchiveTitle
           title="덕질 일기"
