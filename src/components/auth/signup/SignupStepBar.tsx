@@ -49,13 +49,21 @@ const SignupStepBar = ({ currentStep, totalSteps = 3 }: SignupStepBarProps) => {
 
             {/* 연결선 (마지막 스텝 제외) */}
             {index < steps.length - 1 && (
-              <div
-                className={`w-47 h-1 rounded-full transition-colors ${
-                  currentStep > item.step
-                    ? "bg-brand-blue-500"
-                    : "bg-surface-container-20"
-                }`}
-              />
+              <div className={`w-47 bg-[#7D9AB2]`}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="47"
+                  height="1"
+                  viewBox="0 0 711 1"
+                  fill="none"
+                >
+                  <path
+                    d="M0 0.5H711"
+                    stroke="#7D9AB2"
+                    stroke-dasharray="2 2"
+                  />
+                </svg>
+              </div>
             )}
           </div>
           {/* 라벨 내용 */}

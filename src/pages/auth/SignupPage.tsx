@@ -152,15 +152,17 @@ const SignupPage = () => {
 
         <div className="w-full px-30 py-16 rounded-xl bg-white flex flex-col items-center justify-center">
           {/* ✅ 폼 컨테이너 */}
-          {step === 1 && (
-            <SignupStep1
-              checkedAgreements={checkedAgreements}
-              onAgreementChange={handleAgreementChange}
-              onClick={handleNext}
-            />
-          )}
-          {step === 2 && <div></div>}
-          {step === 3 && <div></div>}
+          <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
+            {step === 1 && (
+              <SignupStep1
+                checkedAgreements={checkedAgreements}
+                onAgreementChange={handleAgreementChange}
+                onClick={handleNext}
+              />
+            )}
+            {step === 2 && <div></div>}
+            {step === 3 && <div></div>}
+          </form>
         </div>
 
         <div className="w-[450px] bg-white rounded-2xl shadow-lg p-10">
