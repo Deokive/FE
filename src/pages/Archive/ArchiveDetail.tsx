@@ -10,20 +10,13 @@ import Calendar from "@/components/calendar/Calendar";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
 import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
+import type { LabelData } from "@/types/calendar";
 import { Camera, Link } from "lucide-react";
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 const ArchiveDetail = () => {
   const urlParams = useParams();
   const archiveId = urlParams.id;
-
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-
-  const handleMenuClick = () => {
-    setIsMenuOpen((prev) => !prev);
-    console.log("메뉴 버튼 클릭");
-  };
 
   // 아카이브 데이터 조회 => 추후에 실제 API로 연결
   const archive = archiveDataMock.find(
@@ -45,7 +38,11 @@ const ArchiveDetail = () => {
             isMenu={true}
           />
           {/* 아카이브 달력 */}
-          <Calendar labelData={labelDataMock} stickerData={stickerDataMock} />
+          <Calendar
+            labelData={labelDataMock as LabelData[]}
+            stickerData={stickerDataMock}
+            mode="interactive"
+          />
           <div className="flex flex-col items-start justify-between gap-[60px] my-[60px]">
             {/* 덕질 일기 */}
             <ArchiveTitle
