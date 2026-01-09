@@ -42,9 +42,24 @@ export default function CommunityWrite() {
   // 다른 필수 체크
   const isCategoryValid = category !== "" && category !== "all";
   const isMediaValid = useMemo(() => {
-    if (mediaItems.length === 0) return false;
-    if (mediaItems.length === 1) return true;
-    return mediaItems.some((m) => !!m.isRepresentative);
+    if (!mediaItems || mediaItems.length === 0) return false;
+
+    // 안전한 필드명 추출
+    const normalized = mediaItems.map((m) => ({
+      ...m,
+      _type: (m as any).type ?? (m as any).mediaType,
+      _isRep: !!(m as any).isRepresentative,
+    }));
+
+    // 최소 하나의 이미지가 있어야 함
+    const hasImage = normalized.some((m) => m._type === "image");
+    if (!hasImage) return false;
+
+    // 아이템이 하나뿐이면 (이미지 한 장) 유효
+    if (normalized.length === 1) return normalized[0]._type === "image";
+
+    // 복수 아이템이면 대표 이미지가 지정되어야 유효
+    return normalized.some((m) => m._isRep && m._type === "image");
   }, [mediaItems]);
 
   const isTitleValid = useMemo(
