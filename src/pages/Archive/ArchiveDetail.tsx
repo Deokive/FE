@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import ArchiveHeader from "@/components/archive/ArchiveHeader";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import ButtonLike from "@/components/archive/ButtonLike";
@@ -15,6 +16,8 @@ import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 const ArchiveDetail = () => {
+  const navigate = useNavigate();
+
   const urlParams = useParams();
   const archiveId = urlParams.id;
 
@@ -22,6 +25,8 @@ const ArchiveDetail = () => {
   const archive = archiveDataMock.find(
     (archive) => archive.archiveId === Number(archiveId)
   );
+
+  const hasTickets = (archive?.Ticket?.length ?? 0) > 0;
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -87,18 +92,20 @@ const ArchiveDetail = () => {
             <ArchiveTitle
               title="티켓북"
               onClick={() => {
-                console.log("티켓북 더보기 클릭");
+                if (!archiveId) return;
+                navigate(`/archive/${archiveId}/ticket-book`);
               }}
-              isMore={(archive?.Ticket?.length ?? 0) > 0}
+              isMore={hasTickets}
             />
-            {archive?.Ticket?.length ?? 0 > 0 ? (
+            {hasTickets ? (
               <TicketList ticket={archive?.Ticket} />
             ) : (
               <EmptyList
                 title="티켓 추가"
                 description="새로운 티켓을 추가해보세요."
                 onClick={() => {
-                  console.log("티켓 추가 버튼 클릭");
+                  if (!archiveId) return;
+                  navigate(`/archive/${archiveId}/ticket-book`);
                 }}
               />
             )}
