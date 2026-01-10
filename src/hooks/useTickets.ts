@@ -23,7 +23,7 @@ export function useTickets(initial: Ticket[] = []) {
       review: t.review ?? null,
       createdAt: t.createdAt ?? nowIso,
     };
-    setTickets((prev) => [...prev, full]);
+    setTickets((prev) => [full, ...prev]);
   }, []);
 
   const updateTicket = useCallback((id: string, patch: Partial<Ticket>) => {
