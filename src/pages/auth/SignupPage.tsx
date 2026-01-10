@@ -11,7 +11,11 @@ import SignupStep2 from "@/components/auth/signup/signupStep2";
 // ✅ Step 2 스키마 (이메일, 비밀번호, 닉네임)
 export const schema = z
   .object({
-    email: z.string().email({ message: "이메일 형식이 올바르지 않습니다." }),
+    emailId: z.string().min(1, { message: "이메일 아이디를 입력해주세요." }),
+    emailDomain: z
+      .string()
+      .min(1, { message: "이메일 도메인을 선택해주세요." }),
+
     password: z
       .string()
       .min(8, { message: "비밀번호는 8자 이상이어야 합니다." })
@@ -57,13 +61,15 @@ const SignupPage = () => {
 
   const {
     register,
+    control,
     handleSubmit,
     trigger,
     watch,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     defaultValues: {
-      email: "",
+      emailId: "",
+      emailDomain: "",
       password: "",
       passwordCheck: "",
       nickname: "",
@@ -73,7 +79,10 @@ const SignupPage = () => {
     mode: "onBlur", // 입력 값이 변경될 때 마다 유효성 검사
   });
 
-  const email = watch("email");
+  // email 조합 완성
+  const emailId = watch("emailId");
+  const emailDomain = watch("emailDomain");
+  const email = emailId && emailDomain ? `${emailId}@${emailDomain}` : "";
 
   // ✅ 약관 동의 핸들러
   const handleAgreementChange = (id: string) => {
@@ -100,7 +109,7 @@ const SignupPage = () => {
 
   // ✅ 인증번호 발송
   const handleSendCode = async () => {
-    const isEmailValid = await trigger("email"); // 이메일 유효성 검사
+    const isEmailValid = await trigger(["emailId", "emailDomain"]); // 이메일 유효성 검사
     if (!isEmailValid) return; // 이메일 유효성 검사 실패 시 발송 중단
 
     // TODO: API 호출 - 인증번호 발송
@@ -117,7 +126,8 @@ const SignupPage = () => {
     } else if (step === 2) {
       // Step 2: 폼 유효성 검사
       const isValid = await trigger([
-        "email",
+        "emailId",
+        "emailDomain",
         "password",
         "passwordCheck",
         "nickname",
@@ -161,7 +171,13 @@ const SignupPage = () => {
                 onClick={handleNext}
               />
             )}
-            {step === 2 && <SignupStep2 register={register} errors={errors} />}
+            {step === 2 && (
+              <SignupStep2
+                register={register}
+                control={control}
+                errors={errors}
+              />
+            )}
             {step === 3 && <div></div>}
           </form>
         </div>
