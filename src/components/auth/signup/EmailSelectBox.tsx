@@ -14,6 +14,8 @@ type EmailSelectBoxProps = {
   onChange: (value: string) => void;
   className?: string;
   placeholder?: string;
+  hasError?: boolean; // ✅ 간단한 boolean prop
+  onBlur?: () => void; // 추가
 };
 
 export default function EmailSelectBox({
@@ -22,6 +24,8 @@ export default function EmailSelectBox({
   onChange,
   className,
   placeholder = "직접 입력",
+  hasError,
+  onBlur,
 }: EmailSelectBoxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -76,8 +80,8 @@ export default function EmailSelectBox({
       <div
         className={twMerge(
           "w-full h-[65px] px-5 rounded-xl flex items-center gap-2",
-          "bg-white border-2 border-border-mid",
-          isOpen && "border-brand-blue-400"
+          "bg-white border-2 border-solid focus-within:border-border-mid",
+          hasError ? "border-border-accent" : "border-border-mid"
         )}
       >
         {/* 직접 입력 가능한 input */}
@@ -88,6 +92,7 @@ export default function EmailSelectBox({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className="flex-1 typo-h2 text-color-highest placeholder:text-color-low bg-transparent outline-none"
+          onBlur={onBlur}
         />
 
         {/* 아이콘 - 클릭 시 드롭다운 토글 */}

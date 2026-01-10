@@ -11,28 +11,35 @@ import SignupStep2 from "@/components/auth/signup/signupStep2";
 // ✅ Step 2 스키마 (이메일, 비밀번호, 닉네임)
 export const schema = z
   .object({
-    emailId: z.string().min(1, { message: "이메일 아이디를 입력해주세요." }),
-    emailDomain: z
-      .string()
-      .min(1, { message: "이메일 도메인을 선택해주세요." }),
-
+    emailId: z.string(),
+    emailDomain: z.string(),
     password: z
       .string()
-      .min(8, { message: "비밀번호는 8자 이상이어야 합니다." })
-      .max(16, { message: "비밀번호는 16자 이하이어야 합니다." }),
-    passwordCheck: z
+      .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/, {
+        message:
+          "8 ~ 16자 이내 영문, 숫자, 특수문자를 모두 포함하여 입력해주세요.",
+      }),
+    passwordCheck: z.string(),
+    nickname: z
       .string()
-      .min(8, { message: "비밀번호는 8자 이상이어야 합니다." })
-      .max(16, { message: "비밀번호는 16자 이하이어야 합니다." }),
-    nickname: z.string().min(2, { message: "닉네임을 입력해주세요." }),
-    verificationCode: z
-      .string()
-      .min(6, { message: "인증번호 6자리를 입력해주세요." }),
+      .min(2, { message: "2~10자 이내 한글, 영어, 숫자 중에 작성해 주세요." }),
   })
   .refine((data) => data.password === data.passwordCheck, {
     message: "비밀번호가 일치하지 않습니다.",
     path: ["passwordCheck"],
-  });
+  })
+  // ✅ 이메일 합쳐서 검증
+  .refine(
+    (data) => {
+      const email = `${data.emailId}@${data.emailDomain}`;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
+    {
+      message: "유효한 이메일 주소를 입력해주세요.",
+      path: ["emailId"], // 에러 표시 위치
+    }
+  );
 
 export type FormFields = z.infer<typeof schema>;
 
@@ -65,7 +72,7 @@ const SignupPage = () => {
     handleSubmit,
     trigger,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<FormFields>({
     defaultValues: {
       emailId: "",
@@ -73,13 +80,13 @@ const SignupPage = () => {
       password: "",
       passwordCheck: "",
       nickname: "",
-      verificationCode: "",
     },
     resolver: zodResolver(schema), // 유효성 검사 규칙
-    mode: "onBlur", // 입력 값이 변경될 때 마다 유효성 검사
+    mode: "onBlur", // ✅ onBlur로 설정 (onChange 아님!)
   });
 
   // email 조합 완성
+  // 이메일 합쳐서 사용 (Step 3에서 보여줄 때)
   const emailId = watch("emailId");
   const emailDomain = watch("emailDomain");
   const email = emailId && emailDomain ? `${emailId}@${emailDomain}` : "";
@@ -107,7 +114,7 @@ const SignupPage = () => {
   // ✅ 필수 약관 동의 여부 확인
   const isRequiredAgreed = checkedAgreements.terms && checkedAgreements.privacy;
 
-  // ✅ 인증번호 발송
+  // ✅ 인증번호 발송 API 호출
   const handleSendCode = async () => {
     const isEmailValid = await trigger(["emailId", "emailDomain"]); // 이메일 유효성 검사
     if (!isEmailValid) return; // 이메일 유효성 검사 실패 시 발송 중단
@@ -124,7 +131,7 @@ const SignupPage = () => {
         setStep(2);
       }
     } else if (step === 2) {
-      // Step 2: 폼 유효성 검사
+      // Step 2: 폼 유효성 검사 + 회원가입 API 호출
       const isValid = await trigger([
         "emailId",
         "emailDomain",
@@ -133,6 +140,19 @@ const SignupPage = () => {
         "nickname",
       ]);
       if (isValid) {
+        // emailId와 emailDomain을 합쳐서 email로 만들기
+        const emailId = watch("emailId");
+        const emailDomain = watch("emailDomain");
+        const password = watch("password");
+        const nickname = watch("nickname");
+
+        const signupData = {
+          email: `${emailId}@${emailDomain}`,
+          nickname: nickname,
+          password: password,
+        };
+
+        console.log(signupData);
         setStep(3);
         // 인증번호 자동 발송
         handleSendCode();
@@ -146,14 +166,14 @@ const SignupPage = () => {
   };
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
-    const { passwordCheck, verificationCode, ...rest } = data;
+    const { passwordCheck, ...rest } = data;
     console.log("회원가입 데이터:", rest);
-    console.log("인증번호:", verificationCode);
+
     // TODO: API 호출 - 회원가입
   };
 
   return (
-    <div className="w-full h-screen bg-[#F4F5F9]">
+    <div className="w-full h-full bg-[#F4F5F9]">
       <div className="max-w-[951px] mx-auto py-15 flex flex-col items-center justify-center gap-15">
         {/* 헤더 */}
         <p className="typo-h1 text-color-highest">회원가입</p>
@@ -176,6 +196,10 @@ const SignupPage = () => {
                 register={register}
                 control={control}
                 errors={errors}
+                trigger={trigger}
+                onClick={handleNext}
+                isValid={isValid}
+                watch={watch}
               />
             )}
             {step === 3 && <div></div>}
@@ -279,20 +303,6 @@ const SignupPage = () => {
                 <div className="flex flex-col gap-2">
                   <label className="typo-body2 text-color-high">인증번호</label>
                   <div className="flex gap-3">
-                    <input
-                      {...register("verificationCode")}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={6}
-                      className={`flex-1 h-12 px-4 border rounded-lg typo-body1 text-color-highest
-                      placeholder:text-color-mid focus:outline-none focus:border-brand-blue-500
-                      ${
-                        errors.verificationCode
-                          ? "border-red-500 bg-red-50"
-                          : "border-border-mid"
-                      }`}
-                      placeholder="인증번호 6자리"
-                    />
                     <button
                       type="button"
                       onClick={handleSendCode}
@@ -303,11 +313,6 @@ const SignupPage = () => {
                       인증하기
                     </button>
                   </div>
-                  {errors.verificationCode && (
-                    <p className="typo-body2 text-red-500">
-                      {errors.verificationCode.message}
-                    </p>
-                  )}
                 </div>
                 <p className="typo-body2 text-color-mid">
                   인증번호가 오지 않았나요?{" "}
