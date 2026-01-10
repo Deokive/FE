@@ -72,7 +72,8 @@ const ArchiveDetail = () => {
             <ArchiveTitle
               title="덕질 갤러리"
               onClick={() => {
-                console.log("덕질 갤러리 더보기 클릭");
+                if (!archiveId) return;
+                navigate(`/archive/${archiveId}/gallery`);
               }}
               isMore={(archive?.Gallery?.length ?? 0) > 0}
             />
@@ -84,7 +85,8 @@ const ArchiveDetail = () => {
                 description="사진을 추가해서 덕질 기록을 남겨보세요."
                 startIcon={<Camera className="w-6 h-6 text-color-high" />}
                 onClick={() => {
-                  console.log("갤러리 추가 버튼 클릭");
+                  if (!archiveId) return;
+                  navigate(`/archive/${archiveId}/gallery`);
                 }}
               />
             )}
