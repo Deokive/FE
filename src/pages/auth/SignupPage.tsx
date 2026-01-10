@@ -1,116 +1,220 @@
 import { z } from "zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import SignupStepBar from "@/components/auth/signup/SignupStepBar";
+import type { Agreement } from "@/types/auth/signup";
+import SignupStep1 from "@/components/auth/signup/signupStep1";
+import SignupStep2 from "@/components/auth/signup/signupStep2";
+import SignupStep3 from "@/components/auth/signup/signupStep3";
+import { useNavigate } from "react-router-dom";
 
-const schema = z
+// ✅ Step 2 스키마 (이메일, 비밀번호, 닉네임)
+export const schema = z
   .object({
-    name: z.string().min(2, { message: "이름을 입력해주세요." }),
-    email: z.email({ message: "이메일 형식이 올바르지 않습니다." }), //zod V4부터 z.email() 사용
+    emailId: z.string(),
+    emailDomain: z.string(),
     password: z
       .string()
-      .min(8, { message: "비밀번호는 8자 이상이어야 합니다." })
-      .max(16, { message: "비밀번호는 16자 이하이어야 합니다." }),
-    passwordCheck: z
+      .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/, {
+        message:
+          "8 ~ 16자 이내 영문, 숫자, 특수문자를 모두 포함하여 입력해주세요.",
+      }),
+    passwordCheck: z.string(),
+    nickname: z
       .string()
-      .min(8, { message: "비밀번호는 8자 이상이어야 합니다." })
-      .max(16, { message: "비밀번호는 16자 이하이어야 합니다." }),
+      .min(2, { message: "2~10자 이내 한글, 영어, 숫자 중에 작성해 주세요." }),
   })
-  //완전히 바깥쪽에 refine 정의.
   .refine((data) => data.password === data.passwordCheck, {
     message: "비밀번호가 일치하지 않습니다.",
     path: ["passwordCheck"],
-  });
+  })
+  // ✅ 이메일 합쳐서 검증
+  .refine(
+    (data) => {
+      const email = `${data.emailId}@${data.emailDomain}`;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
+    {
+      message: "유효한 이메일 주소를 입력해주세요.",
+      path: ["emailId"], // 에러 표시 위치
+    }
+  );
 
-type FormFields = z.infer<typeof schema>;
+export type FormFields = z.infer<typeof schema>;
+
+const agreements: Agreement[] = [
+  { id: "all", label: "전체 동의", required: false },
+  { id: "terms", label: "[필수] 이용약관 동의", required: true },
+  { id: "privacy", label: "[필수] 개인정보 수집 및 이용 동의", required: true },
+];
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+  // Step 단계 관리
+  const [step, setStep] = useState(1);
+  // Step 1: 약관 동의 상태
+  const [checkedAgreements, setCheckedAgreements] = useState<
+    Record<string, boolean>
+  >({
+    all: false,
+    terms: false,
+    privacy: false,
+  });
+  // Step 2에서 입력한 회원가입 데이터 저장
+  const [signupData, setSignupData] = useState<{
+    email: string;
+    password: string;
+    nickname: string;
+  } | null>(null);
+
   const {
     register,
+    control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    trigger,
+    watch,
+    formState: { errors, isSubmitting, isValid },
   } = useForm<FormFields>({
     defaultValues: {
-      name: "",
-      email: "",
+      emailId: "",
+      emailDomain: "",
       password: "",
+      passwordCheck: "",
+      nickname: "",
     },
-    resolver: zodResolver(schema),
-    mode: "onBlur", //touched 되었는지 여부 확인
+    resolver: zodResolver(schema), // 유효성 검사 규칙
+    mode: "onBlur", // ✅ onBlur로 설정 (onChange 아님!)
   });
+
+  // email 조합 완성
+  // 이메일 합쳐서 사용 (Step 3에서 보여줄 때)
+  // const emailId = watch("emailId");
+  // const emailDomain = watch("emailDomain");
+  // const email = emailId && emailDomain ? `${emailId}@${emailDomain}` : "";
+
+  // ✅ 약관 동의 핸들러
+  const handleAgreementChange = (id: string) => {
+    if (id === "all") {
+      const newValue = !checkedAgreements.all;
+      setCheckedAgreements({
+        all: newValue,
+        terms: newValue,
+        privacy: newValue,
+      });
+    } else {
+      const newChecked = {
+        ...checkedAgreements,
+        [id]: !checkedAgreements[id],
+      };
+      // 전체 동의 체크 상태 업데이트
+      newChecked.all = newChecked.terms && newChecked.privacy;
+      setCheckedAgreements(newChecked);
+    }
+  };
+
+  // ✅ 필수 약관 동의 여부 확인
+  const isRequiredAgreed = checkedAgreements.terms && checkedAgreements.privacy;
+
+  // ✅ 회원가입 완료 API 호출
+  const handleCompleteSignup = () => {
+    if (signupData) {
+      console.log(signupData, " 로 회원가입 완료");
+      navigate("/");
+    }
+  };
+
+  // ✅ 다음 단계로 이동
+  const handleNext = async () => {
+    if (step === 1) {
+      // Step 1: 필수 약관 동의 확인
+      if (isRequiredAgreed) {
+        setStep(2);
+      }
+    } else if (step === 2) {
+      // Step 2: 폼 유효성 검사 + 이메일 인증번호 발송 API 호출
+      const isValid = await trigger([
+        "emailId",
+        "emailDomain",
+        "password",
+        "passwordCheck",
+        "nickname",
+      ]);
+      if (isValid) {
+        const emailId = watch("emailId");
+        const emailDomain = watch("emailDomain");
+        const password = watch("password");
+        const nickname = watch("nickname");
+
+        const email = `${emailId}@${emailDomain}`;
+
+        // 회원가입 데이터 저장 (Step 3에서 사용)
+        setSignupData({
+          email,
+          password,
+          nickname,
+        });
+
+        // ✅ 올바름 - 방금 계산한 email 변수 사용
+        console.log(email, " 로 이메일 발송 완료");
+        setStep(3);
+      }
+    }
+  };
+
+  // ✅ 이전 단계로 이동
+  const handlePrev = () => {
+    setStep((prev) => Math.max(prev - 1, 1));
+  };
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     const { passwordCheck, ...rest } = data;
-    console.log(rest);
+    console.log("회원가입 데이터:", rest);
+
+    // TODO: API 호출 - 회원가입
   };
 
   return (
-    <form
-      onSubmit={(e) => void handleSubmit(onSubmit)(e)}
-      className="flex flex-col items-center justify-center h-screen gap-4"
-    >
-      <div className="flex flex-col gap-3 w-[300px]">
-        <input
-          {...register("name")}
-          name="name"
-          type={"text"}
-          className={`border border-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm
-            ${errors.name ? "border-red-500 bg-red-200" : "border-gray-300"}`}
-          placeholder="이름"
-        />
-        {errors.name && (
-          <div className="text-red-500 text-sm">{errors.name.message}</div>
-        )}
-        <input
-          {...register("email")}
-          name="email"
-          type={"text"}
-          className={`border border-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm
-            ${errors.email ? "border-red-500 bg-red-200" : "border-gray-300"}`}
-          placeholder="이메일"
-        />
-        {errors.email && (
-          <div className="text-red-500 text-sm">{errors.email.message}</div>
-        )}
-        <input
-          {...register("password")}
-          name="password"
-          type={"password"}
-          className={`border border-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm
-            ${
-              errors.password ? "border-red-500 bg-red-200" : "border-gray-300"
-            }`}
-          placeholder="비밀번호"
-        />
-        {errors.password && (
-          <div className="text-red-500 text-sm">{errors.password.message}</div>
-        )}
-        <input
-          {...register("passwordCheck")}
-          name="passwordCheck"
-          type={"password"}
-          className={`border border-[#ccc] w-[300px] h-[40px] p-2 focus:border-[#807bff] rounded-sm
-            ${
-              errors.passwordCheck
-                ? "border-red-500 bg-red-200"
-                : "border-gray-300"
-            }`}
-          placeholder="비밀번호 확인"
-        />
-        {errors.passwordCheck && (
-          <div className="text-red-500 text-sm">
-            {errors.passwordCheck.message}
-          </div>
-        )}
-        <button
-          type="submit"
-          // onClick={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
-          className={`w-full bg-[#807bff] text-white hover:bg-[#6666ff] h-[40px] rounded-sm cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed`}
-        >
-          Signup
-        </button>
+    <div className="w-full h-screen bg-[#F4F5F9]">
+      <div className="max-w-[951px] mx-auto py-15 flex flex-col items-center justify-center gap-15">
+        {/* 헤더 */}
+        <p className="typo-h1 text-color-highest">회원가입</p>
+        {/* 단계 표시 */}
+        {/* ✅ Step Bar 컴포넌트 사용 */}
+        <SignupStepBar currentStep={step} />
+
+        <div className="w-full px-30 py-16 rounded-xl bg-white flex flex-col items-center justify-center">
+          {/* ✅ 폼 컨테이너 */}
+          <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
+            {step === 1 && (
+              <SignupStep1
+                checkedAgreements={checkedAgreements}
+                onAgreementChange={handleAgreementChange}
+                onClick={handleNext}
+              />
+            )}
+            {step === 2 && (
+              <SignupStep2
+                register={register}
+                control={control}
+                errors={errors}
+                trigger={trigger}
+                onClick={handleNext}
+                isValid={isValid}
+                watch={watch}
+              />
+            )}
+            {step === 3 && (
+              <SignupStep3
+                email={signupData?.email || ""}
+                onComplete={handleCompleteSignup}
+              />
+            )}
+          </form>
+        </div>
       </div>
-    </form>
+    </div>
   );
 };
 

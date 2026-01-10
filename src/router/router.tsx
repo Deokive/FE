@@ -50,9 +50,11 @@ const privateRoutes: RouteObject[] = [
     children: [
       { index: true, element: <Home /> },
       { path: "archive", element: <Archive /> },
+      { path: "archive/:id", element: <ArchiveDetail /> },
       { path: "ticket/create", element: <CreateTicketPage /> },
       { path: "ticket/edit/:id", element: <EditTicketPage /> },
       { path: "feed", element: <Feed /> },
+      { path: "feed/:id", element: <FeedDetail /> },
       { path: "community", element: <Community /> },
       { path: "community/new", element: <CommunityWrite /> },
       { path: "me", element: <MyPage /> },

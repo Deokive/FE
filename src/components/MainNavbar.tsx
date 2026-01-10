@@ -7,7 +7,7 @@ const MainNavbar = () => {
 
   return (
     // 홈, 아카이브, 커뮤니티, 피드 네비게이션 바
-    <div className="typo-h3-semibold bg-brand-blue-400 flex h-20 px-20 py-7 justify-between items-center">
+    <div className="typo-h3 bg-brand-blue-400 flex h-20 px-20 py-7 justify-between items-center">
       <div className="flex items-center gap-10">
         {/* 왼쪽 그룹 */}
         <ul className="flex h-10 items-center gap-10">
@@ -37,18 +37,18 @@ const MainNavbar = () => {
       {/* 오른쪽 단독(My Page) */}
       <div className="flex items-center gap-10">
         <div>
-          <NavLink to="/me" className={linkClass}>
-            My Page
-          </NavLink>
-        </div>
-        <div>
           <NavLink to="/login" className={linkClass}>
-            Login
+            로그인
           </NavLink>
         </div>
         <div>
           <NavLink to="/signup" className={linkClass}>
-            Signup
+            회원가입
+          </NavLink>
+        </div>
+        <div>
+          <NavLink to="/me" className={linkClass}>
+            My page
           </NavLink>
         </div>
       </div>
