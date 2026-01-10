@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "HakgyoansimBadasseugi-B";
+  src: url("/src/assets/fonts/Hakgyoansim Badasseugi OTF B.otf")
+    format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "HakgyoansimBadasseugi-L";
+  src: url("/src/assets/fonts/Hakgyoansim Badasseugi OTF L.otf")
+    format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   /* Font family */
   --font-pretendard: "Pretendard", ui-sans-serif, system-ui, -apple-system,
@@ -71,6 +89,16 @@
 }
 
 @layer utilities {
+  .font-hakgyoansim-b {
+    font-family: "HakgyoansimBadasseugi-B", Pretendard, sans-serif;
+    font-weight: 600;
+  }
+
+  .font-hakgyoansim-l {
+    font-family: "HakgyoansimBadasseugi-L", Pretendard, sans-serif;
+    font-weight: 300;
+  }
+
   /* Heading */
   .typo-h1 {
     @apply font-sans text-h1 leading-h1 font-bold;

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
 import { diaryDataMock } from "@/mockData/diaryData";
 import { galleryDataMock } from "@/mockData/galleryData";
@@ -17,6 +18,8 @@ import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import EmptyFeedList from "@/components/feed/EmptyFeedList";
 
 const FeedDetail = () => {
+  const navigate = useNavigate();
+
   const urlParams = useParams();
   const archiveId = urlParams.id;
   // 아카이브 데이터 조회
@@ -87,7 +90,8 @@ const FeedDetail = () => {
         <ArchiveTitle
           title="티켓북"
           onClick={() => {
-            console.log("티켓북 더보기 클릭");
+            if (!archiveId) return;
+            navigate(`/archive/${archiveId}/ticket-book`);
           }}
           isMore={(ticket.length ?? 0) > 0}
         />

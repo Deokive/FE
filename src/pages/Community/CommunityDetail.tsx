@@ -67,11 +67,11 @@ export default function CommunityDetail() {
       <BackNavigator label="커뮤니티 보기" onClick={() => history.back()} />
 
       <div className="flex justify-center">
-        <div className="max-w-310 flex flex-col gap-10">
-          <div className="text-center typo-h1 text-color-highest">
+        <div className="max-w-310 flex flex-col">
+          <div className="text-center typo-h1 text-color-highest mb-10">
             {mockPost.title}
           </div>
-          <div className="">
+          <div>
             <MediaCarousel
               items={sortedMedia}
               readOnly // 클릭/편집/대표 변경 비활성
