@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pencil } from "lucide-react";
 import CommunityTab from "@/components/community/CommunityTab";
 import CommunityCard from "@/components/community/CommunityCard";
 import Pagination from "@/components/common/Pagination";
-import { BtnBasic, BtnIcon } from "@/components/common/Button/Btn";
+import { BtnIcon } from "@/components/common/Button/Btn";
 import SelectBox from "@/components/common/Button/SelectBox";
 
 type ListOption = { label: string; value: string };
@@ -18,56 +18,74 @@ const LIST_OPTIONS: ListOption[] = [
 const Community = () => {
   const navigate = useNavigate();
   const [category, setCategory] = useState<string>("all");
-  const [sortBy, setSortBy] = useState("all");
-  const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState<string>("all");
+  const [page, setPage] = useState<number>(1);
 
-  const posts = [
-    {
-      id: 1,
-      title: "아이돌 게시물 테스트",
-      categoryLabel: "아이돌",
-      categoryValue: "idol",
+  // 테스트용 데이터 10개
+  const posts = useMemo(
+    () =>
+      Array.from({ length: 10 }).map((_, i) => ({
+        id: i + 1,
+        title: `테스트 제목 ${i + 1}`,
+        categoryLabel: i % 2 === 0 ? "아이돌" : "기타",
+        categoryValue: i % 2 === 0 ? "idol" : "etc",
+        content: "테스트 본문",
+        img: undefined,
+      })),
+    []
+  );
 
-      content:
-        "게시글 본문은 최대 1줄까지만 노출됩니다. 긴 본문은 말줄임 처리되어야 합니다. 이 문장은 테스트용 더미 텍스트입니다.",
-      img: undefined,
-    },
-    {
-      id: 2,
-      title: "배우 게시물 테스트",
-      categoryLabel: "배우",
-      categoryValue: "actor",
-      content:
-        "게시글 본문은 최대 1줄까지만 노출됩니다. 긴 본문은 말줄임 처리되어야 합니다. 이 문장은 테스트용 더미 텍스트입니다.",
-      img: undefined,
-    },
-    {
-      id: 3,
-      title: "기타 게시물 테스트",
-      categoryLabel: "기타",
-      categoryValue: "etc",
-      content:
-        "게시글 본문은 최대 1줄까지만 노출됩니다. 긴 본문은 말줄임 처리되어야 합니다. 이 문장은 테스트용 더미 텍스트입니다.",
-      img: undefined,
-    },
-  ];
-
-  const filteredPosts = posts.filter((p) => {
-    if (category === "all") return true;
-    return (
-      String(p.categoryValue).toLowerCase() === String(category).toLowerCase()
-    );
-  });
+  // 필터 적용 (category 비교를 소문자로 통일)
+  const filteredPosts = useMemo(() => {
+    return posts.filter((p) => {
+      if (category === "all") return true;
+      return (
+        String(p.categoryValue).toLowerCase() === String(category).toLowerCase()
+      );
+    });
+  }, [posts, category]);
 
   const totalItems = filteredPosts.length;
-  const pageSize = 9; // 한 페이지에 보여줄 아이템 수
-  // 현재 페이지에 보여줄 아이템
-  const start = (page - 1) * pageSize;
-  const currentItems = filteredPosts.slice(start, start + pageSize);
+  const pageSize = 9;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
 
-  React.useEffect(() => {
+  // category 또는 sortBy 변경 시 페이지 1로 리셋
+  useEffect(() => {
     setPage(1);
-  }, [category]);
+  }, [category, sortBy]);
+
+  // totalPages 변화로 현재 page가 범위를 벗어나면 보정
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [totalPages, page]);
+
+  // current page items: 반드시 선언되어 있어야 함
+  const start = (page - 1) * pageSize;
+  const currentItems = useMemo(() => {
+    return filteredPosts.slice(start, start + pageSize);
+  }, [filteredPosts, start, pageSize]);
+
+  // robust page change handler (Pagination이 0-based/1-based 중 어느걸 보내도 안전하게 처리)
+  const handlePageChange = (p: number) => {
+    if (typeof p !== "number" || Number.isNaN(p)) return;
+    if (p === 0) {
+      setPage(1);
+      return;
+    }
+    if (p >= 1 && p <= totalPages) {
+      setPage(p);
+      return;
+    }
+    const maybeOneBased = p + 1;
+    if (maybeOneBased >= 1 && maybeOneBased <= totalPages) {
+      setPage(maybeOneBased);
+      return;
+    }
+    const clamped = Math.max(1, Math.min(totalPages, Math.floor(p)));
+    setPage(clamped);
+  };
 
   return (
     <div>
@@ -121,7 +139,7 @@ const Community = () => {
                       categoryValue={post.categoryValue}
                       content={post.content}
                       img={post.img}
-                      onClick={() => navigate("/community/${post.id}")}
+                      onClick={() => navigate(`/community/${post.id}`)}
                       onClickShare={() => console.log(`${post.id} 공유`)}
                     />
                   ))}
@@ -138,8 +156,7 @@ const Community = () => {
             pageSize={pageSize}
             visiblePages={5}
             currentPage={page}
-            onChange={(p) => setPage(p)}
-            className="fixed-bottom-20"
+            onChange={handlePageChange}
           />
         </div>
       )}
