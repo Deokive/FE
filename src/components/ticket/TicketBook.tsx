@@ -43,8 +43,6 @@ export default function TicketBook({
 
   const placementIndices = [0, 1, 2, 3];
 
-  // orderedTickets: createdAt이 있으면 오래된->최신으로 정렬.
-  // 없으면 tickets 배열 자체를 '등록순(앞=오래된)'으로 가정.
   const orderedTickets: Ticket[] = (() => {
     if (!tickets || tickets.length === 0) return [];
 
@@ -56,7 +54,7 @@ export default function TicketBook({
       return [...tickets].sort((a, b) => {
         const aTime = new Date((a as any).createdAt).getTime();
         const bTime = new Date((b as any).createdAt).getTime();
-        return aTime - bTime; // 오래된 순
+        return bTime - aTime; // 최신순
       });
     }
 
