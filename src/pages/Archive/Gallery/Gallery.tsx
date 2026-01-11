@@ -19,13 +19,14 @@ type Photo = {
 };
 
 const PER_PAGE = 9;
-const MAX_UPLOAD = 20;
+const MAX_UPLOAD = 10;
 
 export default function Gallery() {
   const [title, setTitle] = useState<string>("갤러리명 (사용자 지정)");
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [page, setPage] = useState<number>(1);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
 
@@ -58,6 +59,13 @@ export default function Gallery() {
   const onFilesSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+
+    // 사용자가 많이 선택했을 때 안내
+    if (files.length > MAX_UPLOAD) {
+      alert(
+        `한 번에 최대 ${MAX_UPLOAD}장만 업로드할 수 있습니다. 처음 ${MAX_UPLOAD}장만 처리됩니다.`
+      );
+    }
 
     const fileArr = Array.from(files).slice(0, MAX_UPLOAD);
     const newPhotos: Photo[] = fileArr.map((f) => {
@@ -176,8 +184,10 @@ export default function Gallery() {
             <BtnIcon
               onClick={onClickAddPhotos}
               startIcon={<Camera className="size-6 text-color-high" />}
+              disabled={isUploading}
+              className={isUploading ? "opacity-60 cursor-not-allowed" : ""}
             >
-              사진 추가
+              {isUploading ? "업로드 중..." : "사진 추가"}
             </BtnIcon>
           )}
           {isEditing && (
@@ -217,7 +227,7 @@ export default function Gallery() {
               <img
                 src={p.url}
                 alt={p.fileName ?? "photo"}
-                className="object-cover w-full h-full"
+                className="object-cover w-full h-full "
               />
             </div>
 
