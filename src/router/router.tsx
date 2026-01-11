@@ -18,6 +18,7 @@ import TicketBookPage from "@/pages/Archive/Ticket/TicketBookPage";
 import CreateTicketPage from "@/pages/Archive/Ticket/CreateTicketPage";
 import EditTicketPage from "@/pages/Archive/Ticket/EditTicketPage";
 import Gallery from "@/pages/Archive/Gallery/Gallery";
+import RepostingPage from "@/pages/Archive/Repost/RepostingPage";
 
 // 로그인 하지 않은 사용자만 접근 가능한 라우트 (메인 홈, 커뮤니티 열람, 피드 열람)
 const publicRoutes: RouteObject[] = [
@@ -32,6 +33,7 @@ const publicRoutes: RouteObject[] = [
       { path: "archive/:id", element: <ArchiveDetail /> },
       { path: "archive/:id/ticket-book", element: <TicketBookPage /> },
       { path: "archive/:id/gallery", element: <Gallery /> },
+      { path: "archive/:id/repost", element: <RepostingPage /> },
       { path: "feed", element: <Feed /> },
       { path: "feed/:id", element: <FeedDetail /> },
       { path: "community", element: <Community /> },
