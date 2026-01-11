@@ -1,4 +1,3 @@
-import Footbar from "@/components/Footbar";
 import MainNavbar from "@/components/MainNavbar";
 import { Outlet } from "react-router-dom";
 
