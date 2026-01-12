@@ -9,7 +9,7 @@ import kakaoIcon from "@/assets/Icon/kakao.svg";
 import naverIcon from "@/assets/Icon/naver.svg";
 
 const schema = z.object({
-  email: z.email({ message: "이메일 형식이 올바르지 않습니다." }),
+  email: z.string().email({ message: "이메일 형식이 올바르지 않습니다." }),
   password: z
     .string()
     .min(8, { message: "비밀번호는 8자 이상이어야 합니다." })
@@ -22,6 +22,7 @@ const LoginPage = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     defaultValues: {
@@ -29,30 +30,62 @@ const LoginPage = () => {
       password: "",
     },
     resolver: zodResolver(schema),
-    mode: "onBlur", //touched 되었는지 여부 확인
+    mode: "onBlur",
   });
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     console.log(data);
   };
-  const [checked, setChecked] = useState<boolean>(false);
 
-  const handleLogin = () => {
-    console.log("로그인 시도");
+  const [checked, setChecked] = useState<boolean>(false);
+  //로그인 에러 상태
+  const [loginError, setLoginError] = useState<string>("");
+
+  // 입력여부 확인을 위한 watch & isFormValid
+  const email = watch("email");
+  const password = watch("password");
+  const isFormValid = email.length > 0 && password.length > 0;
+
+  const handleLogin = async () => {
+    try {
+      console.log("로그인 시도");
+
+      // const response = await apiClient.post('/auth/login', { email, password });
+
+      // 테스트용
+      const isSuccess = true;
+
+      if (!isSuccess) {
+        throw new Error("로그인 실패");
+      }
+
+      // 성공 시 처리
+      console.log("로그인 성공", { email, password, checked });
+      // navigate('/') 등
+    } catch (error) {
+      // ✅ 로그인 실패 시 에러 메시지 설정
+      setLoginError(
+        "아이디(이메일) 또는 비밀번호가 일치하지 않습니다. 올바른 정보를 입력해주세요."
+      );
+    }
+  };
+
+  // ✅ 입력 변경 시 에러 초기화
+  const handleInputChange = () => {
+    if (loginError) {
+      setLoginError("");
+    }
   };
 
   const handleSocialLogin = (provider: string) => {
     switch (provider) {
       case "google":
-        // window.location.href = "https://www.google.com";
         console.log("google 로그인 시도");
         break;
       case "kakao":
-        // window.location.href = "https://www.kakao.com";
         console.log("kakao 로그인 시도");
         break;
       case "naver":
-        // window.location.href = "https://www.naver.com";
         console.log("naver 로그인 시도");
     }
   };
@@ -73,18 +106,35 @@ const LoginPage = () => {
               {...register("email")}
               type="email"
               placeholder="이메일을 입력해주세요"
-              className="w-full h-[65px] p-5 rounded-xl border-2 border-solid border-border-mid
-            typo-h2 text-color-highest placeholder:text-color-low"
+              onChange={(e) => {
+                register("email").onChange(e);
+                handleInputChange();
+              }}
+              className={`w-full h-[65px] p-5 rounded-xl border-2 border-solid 
+                typo-h2 text-color-highest placeholder:text-color-low outline-none
+                ${loginError ? "border-red-500" : "border-border-mid"}
+                focus:border-brand-blue-400`}
             />
             <input
               {...register("password")}
               type="password"
               placeholder="비밀번호를 입력해주세요"
-              className="w-full h-[65px] p-5 rounded-xl border-2 border-solid border-border-mid 
-            typo-h2 text-color-highest placeholder:text-color-low"
+              onChange={(e) => {
+                register("password").onChange(e);
+                handleInputChange();
+              }}
+              className={`w-full h-[65px] p-5 rounded-xl border-2 border-solid 
+                typo-h2 text-color-highest placeholder:text-color-low outline-none
+                ${loginError ? "border-red-500" : "border-border-mid"}
+                focus:border-brand-blue-400`}
             />
+
+            {loginError && (
+              <p className="typo-h3 text-color-accent">{loginError}</p>
+            )}
+
             <div className="flex items-center gap-2.5">
-              <button onClick={() => setChecked(!checked)}>
+              <button type="button" onClick={() => setChecked(!checked)}>
                 <CheckboxIcon checked={checked} />
               </button>
               <span className="typo-h2 text-color-mid">로그인 상태 유지</span>
@@ -93,19 +143,28 @@ const LoginPage = () => {
           {/* 로그인 버튼  & 회원가입/아이디비밀번호 찾기 */}
           <div className="w-full flex flex-col gap-8">
             <BtnBasic
+              onClick={() => handleLogin()}
               variant="blue"
-              onClick={handleLogin}
-              disabled={isSubmitting}
+              disabled={!isFormValid || isSubmitting || !!loginError}
               className="w-full h-[65px]"
             >
               로그인
             </BtnBasic>
+
             <div className="w-full flex gap-2.5 justify-center items-center typo-h2 text-color-mid">
-              <button onClick={() => {}} className="flex-1 cursor-pointer">
+              <button
+                type="button"
+                onClick={() => {}}
+                className="flex-1 cursor-pointer"
+              >
                 <p>회원가입</p>
               </button>
               <p>|</p>
-              <button onClick={() => {}} className="flex-1 cursor-pointer">
+              <button
+                type="button"
+                onClick={() => {}}
+                className="flex-1 cursor-pointer"
+              >
                 <p>아이디/비밀번호 찾기</p>
               </button>
             </div>
