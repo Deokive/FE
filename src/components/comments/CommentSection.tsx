@@ -191,6 +191,7 @@ export default function CommentSection({
               displayName={currentUser?.nickname ?? "사용자명"}
               size="sm"
               className="flex-shrink-0"
+              nameClassName="typo-body2-semibold "
             />
             <CommentInput
               value={input}
