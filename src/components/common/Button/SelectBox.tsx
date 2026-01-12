@@ -23,7 +23,7 @@ export default function SelectBox({
   value,
   onChange,
   className,
-  placeholder = "선택하세요",
+  placeholder = "전체",
   Icon,
 }: SelectBoxProps) {
   const [isOpen, setIsOpen] = useState(false);
