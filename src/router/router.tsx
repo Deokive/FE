@@ -19,6 +19,7 @@ import CreateTicketPage from "@/pages/Archive/Ticket/CreateTicketPage";
 import EditTicketPage from "@/pages/Archive/Ticket/EditTicketPage";
 import Gallery from "@/pages/Archive/Gallery/Gallery";
 import RepostingPage from "@/pages/Archive/Repost/RepostingPage";
+import PasswordFind from "@/pages/Auth/PasswordFind";
 
 // 로그인 하지 않은 사용자만 접근 가능한 라우트 (메인 홈, 커뮤니티 열람, 피드 열람)
 const publicRoutes: RouteObject[] = [
@@ -28,6 +29,7 @@ const publicRoutes: RouteObject[] = [
     children: [
       { index: true, element: <Home /> },
       { path: "login", element: <LoginPage /> },
+      { path: "password-find", element: <PasswordFind /> },
       { path: "signup", element: <SignupPage /> },
       { path: "archive", element: <Archive /> },
       { path: "archive/:id", element: <ArchiveDetail /> },
