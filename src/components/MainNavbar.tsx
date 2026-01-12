@@ -47,7 +47,7 @@ const MainNavbar = () => {
           </NavLink>
         </div>
         <div>
-          <NavLink to="/me" className={linkClass}>
+          <NavLink to="/mypage" className={linkClass}>
             My page
           </NavLink>
         </div>
