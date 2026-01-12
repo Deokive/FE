@@ -3,7 +3,7 @@ import vectorIcon from "@/assets/icon/VectorGray.svg";
 import { twMerge } from "tailwind-merge";
 import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
 
-interface ArchiveCardProps {
+type Props = {
   archiveId?: number;
   userId?: number;
   title?: string;
@@ -12,11 +12,11 @@ interface ArchiveCardProps {
   viewCount?: number;
   likeCount?: number;
   onClick?: () => void;
-}
-// 편집 모드일 때 카드에 클릭 버튼 추가하기 위한 props
-type Props = ArchiveCardProps & {
   isEditMode?: boolean;
+  checked?: boolean;
+  onToggleCheck?: (id: string, checked: boolean) => void;
 };
+
 const ArchiveCard = ({
   archiveId,
   userId,
@@ -25,6 +25,8 @@ const ArchiveCard = ({
   image,
   onClick,
   isEditMode = false,
+  checked = false,
+  onToggleCheck,
 }: Props) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -46,10 +48,16 @@ const ArchiveCard = ({
   // 편집 모드일 때 카드 클릭 시 체크박스 토글
   const handleCardClick = () => {
     if (isEditMode) {
-      setIsSelected((prev) => !prev);
+      // 편집모드에서 카드 영역 클릭했을 때도 체크 토글 되도록 (부모 콜백 호출)
+      onToggleCheck?.(String(archiveId), !checked);
     } else {
       onClick?.();
     }
+  };
+
+  const handleCheckboxClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onToggleCheck?.(String(archiveId), !checked);
   };
 
   return (
@@ -64,9 +72,15 @@ const ArchiveCard = ({
       <div className="relative w-[321px] h-[179px] rounded-t-[10px] bg-white flex items-center justify-center overflow-hidden">
         {/* 편집 모드일 때 왼쪽 위 체크박스 */}
         {isEditMode && (
-          <div className="absolute top-4 left-5 z-10">
-            <CheckboxIcon checked={isSelected} disabled={false} size={24} />
-          </div>
+          <button
+            type="button"
+            onClick={handleCheckboxClick}
+            className="absolute top-4 left-5 z-10"
+            aria-pressed={checked}
+            aria-label={checked ? "선택 해제" : "선택"}
+          >
+            <CheckboxIcon checked={checked} disabled={false} size={24} />
+          </button>
         )}
         {/* 1) 이미지가 있고, 로딩 성공 */}
         {hasImage && imageLoaded && !imageError && (

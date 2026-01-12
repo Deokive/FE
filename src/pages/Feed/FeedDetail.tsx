@@ -77,7 +77,8 @@ const FeedDetail = () => {
         <ArchiveTitle
           title="덕질 갤러리"
           onClick={() => {
-            console.log("덕질 갤러리 더보기 클릭");
+            if (!archiveId) return;
+            navigate(`/archive/${archiveId}/gallery`);
           }}
           isMore={(gallery.length ?? 0) > 0}
         />
@@ -104,7 +105,8 @@ const FeedDetail = () => {
         <ArchiveTitle
           title="덕질 리포스트"
           onClick={() => {
-            console.log("덕질 리포스트 더보기 클릭");
+            if (!archiveId) return;
+            navigate(`/archive/${archiveId}/repost`);
           }}
           isMore={(repost.length ?? 0) > 0}
         />

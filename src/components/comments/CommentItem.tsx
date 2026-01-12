@@ -47,6 +47,7 @@ export default function CommentItem({
             displayName={comment.authorName ?? "사용자명"}
             size="sm"
             className="flex-shrink-0"
+            nameClassName="typo-body2-semibold "
           />
 
           <div className="ml-8.5">
@@ -110,6 +111,7 @@ export default function CommentItem({
                       displayName={r.authorName ?? "사용자명"}
                       size="sm"
                       className="flex-shrink-0"
+                      nameClassName="typo-body2-semibold "
                     />
                     <div className="ml-8.5">
                       <div className="typo-body2-medium text-highest">
@@ -159,6 +161,7 @@ export default function CommentItem({
                 className="flex-shrink-0"
                 avatarUrl={undefined}
                 displayName={currentUser?.nickname ?? "사용자명"}
+                nameClassName="typo-body2-semibold "
               />
               <div className="flex-1">
                 <CommentInput

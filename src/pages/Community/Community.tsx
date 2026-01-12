@@ -10,9 +10,9 @@ import SelectBox from "@/components/common/Button/SelectBox";
 type ListOption = { label: string; value: string };
 
 const LIST_OPTIONS: ListOption[] = [
-  { label: "전체", value: "all" },
-  { label: "좋아요 순", value: "like" },
+  { label: "최신 순", value: "newest" },
   { label: "조회수 순", value: "popular" },
+  { label: "좋아요 순", value: "like" },
 ];
 
 const Community = () => {
