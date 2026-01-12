@@ -18,17 +18,17 @@ const MainNavbar = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/Archive" className={linkClass}>
+            <NavLink to="/archive" className={linkClass}>
               Archive
             </NavLink>
           </li>
           <li>
-            <NavLink to="/Feed" className={linkClass}>
+            <NavLink to="/feed" className={linkClass}>
               Feed
             </NavLink>
           </li>
           <li>
-            <NavLink to="/Community" className={linkClass}>
+            <NavLink to="/community" className={linkClass}>
               Community
             </NavLink>
           </li>
