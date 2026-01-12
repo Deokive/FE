@@ -7,7 +7,7 @@ import Community from "@/pages/Community/Community";
 import Feed from "@/pages/Feed/Feed";
 import MyPage from "@/pages/MyPage/MyPage";
 import ProtectedLayout from "@/layouts/ProtectedLayout";
-import LoginPage from "@/pages/Auth/LoginPage";
+import LoginPage from "@/pages/auth/LoginPage";
 import SignupPage from "@/pages/Auth/SignupPage";
 import TestPlayGround from "@/pages/Test/TestPlayGround";
 import FeedDetail from "@/pages/Feed/FeedDetail";
@@ -19,7 +19,12 @@ import CreateTicketPage from "@/pages/Archive/Ticket/CreateTicketPage";
 import EditTicketPage from "@/pages/Archive/Ticket/EditTicketPage";
 import Gallery from "@/pages/Archive/Gallery/Gallery";
 import RepostingPage from "@/pages/Archive/Repost/RepostingPage";
-import PasswordFind from "@/pages/Auth/PasswordFind";
+import MyInfoPage from "@/pages/MyPage/MyInfoPage";
+import FriendsPage from "@/pages/MyPage/FriendsPage";
+import VisitProfilePage from "@/pages/MyPage/VisitProfilePage";
+import VisitArchivePage from "@/pages/MyPage/VisitArchivePage";
+import MyArchivePage from "@/pages/MyPage/MyArchivePage";
+import PasswordFind from "@/pages/auth/PasswordFind";
 
 // 로그인 하지 않은 사용자만 접근 가능한 라우트 (메인 홈, 커뮤니티 열람, 피드 열람)
 const publicRoutes: RouteObject[] = [
@@ -40,6 +45,8 @@ const publicRoutes: RouteObject[] = [
       { path: "feed/:id", element: <FeedDetail /> },
       { path: "community", element: <Community /> },
       { path: "/community/:postId", element: <CommunityDetail /> },
+      { path: "/profile/:userId", element: <VisitProfilePage /> },
+      { path: "/profile/:userId/archives", element: <VisitArchivePage /> },
       { path: "test", element: <TestPlayGround /> },
       { path: "*", element: <NotFound /> },
     ],
@@ -61,7 +68,10 @@ const privateRoutes: RouteObject[] = [
       { path: "feed/:id", element: <FeedDetail /> },
       { path: "community", element: <Community /> },
       { path: "community/new", element: <CommunityWrite /> },
-      { path: "me", element: <MyPage /> },
+      { path: "mypage", element: <MyPage /> },
+      { path: "mypage/info", element: <MyInfoPage /> },
+      { path: "mypage/archive", element: <MyArchivePage /> },
+      { path: "mypage/friends", element: <FriendsPage /> },
       { path: "*", element: <NotFound /> },
     ],
   },
