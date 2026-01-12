@@ -5,34 +5,22 @@ import ExclamationIcon from "../../assets/Icon/ExclamationIcon";
 
 // Props 정의
 type ConfirmModalProps = {
-  // 트리거(아이콘/버튼 등). 이 요소가 클릭되면 모달이 열린다.
   trigger?: React.ReactNode;
-
-  // 모달 내용
   title?: React.ReactNode; // 큰 제목
-  description?: React.ReactNode; // 부설명(선택)
-
-  // 상단 아이콘(항상 보여짐) - 기본은 ExclamationIcon
+  description?: React.ReactNode; // 부설명
   icon?: React.ReactNode;
-
-  // 버튼 레이블
   confirmLabel?: string;
   cancelLabel?: string;
-
-  // 컨트롤 모드(optional)
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 
-  // 확인 콜백
   onConfirm: () => void;
   onCancel?: () => void;
 
-  // 기타 옵션
   className?: string;
   confirmVariant?: "blue" | "gray";
   cancelVariant?: "gray";
   closeOnOverlayClick?: boolean;
-  // aria-label (dialog)
   ariaLabel?: string;
 };
 
@@ -139,27 +127,28 @@ export default function ConfirmModal({
             aria-hidden
           />
 
-          {/* 모달 박스 (디자인은 제공해준 스타일 기반) */}
+          {/* 모달 박스 */}
           <div
             className={clsx(
-              "relative z-10 w-152 h-74 bg-white rounded-[20px] px-29 py-10",
+              "relative z-10 w-152 h-74 bg-white rounded-[20px] px-27.5 py-10",
               className
             )}
           >
             <div className="flex flex-col items-center">
               <div className="rounded-full p-3 mb-5">{topIcon}</div>
 
-              <div className="typo-h3-semibold w-95 text-center mb-11">
+              <div className="typo-h3-semibold w-95 text-center mb-2">
                 {title}
               </div>
 
-              {description && (
-                <div className="text-center text-sm text-text-mid mb-6">
+              {description ? (
+                <div className="typo-caption text-color-high mb-6.5">
                   {description}
                 </div>
+              ) : (
+                <span className="inline-block mb-6.5" />
               )}
 
-              {/* 버튼 그룹: BtnBasic 사용 */}
               <div className="w-full flex items-center justify-center gap-5">
                 <div className="w-1/2 flex justify-center">
                   <BtnBasic
