@@ -7,6 +7,7 @@ import { useState } from "react";
 import googleIcon from "@/assets/Icon/Google.svg";
 import kakaoIcon from "@/assets/Icon/kakao.svg";
 import naverIcon from "@/assets/Icon/naver.svg";
+import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   email: z.string().email({ message: "이메일 형식이 올바르지 않습니다." }),
@@ -36,6 +37,8 @@ const LoginPage = () => {
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     console.log(data);
   };
+
+  const navigate = useNavigate();
 
   const [checked, setChecked] = useState<boolean>(false);
   //로그인 에러 상태
@@ -154,7 +157,7 @@ const LoginPage = () => {
             <div className="w-full flex gap-2.5 justify-center items-center typo-h2 text-color-mid">
               <button
                 type="button"
-                onClick={() => {}}
+                onClick={() => navigate("/signup")}
                 className="flex-1 cursor-pointer"
               >
                 <p>회원가입</p>
@@ -162,7 +165,7 @@ const LoginPage = () => {
               <p>|</p>
               <button
                 type="button"
-                onClick={() => {}}
+                onClick={() => navigate("/password-find")}
                 className="flex-1 cursor-pointer"
               >
                 <p>아이디/비밀번호 찾기</p>
