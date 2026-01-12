@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import TrashIcon from "@/assets/Icon/TrashIcon";
 import ArchiveList from "@/components/archive/List/ArchiveList";
 import EmptyArchive from "@/components/archive/Empty/EmptyArchive";
@@ -16,14 +17,54 @@ const Archive = () => {
   };
 
   // 아카이브 데이터 조회 (test용) => 실제로는 API에서 가져올 데이터
-  const archiveData = archiveDataMock.filter(
+  const initialData = archiveDataMock.filter(
     (archive) => archive.userId === user.userId
   );
 
+  const [archives, setArchives] = useState(() => initialData);
   const [isEditMode, setIsEditMode] = useState<boolean>(false); // 편집 모드 여부
+  const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
 
   const handleEditMode = () => {
-    setIsEditMode((prev) => !prev);
+    setIsEditMode((prev) => {
+      const next = !prev;
+      if (!next) setCheckedMap({}); // 편집 종료 시 선택 초기화
+      return next;
+    });
+  };
+
+  // 체크 토글: ArchiveCard 또는 체크버튼에서 호출
+  const toggleCheck = (id: string, checked: boolean) => {
+    setCheckedMap((prev) => {
+      const next = { ...prev };
+      if (checked) next[id] = true;
+      else delete next[id];
+      return next;
+    });
+  };
+
+  // 체크된 id 배열
+  const checkedIds = useMemo(
+    () => Object.keys(checkedMap).filter((k) => checkedMap[k]),
+    [checkedMap]
+  );
+
+  // 선택 삭제
+  const handleDeleteSelected = () => {
+    if (checkedIds.length === 0) {
+      alert("삭제할 아카이브를 선택하세요.");
+      return;
+    }
+    if (!confirm(`${checkedIds.length}개의 아카이브를 삭제하시겠어요?`)) return;
+
+    // TODO: 서버 연동 시 서버 요청 후 성공 시 상태 갱신
+    setArchives((prev) =>
+      prev.filter((a) => !checkedIds.includes(String(a.archiveId)))
+    );
+
+    // 초기화 / 편집 모드 종료
+    setCheckedMap({});
+    setIsEditMode(false);
   };
 
   return (
@@ -34,23 +75,21 @@ const Archive = () => {
       </div>
       <div className="max-w-[1920px] mx-auto mb-40">
         {/* 아카이브가 존재하면 아카이브 카드를 보여줍니다. */}
-        {archiveData.length > 0 ? (
+        {archives.length > 0 ? (
           <div className="flex flex-col gap-10">
             {isEditMode ? (
               <div className="flex items-center justify-end gap-5">
                 <BtnIcon
                   startIcon={<TrashIcon className="w-6 h-6 text-color-high" />}
-                  onClick={() => {
-                    console.log("삭제 버튼 클릭");
-                  }}
+                  onClick={handleDeleteSelected}
                 >
                   삭제하기
                 </BtnIcon>
                 <BtnIcon
                   startIcon={<SquareX className="w-6 h-6 text-color-high" />}
                   onClick={() => {
-                    console.log("취소 버튼 클릭");
                     setIsEditMode(false);
+                    setCheckedMap({});
                   }}
                 >
                   취소하기
@@ -68,17 +107,19 @@ const Archive = () => {
                 </BtnIcon>
                 <BtnIcon
                   startIcon={<Pencil className="w-6 h-6 text-color-high" />}
-                  onClick={() => {
-                    handleEditMode();
-                    console.log(isEditMode);
-                  }}
+                  onClick={handleEditMode}
                 >
                   편집하기
                 </BtnIcon>
               </div>
             )}
 
-            <ArchiveList archive={archiveData} isEditMode={isEditMode} />
+            <ArchiveList
+              archive={archives}
+              isEditMode={isEditMode}
+              checkedMap={checkedMap}
+              onToggleCheck={toggleCheck}
+            />
           </div>
         ) : (
           <EmptyArchive />
