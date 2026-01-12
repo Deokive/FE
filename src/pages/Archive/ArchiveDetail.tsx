@@ -115,7 +115,8 @@ const ArchiveDetail = () => {
             <ArchiveTitle
               title="덕질 리포스트"
               onClick={() => {
-                console.log("덕질 리포스트 더보기 클릭");
+                if (!archiveId) return;
+                navigate(`/archive/${archiveId}/repost`);
               }}
               isMore={(archive?.Repost?.length ?? 0) > 0}
             />
@@ -127,7 +128,8 @@ const ArchiveDetail = () => {
                 description="링크를 모아서 아카이브를 만들어보세요."
                 startIcon={<Link className="w-6 h-6 text-color-high" />}
                 onClick={() => {
-                  console.log("링크 첨부 버튼 클릭");
+                  if (!archiveId) return;
+                  navigate(`/archive/${archiveId}/repost`);
                 }}
               />
             )}

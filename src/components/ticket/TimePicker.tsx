@@ -186,7 +186,7 @@ export default function TimePicker({
         <div
           role="dialog"
           aria-modal="true"
-          className="absolute z-50 mt-6 bg-white rounded-xl shadow-xl p-6 border"
+          className="absolute z-50 mt-6 bg-white rounded-xl shadow-xl p-6"
           style={{ minWidth: 328 }}
         >
           <div className="mb-6">
@@ -201,7 +201,7 @@ export default function TimePicker({
                 onChange={onHourInput}
                 className="w-24 h-20 text-center typo-h1 text-surface-container-50 rounded bg-surface-container-20 placeholder:text-high"
                 aria-label="시 입력"
-                placeholder={use12Hour ? "시" : "HH"}
+                placeholder={use12Hour ? "00" : "HH"}
                 maxLength={2}
               />
             </div>
@@ -219,7 +219,7 @@ export default function TimePicker({
                 onChange={onMinuteInput}
                 className="w-24 h-20 text-center typo-h1 text-surface-container-50 rounded bg-surface-container-20 placeholder:text-high"
                 aria-label="분 입력"
-                placeholder={use12Hour ? "분" : "MM"}
+                placeholder={use12Hour ? "00" : "MM"}
                 maxLength={2}
               />
             </div>
