@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import FirstIcon from "../../assets/Icon/FirstIcon";
-import PrevIcon from "../../assets/Icon/PrevIcon";
-import NextIcon from "../../assets/Icon/NextIcon";
-import LastIcon from "../../assets/Icon/LastIcon";
+import FirstIcon from "../../assets/icon/FirstIcon";
+import PrevIcon from "../../assets/icon/PrevIcon";
+import NextIcon from "../../assets/icon/NextIcon";
+import LastIcon from "../../assets/icon/LastIcon";
 import clsx from "clsx";
 
 type Props = {

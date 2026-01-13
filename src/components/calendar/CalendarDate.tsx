@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import DateInput from "@/utils/dateValidate";
-import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
+import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 
 type CalendarDateProps = {
   startDateValue: Date | null;

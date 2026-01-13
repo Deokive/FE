@@ -1,14 +1,13 @@
-// src/pages/GalleryPage.tsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import EmptyList from "@/components/archive/Empty/EmptyList";
 import EditableTitle from "@/components/common/EditableTitle";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import Pagination from "@/components/common/Pagination";
-import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
+import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import { Pencil, SquareX, Camera } from "lucide-react";
-import TrashIcon from "@/assets/Icon/TrashIcon";
+import TrashIcon from "@/assets/icon/TrashIcon";
 
 type Photo = {
   id: string;

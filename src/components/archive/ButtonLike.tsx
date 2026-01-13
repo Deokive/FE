@@ -1,4 +1,4 @@
-import HeartIcon from "@/assets/Icon/HeartIcon";
+import HeartIcon from "@/assets/icon/HeartIcon";
 import { useState } from "react";
 
 interface ButtonLikeProps {
