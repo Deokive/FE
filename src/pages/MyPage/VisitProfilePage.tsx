@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import type { User } from "@/types/user";
-import profileImage from "../../assets/Images/profile.png";
+import profileImage from "../../assets/images/profile.png";
 import { PlusIcon } from "lucide-react";
-import footerImage from "../../assets/Images/footer.png";
+import footerImage from "../../assets/images/footer.png";
 
 // 더미 (테스트용)
 const mockUser: User = {

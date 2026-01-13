@@ -1,5 +1,5 @@
 import { BtnBasic } from "../common/Button/Btn";
-import profileImage from "../../assets/Images/profile.png";
+import profileImage from "../../assets/images/profile.png";
 
 export type FriendRowProps = {
   id: string;

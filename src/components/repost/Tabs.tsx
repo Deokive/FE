@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import tabActiveImg from "../../assets/Images/tab-active.png";
-import tabInactiveImg from "../../assets/Images/tab-inactive.png";
+import tabActiveImg from "../../assets/images/tab-active.png";
+import tabInactiveImg from "../../assets/images/tab-inactive.png";
 
 export type TabItem = {
   id: string;
