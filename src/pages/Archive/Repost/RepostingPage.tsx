@@ -1,5 +1,4 @@
-// pages/RepostingPage.tsx
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 import EditableTitle from "@/components/common/EditableTitle";

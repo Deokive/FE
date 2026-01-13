@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ProfileMenu from "@/components/mypage/ProfileMenu";
 import type { ProfileMenuItem } from "@/components/mypage/ProfileMenu";
 import ProfileBadge from "@/components/common/ProfileBadge";

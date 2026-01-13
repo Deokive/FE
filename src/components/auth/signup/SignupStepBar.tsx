@@ -3,7 +3,7 @@ type SignupStepBarProps = {
   totalSteps?: number;
 };
 
-const SignupStepBar = ({ currentStep, totalSteps = 3 }: SignupStepBarProps) => {
+const SignupStepBar = ({ currentStep }: SignupStepBarProps) => {
   const steps = [
     { step: 1, label: "약관 동의" },
     { step: 2, label: "정보 입력" },

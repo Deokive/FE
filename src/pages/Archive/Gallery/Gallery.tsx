@@ -5,7 +5,6 @@ import EditableTitle from "@/components/common/EditableTitle";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import Pagination from "@/components/common/Pagination";
 import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
-import ImgCard from "@/components/common/Card/ImgCard";
 import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import { Pencil, SquareX, Camera } from "lucide-react";
@@ -26,7 +25,7 @@ export default function Gallery() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [page, setPage] = useState<number>(1);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading, _] = useState(false); //setIsUploading
 
   const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
 

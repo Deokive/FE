@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
 import CommentInput from "./CommentInput";
 import CommentItem from "./CommentItem";

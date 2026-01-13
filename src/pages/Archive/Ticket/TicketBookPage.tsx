@@ -1,22 +1,22 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import TicketBook from "@/components/ticket/TicketBook";
 import { useTickets } from "@/hooks/useTickets";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import type { Ticket } from "@/types/ticket";
 import Pagination from "@/components/common/Pagination";
 import EditableTitle from "@/components/common/EditableTitle";
 
 export default function TicketBookPage() {
   const initial: Ticket[] = []; // 실제 초기 데이터는 API에서 받음
-  const { tickets, addTicket, updateTicket, deleteTickets /* replaceAll? */ } =
+  const { tickets, addTicket, deleteTickets /* replaceAll? */ } =
     useTickets(initial);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // Pagination state
   const [page, setPage] = useState<number>(1);
   const [pageSize] = useState<number>(4);
   const [totalItems, setTotalItems] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [_, setLoading] = useState<boolean>(false); //loading
   const [ticketbookName, setTicketbookName] =
     useState<string>("티켓북명 (사용자 지정)");
 

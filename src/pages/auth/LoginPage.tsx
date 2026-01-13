@@ -24,7 +24,7 @@ const LoginPage = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting }, // error
   } = useForm<FormFields>({
     defaultValues: {
       email: "",
