@@ -4,8 +4,8 @@ import ProfileBadge from "../common/ProfileBadge";
 import { BtnIcon } from "../common/Button/Btn";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import ConfirmModal from "../common/ConfirmModal";
-import TrashIcon from "@/assets/Icon/TrashIcon";
-import ExclamationIcon from "@/assets/Icon/ExclamationIcon";
+import TrashIcon from "@/assets/icon/TrashIcon";
+import ExclamationIcon from "@/assets/icon/ExclamationIcon";
 import { CornerDownRight } from "lucide-react";
 import type { User } from "@/types/user";
 

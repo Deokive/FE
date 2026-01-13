@@ -1,4 +1,4 @@
-import Logo from "@/assets/Icon/Logo";
+import Logo from "@/assets/icon/Logo";
 import { NavLink } from "react-router-dom";
 
 const MainNavbar = () => {

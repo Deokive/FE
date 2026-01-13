@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import vectorIcon from "@/assets/icon/VectorGray.svg";
 import { twMerge } from "tailwind-merge";
-import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
+import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 
 type Props = {
   archiveId?: number;

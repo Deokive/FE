@@ -2,11 +2,11 @@ import { z } from "zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BtnBasic } from "@/components/common/Button/Btn";
-import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
+import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 import { useState } from "react";
-import googleIcon from "@/assets/Icon/Google.svg";
-import kakaoIcon from "@/assets/Icon/kakao.svg";
-import naverIcon from "@/assets/Icon/naver.svg";
+import googleIcon from "@/assets/icon/Google.svg";
+import kakaoIcon from "@/assets/icon/kakao.svg";
+import naverIcon from "@/assets/icon/naver.svg";
 import { useNavigate } from "react-router-dom";
 
 const schema = z.object({

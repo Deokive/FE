@@ -1,7 +1,7 @@
 import ProfileMenu from "@/components/mypage/ProfileMenu";
 import type { ProfileMenuItem } from "@/components/mypage/ProfileMenu";
 import ProfileBadge from "@/components/common/ProfileBadge";
-import footerImage from "../../assets/Images/footer.png";
+import footerImage from "../../assets/images/footer.png";
 
 export default function MyPage() {
   const currentUser = {

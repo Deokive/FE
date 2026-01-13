@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { BtnBasic } from "@/components/common/Button/Btn";
-import ExclamationIcon from "../../assets/Icon/ExclamationIcon";
+import ExclamationIcon from "../../assets/icon/ExclamationIcon";
 
 // Props 정의
 type ConfirmModalProps = {

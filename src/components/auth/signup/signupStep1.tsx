@@ -1,4 +1,4 @@
-import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
+import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 import type { Agreement } from "@/types/auth/signup";
 import { BtnBasic } from "@/components/common/Button/Btn";
 

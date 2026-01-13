@@ -8,9 +8,9 @@ import LinkAttachBox from "@/components/repost/LinkAttachBox";
 import RepostCard from "@/components/common/Card/RepostCard";
 import Pagination from "@/components/common/Pagination";
 import { BtnIcon } from "@/components/common/Button/Btn";
-import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
+import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 import { Link as LinkIcon, Pencil, SquareX } from "lucide-react";
-import TrashIcon from "@/assets/Icon/TrashIcon";
+import TrashIcon from "@/assets/icon/TrashIcon";
 
 type RepostItem = {
   id: string;

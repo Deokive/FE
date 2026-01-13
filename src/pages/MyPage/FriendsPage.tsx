@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import FriendRow from "@/components/mypage/FriendRow";
 import { v4 as uuidv4 } from "uuid";
 import { usePolling } from "@/hooks/usePolling";
-import footerImage from "../../assets/Images/footer.png";
+import footerImage from "../../assets/images/footer.png";
 import { TabContentWrapper } from "@/components/mypage/TabContentWrapper";
 
 /* 샘플 더미 데이터 (초기) */

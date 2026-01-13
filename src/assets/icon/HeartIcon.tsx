@@ -1,4 +1,3 @@
-// src/components/common/Icon/HeartIcon.tsx
 import { Heart } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 

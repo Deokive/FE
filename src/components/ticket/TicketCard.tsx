@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import type { Ticket } from "@/types/ticket";
 import ticketLeft from "@/assets/images/ticket_left.png";
 import ticketRight from "@/assets/images/ticket_right.png";
-import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
+import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 import ticketThumbnail from "@/assets/images/ticketThumbnail.png";
 import Rating from "./Rating";
 

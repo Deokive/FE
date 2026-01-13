@@ -1,4 +1,3 @@
-// src/assets/Icon/CheckboxIcon.tsx
 import { twMerge } from "tailwind-merge";
 
 interface CheckboxIconProps {

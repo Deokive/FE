@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileBadge from "@/components/common/ProfileBadge";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import footerImage from "../../assets/Images/footer.png";
+import footerImage from "../../assets/images/footer.png";
 
 function maskEmail(email?: string | null) {
   if (!email) return "";
