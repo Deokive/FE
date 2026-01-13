@@ -2,7 +2,7 @@ name: git push into another repo to deploy to vercel
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Pushes to another repository
         id: push_directory
-        uses: cpina/github-action-push-to-another-repository@main
+        uses: cpina/github-action-push-to-another-repository@develop
         env:
           API_TOKEN_GITHUB: ${{ secrets.DEOKIVE_KEY }}
         with:
