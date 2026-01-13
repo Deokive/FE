@@ -24,9 +24,7 @@ export default function LinkAttachBox({
   onCancel,
   validate,
   attachLabel = "첨부",
-  cancelLabel = "취소",
   autoFocus = false,
-  showPreview = true,
   className = "",
 }: Props) {
   const [url, setUrl] = useState(initial);

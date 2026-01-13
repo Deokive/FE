@@ -31,8 +31,8 @@ export default function TimePicker({
   onChange,
   placeholder = "시간 선택",
   className = "",
+  // koreanLabel = true,
   use12Hour = true,
-  koreanLabel = true,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [hour, setHour] = useState<number | null>(null);

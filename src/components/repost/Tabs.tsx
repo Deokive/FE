@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import tabActiveImg from "../../assets/Images/tab-active.png";
 import tabInactiveImg from "../../assets/Images/tab-inactive.png";

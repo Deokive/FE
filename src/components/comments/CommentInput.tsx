@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 import TextField from "../common/Form/TextField";
 import { BtnBasic } from "../common/Button/Btn";

@@ -1,4 +1,3 @@
-import React from "react";
 import ticketAdd from "@/assets/images/ticketAdd.png";
 
 export default function TicketEmptyCard({

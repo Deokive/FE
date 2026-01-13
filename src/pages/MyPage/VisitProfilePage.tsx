@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BtnIcon } from "@/components/common/Button/Btn";
-import ArchiveList from "@/components/archive/List/ArchiveList";
 import type { User } from "@/types/user";
 import profileImage from "../../assets/Images/profile.png";
 import { PlusIcon } from "lucide-react";

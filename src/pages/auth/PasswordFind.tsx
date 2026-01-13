@@ -35,7 +35,7 @@ const PasswordFind = () => {
   // 인증번호 확인 에러 메시지
   const [codeError, setCodeError] = useState("");
   // 인증번호 확인 중 여부
-  const [isVerifying, setIsVerifying] = useState(false);
+  const [_, setIsVerifying] = useState(false); //isVerifying
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordCheckVisible, setIsPasswordCheckVisible] = useState(false);
 

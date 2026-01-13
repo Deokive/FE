@@ -309,7 +309,7 @@ const Calendar = ({
           /** 날짜 숫자 포맷팅 함수 (빈 문자열 반환: 기본 날짜 숫자 숨김, tileContent에서 커스텀 렌더링) */
           formatDay={() => ""}
           /** 요일 약어 포맷팅 함수 (Sun, Mon, Tue 등) */
-          formatShortWeekday={(locale, date) => {
+          formatShortWeekday={(_, date) => {
             const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
             return days[date.getDay()];
           }}

@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useMemo } from "react";
+// import { useParams } from "react-router-dom";
 import CommentSection from "@/components/comments/CommentSection";
 import BackNavigator from "@/components/common/BackNavigator";
 import MediaCarousel from "@/components/media/MediaCarousel";
@@ -51,14 +51,15 @@ const currentUser = {
 };
 
 export default function CommunityDetail() {
-  const navigate = useNavigate();
-  const { postId } = useParams();
+  // const { postId } = useParams();
 
   const CONTAINER_WIDTH = 1240;
 
   const sortedMedia = useMemo(() => {
     const items = [...mockPost.media];
-    items.sort((a, b) => (a.isRepresentative ? -1 : 1));
+    items.sort(
+      (a, b) => Number(b.isRepresentative) - Number(a.isRepresentative)
+    );
     return items;
   }, [mockPost.media]);
 

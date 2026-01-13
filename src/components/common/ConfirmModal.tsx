@@ -58,6 +58,7 @@ export default function ConfirmModal({
   const handleOpen = (e?: React.MouseEvent) => {
     lastActiveElement.current = document.activeElement;
     setOpenInternal(true);
+    console.log("모달 열기", e?.currentTarget);
   };
 
   const handleClose = () => {

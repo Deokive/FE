@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import CommentInput from "./CommentInput";
 import ProfileBadge from "../common/ProfileBadge";
-import { BtnBasic, BtnIcon } from "../common/Button/Btn";
+import { BtnIcon } from "../common/Button/Btn";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import ConfirmModal from "../common/ConfirmModal";
 import TrashIcon from "@/assets/Icon/TrashIcon";

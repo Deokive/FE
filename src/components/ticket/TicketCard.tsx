@@ -1,4 +1,3 @@
-import React from "react";
 import ImgCard from "../common/Card/ImgCard";
 import { twMerge } from "tailwind-merge";
 import type { Ticket } from "@/types/ticket";
@@ -16,8 +15,8 @@ export default function TicketCard({
   onClick,
   selectable = false,
   checked = false,
+  // onDelete,
   onToggleCheck,
-  onDelete,
 }: {
   ticket: Ticket;
   side?: Side;

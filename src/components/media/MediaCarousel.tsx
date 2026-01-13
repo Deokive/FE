@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ImgCard from "../common/Card/ImgCard";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import type { MediaItem } from "@/types/media";
@@ -13,9 +13,9 @@ export default function MediaCarousel({
   slideBy = 1,
   selectedId,
   readOnly = false,
-  showRepresentativeBadge = false,
+  // showRepresentativeBadge = false,
+  // nextOffset,
   prevOffset,
-  nextOffset,
 }: {
   items: MediaItem[];
   onRemove?: (id: string) => void;
