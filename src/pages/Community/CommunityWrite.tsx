@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import BackNavigator from "@/components/common/BackNavigator";
 import RequiredLabel from "@/components/common/Form/RequiredLabel";
 import TextField from "@/components/common/Form/TextField";

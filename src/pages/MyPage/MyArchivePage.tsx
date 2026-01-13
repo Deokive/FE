@@ -24,10 +24,10 @@ const MyArchivePage = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false); // 편집 모드 여부
   const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
 
-  const handleEditMode = () => {
-    setIsEditMode((prev) => !prev);
-    if (isEditMode) setCheckedMap({});
-  };
+  // const handleEditMode = () => {
+  //   setIsEditMode((prev) => !prev);
+  //   if (isEditMode) setCheckedMap({});
+  // };
 
   // 체크 토글: ArchiveCard에서 호출
   const toggleCheck = (id: string, checked: boolean) => {

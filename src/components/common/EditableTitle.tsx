@@ -16,7 +16,6 @@ export default function EditableTitle({
   placeholder = "티켓북명 (클릭하여 수정)",
   maxLength = 60,
   className,
-  autoFocus = false,
 }: Props) {
   const [editing, setEditing] = useState<boolean>(false);
   const [text, setText] = useState<string>(value ?? "");

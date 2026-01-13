@@ -1,12 +1,12 @@
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type CalendarTagProps = {
   tags?: string[];
   onTagChange?: (data: { tags: string[] }) => void;
 };
 
-const CalendarTag = ({ tags, onTagChange }: CalendarTagProps) => {
+const CalendarTag = ({ tags }: CalendarTagProps) => {
   const [tag, setTag] = useState("");
   const [tagsState, setTagsState] = useState<string[]>(tags || []);
   const [error, setError] = useState<string | null>(null); // ✅ 에러 state 추가

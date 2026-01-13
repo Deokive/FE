@@ -5,7 +5,7 @@ import TicketEmptyCard from "./TicketEmptyCard";
 import { useNavigate } from "react-router-dom";
 import ticketbook from "@/assets/images/ticketbook.png";
 import { Pencil, PlusIcon, SquareX } from "lucide-react";
-import { BtnBasic, BtnIcon } from "@/components/common/Button/Btn";
+import { BtnIcon } from "@/components/common/Button/Btn";
 import TrashIcon from "@/assets/Icon/TrashIcon";
 
 export default function TicketBook({

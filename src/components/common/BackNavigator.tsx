@@ -1,4 +1,4 @@
-import React, { KeyboardEvent } from "react";
+import type { KeyboardEvent } from "react";
 import BackIcon from "../../assets/Icon/BackIcon";
 
 type Props = {

@@ -3,7 +3,6 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import SignupStepBar from "@/components/auth/signup/SignupStepBar";
-import type { Agreement } from "@/types/auth/signup";
 import SignupStep1 from "@/components/auth/signup/signupStep1";
 import SignupStep2 from "@/components/auth/signup/signupStep2";
 import SignupStep3 from "@/components/auth/signup/signupStep3";
@@ -44,11 +43,11 @@ export const schema = z
 
 export type FormFields = z.infer<typeof schema>;
 
-const agreements: Agreement[] = [
-  { id: "all", label: "전체 동의", required: false },
-  { id: "terms", label: "[필수] 이용약관 동의", required: true },
-  { id: "privacy", label: "[필수] 개인정보 수집 및 이용 동의", required: true },
-];
+// const agreements: Agreement[] = [
+//   { id: "all", label: "전체 동의", required: false },
+//   { id: "terms", label: "[필수] 이용약관 동의", required: true },
+//   { id: "privacy", label: "[필수] 개인정보 수집 및 이용 동의", required: true },
+// ];
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -75,7 +74,7 @@ const SignupPage = () => {
     handleSubmit,
     trigger,
     watch,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isValid },
   } = useForm<FormFields>({
     defaultValues: {
       emailId: "",
@@ -164,9 +163,9 @@ const SignupPage = () => {
   };
 
   // ✅ 이전 단계로 이동
-  const handlePrev = () => {
-    setStep((prev) => Math.max(prev - 1, 1));
-  };
+  // const handlePrev = () => {
+  //   setStep((prev) => Math.max(prev - 1, 1));
+  // };
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     const { passwordCheck, ...rest } = data;

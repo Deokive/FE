@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FriendRow from "@/components/mypage/FriendRow";
 import { v4 as uuidv4 } from "uuid";

@@ -1,5 +1,4 @@
 import CheckboxIcon from "@/assets/Icon/CheckboxIcon";
-import { useState } from "react";
 import type { Agreement } from "@/types/auth/signup";
 import { BtnBasic } from "@/components/common/Button/Btn";
 

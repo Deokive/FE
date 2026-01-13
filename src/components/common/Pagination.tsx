@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import FirstIcon from "../../assets/Icon/FirstIcon";
 import PrevIcon from "../../assets/Icon/PrevIcon";
 import NextIcon from "../../assets/Icon/NextIcon";
@@ -66,8 +66,8 @@ export default function Pagination({
   const goNextGroup = () => setPage(nextGroupStart); // >> 다음 그룹의 첫 페이지
 
   // 처음/마지막 (선택적)
-  const goFirst = () => setPage(1);
-  const goLast = () => setPage(totalPages);
+  // const goFirst = () => setPage(1);
+  // const goLast = () => setPage(totalPages);
 
   const isDisabled = (cond: boolean) => (cond || disabled ? true : false);
 

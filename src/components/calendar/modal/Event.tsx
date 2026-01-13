@@ -16,7 +16,7 @@ const Event = ({ onClose, startDate, editData }: EventProps) => {
   const isEditMode = !!editData;
 
   // ✅ editData가 있으면 해당 데이터로 초기화
-  const [eventTitle, setEventTitle] = useState(editData?.title || "");
+  const [eventTitle, _] = useState(editData?.title || "");
   const [dateData, setDateData] = useState<DateData>({
     startDate: editData ? new Date(editData.date) : startDate,
     endDate: null,

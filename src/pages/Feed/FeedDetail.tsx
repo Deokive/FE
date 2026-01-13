@@ -16,6 +16,7 @@ import { repostDataMock } from "@/mockData/repostData";
 import ButtonLike from "@/components/archive/ButtonLike";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import EmptyFeedList from "@/components/feed/EmptyFeedList";
+import type { LabelData } from "@/types/calendar";
 
 const FeedDetail = () => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const FeedDetail = () => {
         />
         {/* 아카이브 달력 */}
         <Calendar
-          labelData={labelDataMock}
+          labelData={labelDataMock as unknown as LabelData[]}
           stickerData={stickerDataMock}
           mode="readonly"
         />

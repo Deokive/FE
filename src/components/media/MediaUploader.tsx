@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import ImgUpLoadCard from "../common/Card/ImgUpLoadCard";
 import MediaCarousel from "./MediaCarousel";
 

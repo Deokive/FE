@@ -6,7 +6,7 @@ type SignupStep3Props = {
   onComplete: () => void; // 회원가입 완료 시 호출될 함수
 };
 
-const SignupStep3 = ({ email, onComplete }: SignupStep3Props) => {
+const SignupStep3 = ({ onComplete }: SignupStep3Props) => {
   const [code, setCode] = useState<string>("");
   const [isVerified, setIsVerified] = useState<boolean>(false); // 인증 성공 여부
   const [isVerifying, setIsVerifying] = useState<boolean>(false); // 인증 중 로딩 상태

@@ -1,4 +1,3 @@
-import React from "react";
 import { BtnBasic } from "../common/Button/Btn";
 import profileImage from "../../assets/Images/profile.png";
 
@@ -16,7 +15,7 @@ export type FriendRowProps = {
 
 export default function FriendRow({
   id,
-  avatarUrl,
+  // avatarUrl,
   displayName,
   role,
   onViewProfile,

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileBadge from "@/components/common/ProfileBadge";
 import ConfirmModal from "@/components/common/ConfirmModal";
@@ -29,8 +29,8 @@ export default function MyInfoPage() {
   const navigate = useNavigate();
 
   // 닉네임 편집
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [nameInput, setNameInput] = useState<string>(
+  const [isEditingName, _setIsEditingName] = useState(false);
+  const [_nameInput, setNameInput] = useState<string>(
     currentUser?.nickname ?? ""
   );
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -50,43 +50,43 @@ export default function MyInfoPage() {
     }
   }, [isEditingName]);
 
-  const saveNickname = async (nextName: string) => {
-    const trimmed = nextName.trim().slice(0, 10);
-    if (!trimmed) {
-      // 빈값은 무시하거나 에러 처리
-      setNameInput(currentUser?.nickname ?? "");
-      setIsEditingName(false);
-      return;
-    }
+  // const saveNickname = async (nextName: string) => {
+  //   const trimmed = nextName.trim().slice(0, 10);
+  //   if (!trimmed) {
+  //     // 빈값은 무시하거나 에러 처리
+  //     setNameInput(currentUser?.nickname ?? "");
+  //     setIsEditingName(false);
+  //     return;
+  //   }
 
-    if (trimmed === currentUser?.nickname) {
-      setIsEditingName(false);
-      return;
-    }
+  //   if (trimmed === currentUser?.nickname) {
+  //     setIsEditingName(false);
+  //     return;
+  //   }
 
-    try {
-      // TODO: 실제 API 호출로 닉네임 저장
-      console.info("닉네임 저장 호출: ", trimmed);
-      // r상태 업데이트
-      //   await refetch?.();
-    } catch (err) {
-      console.error(err);
-      alert("닉네임 저장 중 오류가 발생했습니다.");
-    } finally {
-      setIsEditingName(false);
-    }
-  };
+  //   try {
+  //     // TODO: 실제 API 호출로 닉네임 저장
+  //     console.info("닉네임 저장 호출: ", trimmed);
+  //     // r상태 업데이트
+  //     //   await refetch?.();
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("닉네임 저장 중 오류가 발생했습니다.");
+  //   } finally {
+  //     setIsEditingName(false);
+  //   }
+  // };
 
-  const handleNameKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
-    e
-  ) => {
-    if (e.key === "Enter") {
-      saveNickname(nameInput);
-    } else if (e.key === "Escape") {
-      setNameInput(currentUser?.nickname ?? "");
-      setIsEditingName(false);
-    }
-  };
+  // const handleNameKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
+  //   e
+  // ) => {
+  //   if (e.key === "Enter") {
+  //     saveNickname(nameInput);
+  //   } else if (e.key === "Escape") {
+  //     setNameInput(currentUser?.nickname ?? "");
+  //     setIsEditingName(false);
+  //   }
+  // };
 
   const handleLogoutConfirm = () => {
     // 로그아웃 로직: 토큰 삭제, 상태 초기화, 라우팅 등
@@ -135,7 +135,7 @@ export default function MyInfoPage() {
             className="gap-5"
             nameClassName="typo-h1 text-color-high"
             editable={true}
-            onRename={async (next) => {
+            onRename={async (_next) => {
               // 프로젝트 API 함수로 교체
               try {
                 // await api.updateNickname(next);

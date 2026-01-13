@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Banner from "@/components/community/Banner";
 import ArchiveList from "@/components/archive/List/ArchiveList";

@@ -1,4 +1,3 @@
-import React from "react";
 import TicketForm from "@/components/ticket/TicketForm";
 import { useTickets } from "@/hooks/useTickets";
 import { useNavigate } from "react-router-dom";
