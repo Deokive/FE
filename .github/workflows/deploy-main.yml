@@ -20,7 +20,7 @@ jobs:
 
       - name: Pushes to another repository
         id: push_directory
-        uses: cpina/github-action-push-to-another-repository@develop
+        uses: cpina/github-action-push-to-another-repository@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.DEOKIVE_KEY }}
         with:
@@ -29,7 +29,7 @@ jobs:
           destination-repository-name: ${{ secrets.DEOKIVE_REPOSITORY }}
           user-email: ${{ secrets.DEOKIVE_EMAIL }}
           commit-message: ${{ github.event.commits[0].message }}
-          target-branch: develop
+          target-branch: main
 
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY
