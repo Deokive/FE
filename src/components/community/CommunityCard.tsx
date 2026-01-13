@@ -1,5 +1,5 @@
 import vectorIcon from "@/assets/icon/Vector.svg";
-import shareIcon from "@/assets/icon/share.svg";
+import shareIcon from "@/assets/icon/Share.svg";
 
 interface CommunityCardProps {
   title?: string;
