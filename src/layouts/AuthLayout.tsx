@@ -2,12 +2,12 @@ import MainNavbar from "@/components/MainNavbar";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedLayout = () => {
+const AuthLayout = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  // 인증되지 않은 경우 로그인 페이지로 리다이렉트
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  // ✅ 로그인된 사용자는 홈으로 리다이렉트
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -18,4 +18,4 @@ const ProtectedLayout = () => {
   );
 };
 
-export default ProtectedLayout;
+export default AuthLayout;

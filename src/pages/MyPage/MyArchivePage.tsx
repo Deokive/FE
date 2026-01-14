@@ -6,16 +6,15 @@ import { BtnIcon } from "@/components/common/Button/Btn";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
 import { Pencil, SquareX } from "lucide-react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const MyArchivePage = () => {
-  const user = {
-    userId: 1,
-    nickname: "홍길동",
-  };
+  // 현재 로그인한 사용자 ID
+  const user = useAuthStore((state) => state.user);
 
   // 초기 데이터(서버 대신 mock에서 초기화)
   const initialData = archiveDataMock.filter(
-    (archive) => archive.userId === user.userId
+    (archive) => archive.userId === user?.id
   );
 
   // 아카이브 목록 상태를 컴포넌트가 직접 관리
