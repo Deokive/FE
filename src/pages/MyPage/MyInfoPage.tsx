@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ProfileBadge from "@/components/common/ProfileBadge";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import footerImage from "../../assets/images/footer.png";
+import { useAuthStore } from "@/store/useAuthStore";
 
 function maskEmail(email?: string | null) {
   if (!email) return "";
@@ -19,12 +20,7 @@ function maskEmail(email?: string | null) {
 }
 
 export default function MyInfoPage() {
-  const currentUser = {
-    id: "u3",
-    nickname: "테스트",
-    avatarUrl: "undefiend",
-    email: "testtest@gmail.com",
-  };
+  const currentUser = useAuthStore((state) => state.user);
 
   const navigate = useNavigate();
 
