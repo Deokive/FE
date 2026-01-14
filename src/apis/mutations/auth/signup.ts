@@ -4,6 +4,8 @@ import type {
   SendVerificationCodeResponse,
   SignupRequest,
   SignupResponse,
+  VerifyEmailCodeRequest,
+  VerifyEmailCodeResponse,
 } from "@/types/auth/signup";
 
 /**
@@ -20,6 +22,7 @@ export const registerUser = async (
   return response.data;
 };
 
+// 이메일 인증번호 발송 API
 export const sendVerificationCode = async (
   data: SendVerificationCodeRequest
 ): Promise<SendVerificationCodeResponse> => {
@@ -32,6 +35,17 @@ export const sendVerificationCode = async (
         email: data.email,
       },
     }
+  );
+  return response.data;
+};
+
+//이메일 인증 번호 검증 API
+export const verifyEmailCode = async (
+  data: VerifyEmailCodeRequest
+): Promise<VerifyEmailCodeResponse> => {
+  const response = await axiosInstance.post<VerifyEmailCodeResponse>(
+    "/api/v1/auth/email/verify",
+    data
   );
   return response.data;
 };

@@ -8,6 +8,8 @@ import googleIcon from "@/assets/icon/Google.svg";
 import kakaoIcon from "@/assets/icon/kakao.svg";
 import naverIcon from "@/assets/icon/naver.svg";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "@/apis/mutations/auth/login";
 
 const schema = z.object({
   email: z.string().email({ message: "이메일 형식이 올바르지 않습니다." }),
@@ -49,28 +51,26 @@ const LoginPage = () => {
   const password = watch("password");
   const isFormValid = email.length > 0 && password.length > 0;
 
-  const handleLogin = async () => {
-    try {
-      console.log("로그인 시도");
-
-      // const response = await apiClient.post('/auth/login', { email, password });
-
-      // 테스트용
-      const isSuccess = true;
-
-      if (!isSuccess) {
-        throw new Error("로그인 실패");
-      }
-
-      // 성공 시 처리
-      console.log("로그인 성공", { email, password, checked });
-      // navigate('/') 등
-    } catch (error) {
-      // ✅ 로그인 실패 시 에러 메시지 설정
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      console.log("로그인 성공:", data);
+      navigate("/");
+    },
+    onError: (error) => {
+      console.error("로그인 실패:", error);
       setLoginError(
         "아이디(이메일) 또는 비밀번호가 일치하지 않습니다. 올바른 정보를 입력해주세요."
       );
-    }
+    },
+  });
+
+  const handleLogin = async () => {
+    loginMutation.mutate({
+      email,
+      password,
+      rememberMe: checked,
+    });
   };
 
   // ✅ 입력 변경 시 에러 초기화
