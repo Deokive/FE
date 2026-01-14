@@ -1,7 +1,10 @@
 import Logo from "@/assets/icon/Logo";
 import { NavLink } from "react-router-dom";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const MainNavbar = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     isActive ? "text-color-lowest" : "text-color-lowest opacity-[0.5]";
 
@@ -34,23 +37,31 @@ const MainNavbar = () => {
           </li>
         </ul>
       </div>
-      {/* 오른쪽 단독(My Page) */}
+
+      {/* 오른쪽 - 로그인 상태에 따라 다르게 표시 */}
       <div className="flex items-center gap-10">
-        <div>
-          <NavLink to="/login" className={linkClass}>
-            로그인
-          </NavLink>
-        </div>
-        <div>
-          <NavLink to="/signup" className={linkClass}>
-            회원가입
-          </NavLink>
-        </div>
-        <div>
-          <NavLink to="/mypage" className={linkClass}>
-            My page
-          </NavLink>
-        </div>
+        {isAuthenticated ? (
+          // ✅ 로그인 O: 마이페이지만 표시
+          <div>
+            <NavLink to="/mypage" className={linkClass}>
+              My page
+            </NavLink>
+          </div>
+        ) : (
+          // ✅ 로그인 X: 로그인, 회원가입 표시
+          <>
+            <div>
+              <NavLink to="/login" className={linkClass}>
+                로그인
+              </NavLink>
+            </div>
+            <div>
+              <NavLink to="/signup" className={linkClass}>
+                회원가입
+              </NavLink>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
