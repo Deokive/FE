@@ -14,7 +14,9 @@ const MainNavbar = () => {
       <div className="flex items-center gap-10">
         {/* 왼쪽 그룹 */}
         <ul className="flex h-10 items-center gap-10">
-          <Logo />
+          <NavLink to="/">
+            <Logo />
+          </NavLink>
           <li>
             <NavLink to="/" className={linkClass}>
               Home
