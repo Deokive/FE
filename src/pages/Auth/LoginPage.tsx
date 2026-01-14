@@ -10,6 +10,7 @@ import naverIcon from "@/assets/icon/naver.svg";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/apis/mutations/auth/login";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const schema = z.object({
   email: z.string().email({ message: "이메일 형식이 올바르지 않습니다." }),
@@ -51,10 +52,19 @@ const LoginPage = () => {
   const password = watch("password");
   const isFormValid = email.length > 0 && password.length > 0;
 
+  // 로그인 상태 관리 => Zustand Store 사용
+  const loginUser = useAuthStore((state) => state.login);
+
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
       console.log("로그인 성공:", data);
+      loginUser({
+        id: data.user.id,
+        email: data.user.email,
+        nickname: data.user.nickname,
+        role: data.user.role,
+      });
       navigate("/");
     },
     onError: (error) => {
