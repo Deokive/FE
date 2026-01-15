@@ -100,13 +100,19 @@ const LoginPage = () => {
   const handleSocialLogin = (provider: string) => {
     switch (provider) {
       case "google":
-        console.log("google 로그인 시도");
+        window.location.href = `${
+          import.meta.env.VITE_API_BASE
+        }/oauth2/authorization/google`;
         break;
       case "kakao":
-        console.log("kakao 로그인 시도");
+        window.location.href = `${
+          import.meta.env.VITE_API_BASE
+        }/oauth2/authorization/kakao`;
         break;
       case "naver":
-        console.log("naver 로그인 시도");
+        window.location.href = `${
+          import.meta.env.VITE_API_BASE
+        }/oauth2/authorization/naver`;
     }
   };
 
