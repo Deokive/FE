@@ -25,6 +25,7 @@ import VisitArchivePage from "@/pages/MyPage/VisitArchivePage";
 import MyArchivePage from "@/pages/MyPage/MyArchivePage";
 import PasswordFind from "@/pages/Auth/PasswordFind";
 import AuthLayout from "@/layouts/AuthLayout";
+import SocialCallback from "@/pages/Auth/socialCallback";
 
 const router = createBrowserRouter([
   // 🔓 Public Routes (누구나 접근 가능)
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
       { path: "login", element: <LoginPage /> },
       { path: "signup", element: <SignupPage /> },
       { path: "password-find", element: <PasswordFind /> },
+      { path: "/oauth/callback", element: <SocialCallback /> },
     ],
   },
 

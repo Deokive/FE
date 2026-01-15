@@ -18,3 +18,18 @@ export type LoginResponse = {
     refreshTokenExpiresAt: Date;
   };
 };
+
+export type SocialLoginGetMeResponse = {
+  user: {
+    id: number;
+    email: string;
+    role: "USER" | "ADMIN";
+    nickname: string;
+    createdAt: Date;
+    lastModifiedAt: Date;
+  };
+  tokenExpiresInfo: {
+    accessTokenExpiresAt: Date;
+    refreshTokenExpiresAt: Date;
+  };
+};
