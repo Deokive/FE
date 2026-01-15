@@ -107,7 +107,7 @@ const LoginPage = () => {
       case "kakao":
         window.location.href = `${
           import.meta.env.VITE_API_BASE
-        }/oauth2/authorization/kakao`;
+        }/oauth2/authorization/kakao?prompt=login`;
         break;
       case "naver":
         window.location.href = `${
