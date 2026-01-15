@@ -26,6 +26,9 @@ import MyArchivePage from "@/pages/MyPage/MyArchivePage";
 import PasswordFind from "@/pages/Auth/PasswordFind";
 import AuthLayout from "@/layouts/AuthLayout";
 import SocialCallback from "@/pages/Auth/socialCallback";
+import DiaryWritePage from "@/pages/Archive/diary/DiaryWritePage";
+import DiaryDetailPage from "@/pages/Archive/diary/DiaryDetailPage";
+import DiaryPage from "@/pages/Archive/diary/DiaryPage";
 
 const router = createBrowserRouter([
   // 🔓 Public Routes (누구나 접근 가능)
@@ -41,6 +44,7 @@ const router = createBrowserRouter([
       { path: "community/:postId", element: <CommunityDetail /> },
       { path: "archive", element: <Archive /> },
       { path: "archive/:id", element: <ArchiveDetail /> },
+      { path: "archive/:id/diary", element: <DiaryPage /> }, // 아카이브 내 다이어리 목록 보기
       { path: "archive/:id/ticket-book", element: <TicketBookPage /> },
       { path: "archive/:id/gallery", element: <Gallery /> },
       { path: "archive/:id/repost", element: <RepostingPage /> },
@@ -74,6 +78,19 @@ const router = createBrowserRouter([
       { path: "mypage/info", element: <MyInfoPage /> },
       { path: "mypage/archive", element: <MyArchivePage /> },
       { path: "mypage/friends", element: <FriendsPage /> },
+
+      {
+        path: "/archive/:archiveId/diary/:diaryId", // 다른 사용자의 다이어리 상세 보기
+        element: <DiaryDetailPage />,
+      },
+      {
+        path: "/archive/:archiveId/diary/:diaryId/edit", // 작성자만 수정 가능
+        element: <DiaryDetailPage />,
+      },
+      {
+        path: "/archive/:archiveId/diary/new", // 다이어리 작성
+        element: <DiaryWritePage />,
+      },
     ],
   },
 ]);
