@@ -53,12 +53,13 @@ const ArchiveDetail = () => {
             <ArchiveTitle
               title="덕질 일기"
               onClick={() => {
-                console.log("덕질 일기 더보기 클릭");
+                if (!archiveId) return;
+                navigate(`/archive/${archiveId}/diary`);
               }}
               isMore={(archive?.Diary?.length ?? 0) > 0}
             />
             {archive?.Diary?.length ?? 0 > 0 ? (
-              <DiaryList diary={archive?.Diary} />
+              <DiaryList diary={archive?.Diary} limit={3} />
             ) : (
               <EmptyList
                 title="일기 추가"
