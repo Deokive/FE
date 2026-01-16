@@ -26,9 +26,8 @@ type ImageItem = {
 };
 
 const DiaryWritePage = () => {
-  const { archiveId, diaryId } = useParams();
+  const { archiveId } = useParams();
   const navigate = useNavigate();
-  const isEdit = !!diaryId;
 
   const colors: Color[] = [
     { name: "pink", color: "#FFDFE7" },
@@ -155,7 +154,8 @@ const DiaryWritePage = () => {
     // TODO: API 호출
     console.log("다이어리 저장:", data);
     resetForm();
-    // navigate(`/archive/${archiveId}/diary/${diaryId}/edit`);
+    // TODO: API 호출 후 리다이렉트 => 작성자라면 수정페이지, 아니면 상세페이지
+    navigate(`/archive/${archiveId}/diary`);
   };
 
   // ✅ handleSave - DiaryFooter에서 호출
@@ -236,7 +236,6 @@ const DiaryWritePage = () => {
       <DiaryFooter
         onSave={handleSave}
         onCancel={() => navigate(-1)}
-        isEdit={isEdit}
         isDisabled={!isFormValid} // ✅ 필수 필드 검증 결과 전달
       />
     </div>

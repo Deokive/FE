@@ -1,4 +1,3 @@
-import type { DiaryFormData } from "@/pages/Archive/diary/DiaryWritePage";
 import { BtnBasic } from "@/components/common/Button/Btn";
 
 type DiaryFooterProps = {
