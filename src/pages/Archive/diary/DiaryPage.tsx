@@ -21,7 +21,7 @@ const DiaryPage = () => {
   const [page, setPage] = useState(1);
   const pageSize = 9;
 
-  // ✅ 전체 다이어리 필터링
+  // ✅ 전체 다이어리 필터링 => 추후에 실제 API와 연동
   const allDiary = diaryDataMock.filter(
     (diary) => diary.archiveId === Number(params.id)
   );

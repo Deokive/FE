@@ -1,5 +1,6 @@
 import type { ColorData } from "@/types/calendar";
 import { useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 type Color = {
   name: string;
@@ -9,9 +10,14 @@ type Color = {
 type ColorChangeProps = {
   initialColor?: ColorData | null; // ✅ 추가
   onColorChange?: (color: Color | null) => void;
+  className?: string;
 };
 
-const ColorChange = ({ initialColor, onColorChange }: ColorChangeProps) => {
+const ColorChange = ({
+  initialColor,
+  onColorChange,
+  className,
+}: ColorChangeProps) => {
   const colors: Color[] = [
     { name: "pink", color: "#FFDFE7" },
     { name: "red", color: "#FFABAB" },
@@ -38,7 +44,15 @@ const ColorChange = ({ initialColor, onColorChange }: ColorChangeProps) => {
   return (
     <div className="flex flex-col itmes-center gap-5">
       <div className="w-full flex items-center justify-between gap-10">
-        <p className="py-1.5 typo-h2-semibold text-color-highest">색상 설정</p>
+        {/* ✅ className을 부모 div에 적용하고, span에도 폰트 클래스 적용 */}
+        <p
+          className={twMerge(
+            "py-1.5 typo-h2-semibold text-color-highest",
+            className
+          )}
+        >
+          색상 설정
+        </p>
         {/* 색상 칩 */}
         <div className="flex items-center gap-5">
           {colors.map((color) => (
