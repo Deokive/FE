@@ -85,6 +85,7 @@ export default function TicketBookPage() {
         <div className="mt-5 mb-15">
           <TicketBook
             key={page}
+            archiveId={archiveId}
             tickets={tickets}
             editMode={editMode}
             setEditMode={setEditMode}

@@ -9,6 +9,7 @@ import { BtnIcon } from "@/components/common/Button/Btn";
 import TrashIcon from "@/assets/icon/TrashIcon";
 
 type TicketBookProps = {
+  archiveId: number;
   tickets: Ticket[];
   editMode: boolean;
   setEditMode: Dispatch<SetStateAction<boolean>>;
@@ -18,6 +19,7 @@ type TicketBookProps = {
 };
 
 export default function TicketBook({
+  archiveId,
   tickets,
   editMode,
   setEditMode,
@@ -96,7 +98,7 @@ export default function TicketBook({
           <>
             {!editMode && (
               <BtnIcon
-                onClick={() => navigate("/ticket/create")}
+                onClick={() => navigate(`/archive/${archiveId}/ticket/create`)}
                 startIcon={<PlusIcon className="size-6 text-color-high" />}
               >
                 티켓 추가
@@ -143,7 +145,9 @@ export default function TicketBook({
                   return (
                     <div key={idx} className="w-[430px]">
                       <TicketEmptyCard
-                        onCreate={() => navigate("/ticket/create")}
+                        onCreate={() =>
+                          navigate(`/archive/${archiveId}/ticket/create`)
+                        }
                       />
                     </div>
                   );
@@ -164,7 +168,10 @@ export default function TicketBook({
                             slotTicket.id,
                             !checkedMap[slotTicket.id]
                           );
-                        else navigate(`/ticket/edit/${slotTicket.id}`);
+                        else
+                          navigate(
+                            `/archive/${archiveId}/ticket/${slotTicket.id}/edit/`
+                          );
                       }}
                       selectable={editMode}
                       checked={!!checkedMap[slotTicket.id]}
