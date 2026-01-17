@@ -26,7 +26,7 @@ export default function TicketForm({
   submitLabel = "등록",
 }: Props) {
   const navigate = useNavigate();
-  const [initialState, setInitialState] = useState(initial);
+  const [initialState, _] = useState(initial);
   const [isChanged, setIsChanged] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(
     initial.imageUrl ?? null
@@ -48,8 +48,7 @@ export default function TicketForm({
 
   useEffect(() => {
     const isFileIdChanged = (initialState.fileId ?? null) !== fileId;
-    const isEventNameChanged =
-      (initialState.eventName ?? "") !== eventName;
+    const isEventNameChanged = (initialState.eventName ?? "") !== eventName;
     const isDateChanged =
       (initialState.dateTime ? initialState.dateTime.split("T")[0] : null) !==
       date;
