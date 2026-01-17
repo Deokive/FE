@@ -21,9 +21,12 @@ export const useUpdateTicket = () => {
     UpdateTicketRequest
   >({
     mutationFn: (data) => updateTicket(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.ticket.all });
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.ticketBook.all });
+      queryClient.setQueryData(
+        queryKeys.ticket.detail(variables.ticketId),
+        data
+      );
     },
     onError: (error) => {
       console.log(error);
