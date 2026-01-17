@@ -67,8 +67,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <ProtectedLayout />,
     children: [
-      { path: "ticket/create", element: <CreateTicketPage /> },
-      { path: "ticket/edit/:id", element: <EditTicketPage /> },
+      {
+        path: "archive/:archiveId/ticket/create",
+        element: <CreateTicketPage />,
+      },
+      {
+        path: "archive/:archiveId/ticket/:ticketId/edit",
+        element: <EditTicketPage />,
+      },
       { path: "community/new", element: <CommunityWrite /> },
       { path: "mypage", element: <MyPage /> },
       { path: "mypage/info", element: <MyInfoPage /> },
