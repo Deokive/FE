@@ -6,12 +6,15 @@ type Props = {
   content?: string;
   onTitleChange?: (value: string) => void;
   onContentChange?: (value: string) => void;
+  isEditable?: boolean; // ✅ 편집 가능 여부
 };
+
 const DiaryText = ({
   title = "",
   content = "",
   onTitleChange,
   onContentChange,
+  isEditable = true, // ✅ 기본값은 편집 가능
 }: Props) => {
   return (
     <div
@@ -34,7 +37,9 @@ const DiaryText = ({
             value={title}
             onChange={(e) => onTitleChange?.(e.target.value)}
             placeholder="제목을 입력하세요"
-            className="w-full outline-none text-[40px] font-bold text-color-high placeholder:text-color-mid "
+            className="w-full outline-none text-[40px] font-bold text-color-high placeholder:text-color-mid"
+            readOnly={!isEditable} // ✅ 편집 모드가 아니면 읽기 전용
+            disabled={!isEditable} // ✅ 편집 모드가 아니면 비활성화
           />
 
           {/* ✅ 내용 - 점선 줄이 있는 textarea */}
@@ -44,8 +49,10 @@ const DiaryText = ({
             placeholder="일기 내용을 입력하세요"
             className="w-full max-h-225 outline-none text-[30px] font-light text-color-highest placeholder:text-color-mid bg-transparent resize-none"
             rows={18}
+            readOnly={!isEditable} // ✅ 편집 모드가 아니면 읽기 전용
+            disabled={!isEditable} // ✅ 편집 모드가 아니면 비활성화
             style={{
-              // ✅ 점선 줄 배경 패턴 (더 명확한 점선)
+              // ✅ 점선 줄 배경 패턴
               backgroundImage: `repeating-linear-gradient(
                 to bottom,
                 transparent 0,
@@ -55,6 +62,7 @@ const DiaryText = ({
               )`,
               backgroundSize: "100% 50px",
               lineHeight: "50px",
+              cursor: isEditable ? "text" : "default", // ✅ 커서 스타일
             }}
           />
         </div>

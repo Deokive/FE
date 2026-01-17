@@ -107,11 +107,11 @@ export default function ConfirmModal({
         onClick={handleOpen}
         className={clsx("inline-block", !trigger && "cursor-pointer")}
       >
-        {trigger ?? (
+        {/* {trigger ?? (
           <button type="button" className="cursor-pointer">
             열기
           </button>
-        )}
+        )} */}
       </div>
 
       {open && (

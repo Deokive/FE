@@ -1,19 +1,23 @@
 import { BtnBasic } from "@/components/common/Button/Btn";
 
 type DiaryFooterProps = {
-  onSave: () => void;
-  onCancel: () => void;
-  onEdit: () => void;
+  onSave?: () => void;
+  onCancel?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
   isEdit?: boolean; // ✅ 편집 모드 여부
   isDisabled?: boolean;
+  noBtn?: boolean;
 };
 
 export const DiaryFooter = ({
   onSave,
   onCancel,
   onEdit,
+  onDelete,
   isEdit = false,
   isDisabled = false,
+  noBtn = false,
 }: DiaryFooterProps) => {
   return (
     <div className="relative w-screen h-[218px]">
@@ -36,22 +40,46 @@ export const DiaryFooter = ({
           fill="white"
         />
       </svg>
-
+      {!noBtn && (
+        <div className="relative z-10 flex items-center justify-center gap-4 px-20 h-full">
+          {isEdit ? (
+            <div className="relative z-10 flex items-center justify-center gap-4 px-20 h-full">
+              <BtnBasic
+                variant="gray"
+                onClick={() => onDelete?.()}
+                className="px-8"
+              >
+                삭제
+              </BtnBasic>
+              <BtnBasic
+                variant="blue"
+                onClick={() => onEdit?.()}
+                className="px-8"
+              >
+                수정
+              </BtnBasic>
+            </div>
+          ) : (
+            <div className="relative z-10 flex items-center justify-center gap-4 px-20 h-full">
+              <BtnBasic
+                variant="gray"
+                onClick={() => onCancel?.()}
+                className="px-8"
+              >
+                취소
+              </BtnBasic>
+              <BtnBasic
+                variant="blue"
+                onClick={() => onSave?.()}
+                className="px-8"
+              >
+                등록
+              </BtnBasic>
+            </div>
+          )}
+        </div>
+      )}
       {/* ✅ 버튼 영역 - SVG 위에 배치 */}
-      <div className="relative z-10 flex items-center justify-center gap-4 px-20 h-full">
-        <BtnBasic variant="gray" onClick={onCancel} className="px-8">
-          취소
-        </BtnBasic>
-        {isEdit ? (
-          <BtnBasic variant="blue" onClick={onEdit} className="px-8">
-            수정
-          </BtnBasic>
-        ) : (
-          <BtnBasic variant="blue" onClick={onSave} className="px-8">
-            등록
-          </BtnBasic>
-        )}
-      </div>
     </div>
   );
 };

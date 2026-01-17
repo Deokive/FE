@@ -13,6 +13,7 @@ import { DiaryFooter } from "@/components/diary/DiaryFooter";
 import type { CreateDiaryRequest, DiaryDetailResponse } from "@/types/diary";
 import { MediaType } from "@/enums/mediaType";
 import { MediaRole } from "@/enums/mediaRole";
+import dayjs from "dayjs";
 // TODO: API 함수 import
 // import { useQuery } from "@tanstack/react-query";
 // import { getDiary, updateDiary, deleteDiary } from "@/apis/...";
@@ -65,8 +66,8 @@ const DiaryDetailPage = () => {
     ],
   };
   // ✅ 작성자 여부 확인 => 작성자라면 수정 가능
-  const isOwner = currentUser?.id === diary.createdBy ? true : false;
-  // const isOwner = false;
+  // const isOwner = currentUser?.id === diary.createdBy ? true : false;
+  const isOwner = false;
 
   // ✅ 편집 모드 상태
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -195,13 +196,17 @@ const DiaryDetailPage = () => {
   // 삭제 모달 상태
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
+  const handleDeleteModalOpen = () => {
+    setDeleteModalOpen(true);
+  };
+
   // 삭제 핸들러
   const handleDelete = async () => {
     try {
       // TODO: 삭제 API 호출
       // await deleteDiary(diaryId!);
       console.log("다이어리 삭제");
-      navigate(`/archive/${archiveId}`);
+      setDeleteModalOpen(true);
     } catch (error) {
       console.error("다이어리 삭제 실패:", error);
     }
@@ -242,14 +247,20 @@ const DiaryDetailPage = () => {
           <div className="w-310 flex flex-col gap-15">
             <div className="flex gap-5 items-center w-full">
               <p className="text-center typo-h1 text-color-high">날짜 : </p>
-              <DatePicker
-                value={recordedAt}
-                onChange={(date) => {
-                  setValue("CreateDiaryRequest.recordedAt", date || "");
-                }}
-                placeholder="날짜 입력"
-                className="flex-1 w-50 justify-center items-center"
-              />
+              {isEditMode ? (
+                <DatePicker
+                  value={recordedAt}
+                  onChange={(date) => {
+                    setValue("CreateDiaryRequest.recordedAt", date || "");
+                  }}
+                  placeholder="날짜 입력"
+                  className="flex-1 w-50 justify-center items-center"
+                />
+              ) : (
+                <p className="text-center text-[40px] font-light text-color-high">
+                  {dayjs(recordedAt).format("YYYY.MM.DD")}
+                </p>
+              )}
             </div>
             {/* 일기 내용 */}
             <DiaryText
@@ -261,6 +272,7 @@ const DiaryDetailPage = () => {
               onContentChange={(content) => {
                 setValue("CreateDiaryRequest.content", content || "");
               }}
+              isEditable={isEditMode} // ✅ 편집 모드일 때만 입력 가능
             />
           </div>
           {/* 비공개 버튼 */}
@@ -288,10 +300,21 @@ const DiaryDetailPage = () => {
             </div>
           )}
         </div>
+        <ConfirmModal
+          open={deleteModalOpen}
+          onOpenChange={setDeleteModalOpen}
+          title="해당 일기장을 삭제하시겠어요?"
+          confirmLabel="확인"
+          cancelLabel="취소"
+          confirmVariant="blue"
+          onConfirm={handleDelete}
+          onCancel={() => setDeleteModalOpen(false)}
+        />
         <DiaryFooter
           onEdit={handleEdit}
           onSave={handleSave}
           onCancel={handleCancelEdit}
+          onDelete={handleDeleteModalOpen}
           isEdit={!isEditMode}
           isDisabled={!isFormValid}
         />
@@ -301,70 +324,41 @@ const DiaryDetailPage = () => {
 
   // ✅ 읽기 모드 (기존 UI)
   return (
-    <div className="w-full max-w-[1200px] mx-auto px-4 py-8">
-      {/* 헤더 */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <p className="typo-h2 text-color-highest">날짜: {diary.recordedAt}</p>
+    <div className="w-full h-full bg-[#EEF7FC]">
+      <div className="flex flex-col items-center justify-center max-w-[1920px] mx-auto py-15 gap-15 ">
+        {/* 이미지 첨부 영역 */}
+        <div className="w-full">
+          <DiaryImage
+            isEditMode={!isEditMode}
+            images={imageItems}
+            onImageAdd={handleImageAdd}
+            onImageDelete={handleImageDelete}
+          />
         </div>
+        {/* 날짜 선택 */}
+        <div className="w-310 flex flex-col gap-15">
+          <div className="flex gap-5 items-center w-full">
+            <p className="text-center typo-h1 text-color-high">날짜 : </p>
 
-        {/* ✅ 작성자만 수정/삭제 버튼 표시 */}
-        {isOwner && (
-          <div className="flex gap-4">
-            <button
-              onClick={handleEdit}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-blue-400 text-color-highest hover:bg-brand-blue-300"
-            >
-              <Edit2 className="w-5 h-5" />
-              <span className="typo-body2-semibold">수정</span>
-            </button>
-            <button
-              onClick={() => setDeleteModalOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
-            >
-              <Trash2 className="w-5 h-5" />
-              <span className="typo-body2-semibold">삭제</span>
-            </button>
+            <p className="text-center text-[40px] font-light text-color-high">
+              {dayjs(recordedAt).format("YYYY.MM.DD")}
+            </p>
           </div>
-        )}
-      </div>
-
-      {/* 이미지 영역 */}
-      {diary.files && diary.files.length > 0 && (
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          {diary.files.map((file, index) => (
-            <img
-              key={index}
-              src={file.cdnUrl}
-              alt={`다이어리 이미지 ${index + 1}`}
-              className="w-full h-auto rounded-lg"
-            />
-          ))}
+          {/* 일기 내용 */}
+          <DiaryText
+            title={watch("CreateDiaryRequest.title")}
+            onTitleChange={(title) => {
+              setValue("CreateDiaryRequest.title", title || "");
+            }}
+            content={watch("CreateDiaryRequest.content")}
+            onContentChange={(content) => {
+              setValue("CreateDiaryRequest.content", content || "");
+            }}
+            isEditable={isEditMode} // ✅ 편집 모드일 때만 입력 가능
+          />
         </div>
-      )}
-
-      {/* 제목 */}
-      <h1 className="typo-h1 text-color-highest mb-6">{diary.title}</h1>
-
-      {/* 내용 */}
-      <div className="prose max-w-none">
-        <p className="typo-body1 text-color-high whitespace-pre-wrap">
-          {diary.content}
-        </p>
       </div>
-
-      {/* 삭제 확인 모달 */}
-      <ConfirmModal
-        open={deleteModalOpen}
-        onOpenChange={setDeleteModalOpen}
-        title="삭제하시겠습니까?"
-        description="삭제된 다이어리는 복구할 수 없습니다."
-        confirmLabel="삭제"
-        cancelLabel="취소"
-        confirmVariant="gray"
-        onConfirm={handleDelete}
-        onCancel={() => setDeleteModalOpen(false)}
-      />
+      <DiaryFooter noBtn={true} />
     </div>
   );
 };
