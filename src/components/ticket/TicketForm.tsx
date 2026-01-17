@@ -9,6 +9,8 @@ import Rating from "./Rating";
 import RequiredLabel from "../common/Form/RequiredLabel";
 import TextField from "../common/Form/TextField";
 import { BtnBasic } from "@/components/common/Button/Btn";
+import { useFileUpload } from "@/hooks/useFileUpload";
+import { MediaRole } from "@/enums/mediaRole";
 
 type Props = {
   initial?: Partial<Ticket>;
@@ -39,7 +41,21 @@ export default function TicketForm({
   const [casting, setCasting] = useState(initial.casting ?? "");
   const [rating, setRating] = useState<number>(initial.rating ?? 0);
   const [review, setReview] = useState(initial.review ?? "");
+  const [fileId, setFileId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 파일 업로드 훅
+  const { upload } = useFileUpload({
+    onSuccess: (response) => {
+      setImageUrl(response.cdnUrl);
+      setFileId(response.fileId);
+    },
+    onError: (error: any) => {
+      alert(
+        `이미지 업로드 실패: ${error.response?.data?.message || error.message}`
+      );
+    },
+  });
 
   // 숨김 파일 input ref
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -82,7 +98,7 @@ export default function TicketForm({
   }, []);
 
   // 파일 선택 처리
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -99,12 +115,16 @@ export default function TicketForm({
       previousBlobRef.current = null;
     }
 
-    // 새 blob 생성 및 저장
-    const url = URL.createObjectURL(file);
-    previousBlobRef.current = url;
-    setImageUrl(url);
+    // 새 blob 생성하여 미리보기 표시
+    const previewUrl = URL.createObjectURL(file);
+    previousBlobRef.current = previewUrl;
+    setImageUrl(previewUrl);
 
-    // 여기서 서버 업로드 호출 -> 서버에서 받은 URL로 setImageUrl(serverUrl)
+    // 서버에 업로드 (성공 시 onSuccess에서 cdnUrl로 교체됨)
+    await upload({
+      file,
+      mediaRole: MediaRole.CONTENT,
+    });
   };
 
   const openFilePicker = () => {
@@ -134,7 +154,7 @@ export default function TicketForm({
   const buildPayload = (): Ticket => {
     const id = (initial as any).id ?? `tmp-${Date.now()}`;
     const dateTimeIso = date
-      ? `${date}${time ? "T" + time : "T00:00"}`
+      ? `${date}${time ? "T" + time + ":00" : "T00:00:00"}`
       : undefined;
     return {
       id,
@@ -147,6 +167,7 @@ export default function TicketForm({
       casting: casting || null,
       rating: rating || null,
       review: review || null,
+      fileId: fileId,
       createdAt: initial.createdAt ?? new Date().toISOString(),
     };
   };

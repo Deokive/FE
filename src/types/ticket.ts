@@ -18,6 +18,7 @@ export type Ticket = {
   casting?: string | null;
   rating?: number | null;
   review?: string | null;
+  fileId?: number | null;
   createdAt?: string | null;
 };
 
