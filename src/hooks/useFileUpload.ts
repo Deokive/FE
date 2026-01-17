@@ -211,23 +211,18 @@ export const useFileUpload = (options: UseFileUploadOptions = {}) => {
       params: UploadFilesParams
     ): Promise<FileCompleteResponse[] | null> => {
       const { files, mediaRole } = params;
-      const results: FileCompleteResponse[] = [];
 
-      for (let i = 0; i < files.length; i++) {
-        const result = await upload({
-          file: files[i],
-          mediaRole,
-          sequence: i,
-        });
+      const promises = files.map((file, i) =>
+        upload({ file, mediaRole, sequence: i })
+      );
 
-        if (result) {
-          results.push(result);
-        } else {
-          return null;
-        }
+      const results = await Promise.all(promises);
+
+      if (results.some((r) => r === null)) {
+        return null;
       }
 
-      return results;
+      return results as FileCompleteResponse[];
     },
     [upload]
   );
