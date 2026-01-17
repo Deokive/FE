@@ -42,7 +42,7 @@ const DiaryText = ({
             value={content}
             onChange={(e) => onContentChange?.(e.target.value)}
             placeholder="일기 내용을 입력하세요"
-            className="w-full max-h-225 outline-none text-[36px] font-normal text-color-highest placeholder:text-color-mid bg-transparent resize-none"
+            className="w-full max-h-225 outline-none text-[30px] font-light text-color-highest placeholder:text-color-mid bg-transparent resize-none"
             rows={18}
             style={{
               // ✅ 점선 줄 배경 패턴 (더 명확한 점선)
