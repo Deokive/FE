@@ -10,9 +10,8 @@ export type DateData = {
 };
 
 export type ColorData = {
-  name: string;
   color: string;
-} | null;
+};
 
 export type SportInfo = {
   team1: string;

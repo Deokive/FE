@@ -102,7 +102,7 @@ const LoginPage = () => {
       case "google":
         window.location.href = `${
           import.meta.env.VITE_API_BASE
-        }/oauth2/authorization/google`;
+        }/oauth2/authorization/google?prompt=login`;
         break;
       case "kakao":
         window.location.href = `${
@@ -112,7 +112,7 @@ const LoginPage = () => {
       case "naver":
         window.location.href = `${
           import.meta.env.VITE_API_BASE
-        }/oauth2/authorization/naver`;
+        }/oauth2/authorization/naver?prompt=login`;
     }
   };
 

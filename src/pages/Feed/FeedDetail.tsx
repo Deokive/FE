@@ -65,12 +65,13 @@ const FeedDetail = () => {
         <ArchiveTitle
           title="덕질 일기"
           onClick={() => {
-            console.log("덕질 일기 더보기 클릭");
+            if (!archiveId) return;
+            navigate(`/archive/${archiveId}/diary`);
           }}
           isMore={(diary.length ?? 0) > 0}
         />
         {diary.length ?? 0 > 0 ? (
-          <DiaryList diary={diary} />
+          <DiaryList diary={diary} limit={3} />
         ) : (
           <EmptyFeedList description="아직 작성된 일기가 없어요." />
         )}

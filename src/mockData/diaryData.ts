@@ -90,6 +90,48 @@ const diaryDataMock = [
     image: "https://picsum.photos/213/300",
     date: "2026-01-04 10:00:00",
   },
+  {
+    id: 14,
+    archiveId: 1,
+    title: "덕질 일기14",
+    image: "https://picsum.photos/208/300",
+    date: "2025-12-30 10:00:00",
+  },
+  {
+    id: 15,
+    archiveId: 1,
+    title: "덕질 일기15",
+    image: "https://picsum.photos/209/300",
+    date: "2025-12-31 10:00:00",
+  },
+  {
+    id: 16,
+    archiveId: 1,
+    title: "덕질 일기16",
+    image: "https://picsum.photos/210/300",
+    date: "2026-01-01 10:00:00",
+  },
+  {
+    id: 17,
+    archiveId: 1,
+    title: "덕질 일기17",
+    image: "https://picsum.photos/211/300",
+    date: "2026-01-02 10:00:00",
+  },
+  {
+    id: 18,
+    archiveId: 1,
+    title: "덕질 일기18",
+    image: "https://picsum.photos/212/300",
+    date: "2026-01-03 10:00:00",
+  },
+  {
+    id: 19,
+    archiveId: 1,
+    title: "덕질 일기19",
+    image: "https://picsum.photos/213/300",
+    date: "2026-01-04 10:00:00",
+  },
 ];
 
 export { diaryDataMock };
