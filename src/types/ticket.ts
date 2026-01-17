@@ -20,6 +20,7 @@ export type Ticket = {
   review?: string | null;
   fileId?: number | null;
   createdAt?: string | null;
+  deleteFile?: boolean;
 };
 
 type TicketId = {
@@ -75,7 +76,10 @@ export type GetTicketResponse = DefaultTicketResponse;
 export type DeleteTicketRequest = TicketId;
 export type DeleteTicketResponse = void; // 204 빈 응답이라 void 처리
 
-export type UpdateTicketRequest = TicketId & DefaultTicketRequest;
+export type UpdateTicketRequest = TicketId &
+  DefaultTicketRequest & {
+    deleteFile?: boolean;
+  };
 
 export type UpdateTicketResponse = DefaultTicketResponse;
 

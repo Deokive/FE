@@ -52,6 +52,7 @@ export default function EditTicketPage() {
       score: payload.rating,
       review: payload.review,
       fileId: payload.fileId,
+      deleteFile: payload.fileId === null ? true : false,
     };
     updateTicket(requestData, {
       onSuccess: () => {
