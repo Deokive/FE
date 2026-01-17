@@ -80,11 +80,7 @@ const router = createBrowserRouter([
       { path: "mypage/friends", element: <FriendsPage /> },
 
       {
-        path: "/archive/:archiveId/diary/:diaryId", // 다른 사용자의 다이어리 상세 보기
-        element: <DiaryDetailPage />,
-      },
-      {
-        path: "/archive/:archiveId/diary/:diaryId/edit", // 작성자만 수정 가능
+        path: "/archive/:archiveId/diary/:diaryId", // 다른 사용자의 다이어리 상세 보기 또는 수정(작성자만)
         element: <DiaryDetailPage />,
       },
       {

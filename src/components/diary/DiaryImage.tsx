@@ -13,12 +13,14 @@ type DiaryImageProps = {
   images?: ImageItem[];
   onImageAdd?: (file: File) => void;
   onImageDelete?: (id: string) => void;
+  isEditMode?: boolean;
 };
 
 const DiaryImage = ({
   images = [],
   onImageAdd,
   onImageDelete,
+  isEditMode = false,
 }: DiaryImageProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -70,12 +72,14 @@ const DiaryImage = ({
             }}
           >
             {/* ✅ 이미지 추가 버튼 */}
-            <div
-              className="cursor-pointer flex-shrink-0"
-              onClick={handleImageCardClick}
-            >
-              <DiaryImageCard />
-            </div>
+            {!isEditMode && (
+              <div
+                className="cursor-pointer flex-shrink-0"
+                onClick={handleImageCardClick}
+              >
+                <DiaryImageCard />
+              </div>
+            )}
 
             {/* ✅ 업로드된 이미지들 표시 */}
             {images.map((imageItem) => (

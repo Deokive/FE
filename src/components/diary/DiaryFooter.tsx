@@ -3,6 +3,7 @@ import { BtnBasic } from "@/components/common/Button/Btn";
 type DiaryFooterProps = {
   onSave: () => void;
   onCancel: () => void;
+  onEdit: () => void;
   isEdit?: boolean; // ✅ 편집 모드 여부
   isDisabled?: boolean;
 };
@@ -10,6 +11,7 @@ type DiaryFooterProps = {
 export const DiaryFooter = ({
   onSave,
   onCancel,
+  onEdit,
   isEdit = false,
   isDisabled = false,
 }: DiaryFooterProps) => {
@@ -40,14 +42,15 @@ export const DiaryFooter = ({
         <BtnBasic variant="gray" onClick={onCancel} className="px-8">
           취소
         </BtnBasic>
-        <BtnBasic
-          variant="blue"
-          onClick={onSave}
-          className="px-8"
-          disabled={isDisabled}
-        >
-          {isEdit ? "수정" : "등록"}
-        </BtnBasic>
+        {isEdit ? (
+          <BtnBasic variant="blue" onClick={onEdit} className="px-8">
+            수정
+          </BtnBasic>
+        ) : (
+          <BtnBasic variant="blue" onClick={onSave} className="px-8">
+            등록
+          </BtnBasic>
+        )}
       </div>
     </div>
   );

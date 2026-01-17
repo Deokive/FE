@@ -10,18 +10,15 @@ import DatePicker from "@/components/ticket/DatePicker";
 import DiaryText from "@/components/diary/DiaryText";
 import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 import { DiaryFooter } from "@/components/diary/DiaryFooter";
-import type { CreateDiaryRequest } from "@/types/diary";
+import type { CreateDiaryRequest, DiaryDetailResponse } from "@/types/diary";
+import { MediaType } from "@/enums/mediaType";
+import { MediaRole } from "@/enums/mediaRole";
 // TODO: API 함수 import
 // import { useQuery } from "@tanstack/react-query";
 // import { getDiary, updateDiary, deleteDiary } from "@/apis/...";
 
 type DiaryFormData = {
   CreateDiaryRequest: CreateDiaryRequest;
-};
-
-type Color = {
-  name: string;
-  color: string;
 };
 
 type ImageItem = {
@@ -33,44 +30,48 @@ type ImageItem = {
 const DiaryDetailPage = () => {
   const { archiveId, diaryId } = useParams();
   const navigate = useNavigate();
+  // 현재 로그인된 사용자 정보
   const currentUser = useAuthStore((state) => state.user);
 
-  // ✅ 편집 모드 상태
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [imageItems, setImageItems] = useState<ImageItem[]>([]);
-
-  const colors: Color[] = [
-    { name: "pink", color: "#FFDFE7" },
-    { name: "red", color: "#FFABAB" },
-    { name: "orange", color: "#FFDEBF" },
-    { name: "yellow", color: "#FFEEBB" },
-    { name: "green", color: "#CEEBCC" },
-    { name: "blue", color: "#82BEF5" },
-    { name: "purple", color: "#DFDFFF" },
-    { name: "gray", color: "#DFDCDC" },
-  ];
-
-  // TODO: 실제 API로 다이어리 데이터 가져오기
-  // const { data: diary, isLoading } = useQuery({
-  //   queryKey: ["diary", diaryId],
-  //   queryFn: () => getDiary(diaryId!),
-  // });
-
   // 임시 데이터 (실제로는 API에서 가져옴)
-  const diary = {
+  const diary: DiaryDetailResponse = {
     id: Number(diaryId),
-    archiveId: Number(archiveId),
     title: "사용자가 입력한 일기 제목",
     content: "Lorem ipsum dolor sit amet...",
     recordedAt: "2023-12-12",
-    images: [],
-    color: colors[5].color,
+    color: "#82BEF5",
     visibility: "PUBLIC",
-    authorId: currentUser?.id || 1,
+    diaryBookId: Number(archiveId),
+    createdBy: currentUser?.id || 1, // ✅ 작성자 ID
+    files: [
+      {
+        fileId: 1,
+        filename: "example.jpg",
+        cdnUrl: "https://example.com/example.jpg",
+        fileSize: 1024,
+        mediaType: MediaType.IMAGE,
+        mediaRole: MediaRole.CONTENT,
+        sequence: 1,
+      },
+      {
+        fileId: 2,
+        filename: "example2.jpg",
+        cdnUrl: "https://example.com/example.jpg",
+        fileSize: 1024,
+        mediaType: MediaType.IMAGE,
+        mediaRole: MediaRole.CONTENT,
+        sequence: 2,
+      },
+    ],
   };
+  // ✅ 작성자 여부 확인 => 작성자라면 수정 가능
+  const isOwner = currentUser?.id === diary.createdBy ? true : false;
+  // const isOwner = false;
 
-  // ✅ 작성자 여부 확인
-  const isOwner = currentUser?.id === diary.authorId;
+  // ✅ 편집 모드 상태
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+
+  const [imageItems, setImageItems] = useState<ImageItem[]>([]);
 
   // ✅ 폼 관리
   const { handleSubmit, watch, setValue, reset } = useForm<DiaryFormData>({
@@ -90,8 +91,7 @@ const DiaryDetailPage = () => {
   const content = watch("CreateDiaryRequest.content");
   const recordedAt = watch("CreateDiaryRequest.recordedAt");
   const currentColor = watch("CreateDiaryRequest.color");
-  const selectedColor =
-    colors.find((c) => c.color === currentColor) || colors[5];
+  const selectedColor = diary.color; // 임시 데이터의 색상.
 
   // ✅ 필수 필드 검증
   const isFormValid = useMemo(() => {
@@ -104,7 +104,7 @@ const DiaryDetailPage = () => {
 
   // ✅ 편집 모드 진입 시 폼 초기화
   useEffect(() => {
-    if (isEditMode && diary) {
+    if (isEditMode) {
       reset({
         CreateDiaryRequest: {
           title: diary.title,
@@ -116,11 +116,13 @@ const DiaryDetailPage = () => {
         },
       });
     }
-  }, [isEditMode, diary, reset]);
+  }, [isEditMode, reset]);
 
   // ✅ 편집 모드 진입
   const handleEdit = () => {
+    console.log("편집 모드 진입");
     setIsEditMode(true);
+    console.log("isEditMode", isEditMode);
   };
 
   // ✅ 편집 취소
@@ -205,28 +207,31 @@ const DiaryDetailPage = () => {
     }
   };
 
-  // ✅ 편집 모드일 때는 작성 페이지 UI 표시
-  if (isEditMode && isOwner) {
+  // ✅ 다이어리가 작성자의 다이어리라면 수정 페이지 UI 표시
+  if (isOwner) {
     return (
       <div className="w-full h-full bg-[#EEF7FC]">
         <div className="flex flex-col items-center justify-center max-w-[1920px] mx-auto py-15 gap-15 ">
           {/* 색상 선택 */}
           <div className="w-310 flex justify-start">
-            <ColorChange
-              initialColor={selectedColor}
-              onColorChange={(color) =>
-                setValue(
-                  "CreateDiaryRequest.color",
-                  color?.color || colors[5].color
-                )
-              }
-              className="font-hakgyoansim-b"
-            />
+            {isEditMode && (
+              <ColorChange
+                initialColor={{ color: diary.color }}
+                onColorChange={(color) =>
+                  setValue(
+                    "CreateDiaryRequest.color",
+                    color?.color || diary.color
+                  )
+                }
+                className="font-hakgyoansim-b"
+              />
+            )}
           </div>
 
           {/* 이미지 첨부 영역 */}
           <div className="w-full">
             <DiaryImage
+              isEditMode={!isEditMode}
               images={imageItems}
               onImageAdd={handleImageAdd}
               onImageDelete={handleImageDelete}
@@ -259,30 +264,35 @@ const DiaryDetailPage = () => {
             />
           </div>
           {/* 비공개 버튼 */}
-          <div className="w-310 flex items-center justify-end gap-3">
-            <div
-              className="w-6 h-6 cursor-pointer"
-              onClick={() => {
-                const currentVisibility = watch(
-                  "CreateDiaryRequest.visibility"
-                );
-                const newVisibility =
-                  currentVisibility === "PRIVATE" ? "PUBLIC" : "PRIVATE";
-                setValue("CreateDiaryRequest.visibility", newVisibility);
-              }}
-            >
-              <CheckboxIcon
-                size={24}
-                checked={watch("CreateDiaryRequest.visibility") === "PRIVATE"}
-              />
+          {isEditMode && (
+            <div className="w-310 flex items-center justify-end gap-3">
+              <div
+                className="w-6 h-6 cursor-pointer"
+                onClick={() => {
+                  const currentVisibility = watch(
+                    "CreateDiaryRequest.visibility"
+                  );
+                  const newVisibility =
+                    currentVisibility === "PRIVATE" ? "PUBLIC" : "PRIVATE";
+                  setValue("CreateDiaryRequest.visibility", newVisibility);
+                }}
+              >
+                <CheckboxIcon
+                  size={24}
+                  checked={watch("CreateDiaryRequest.visibility") === "PRIVATE"}
+                />
+              </div>
+              <p className="typo-body1 text-color-highest text-center">
+                비공개
+              </p>
             </div>
-            <p className="typo-body1 text-color-highest text-center">비공개</p>
-          </div>
+          )}
         </div>
         <DiaryFooter
+          onEdit={handleEdit}
           onSave={handleSave}
           onCancel={handleCancelEdit}
-          isEdit={true}
+          isEdit={!isEditMode}
           isDisabled={!isFormValid}
         />
       </div>
@@ -320,12 +330,12 @@ const DiaryDetailPage = () => {
       </div>
 
       {/* 이미지 영역 */}
-      {diary.images && diary.images.length > 0 && (
+      {diary.files && diary.files.length > 0 && (
         <div className="grid grid-cols-2 gap-4 mb-8">
-          {diary.images.map((image, index) => (
+          {diary.files.map((file, index) => (
             <img
               key={index}
-              src={image}
+              src={file.cdnUrl}
               alt={`다이어리 이미지 ${index + 1}`}
               className="w-full h-auto rounded-lg"
             />

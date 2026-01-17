@@ -2,14 +2,9 @@ import type { ColorData } from "@/types/calendar";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-type Color = {
-  name: string;
-  color: string;
-};
-
 type ColorChangeProps = {
   initialColor?: ColorData | null; // ✅ 추가
-  onColorChange?: (color: Color | null) => void;
+  onColorChange?: (color: ColorData | null) => void;
   className?: string;
 };
 
@@ -18,25 +13,25 @@ const ColorChange = ({
   onColorChange,
   className,
 }: ColorChangeProps) => {
-  const colors: Color[] = [
-    { name: "pink", color: "#FFDFE7" },
-    { name: "red", color: "#FFABAB" },
-    { name: "orange", color: "#FFDEBF" },
-    { name: "yellow", color: "#FFEEBB" },
-    { name: "green", color: "#CEEBCC" },
-    { name: "blue", color: "#82BEF5" },
-    { name: "purple", color: "#DFDFFF" },
-    { name: "gray", color: "#DFDCDC" },
+  const colors: ColorData[] = [
+    { color: "#FFDFE7" },
+    { color: "#FFABAB" },
+    { color: "#FFDEBF" },
+    { color: "#FFEEBB" },
+    { color: "#CEEBCC" },
+    { color: "#82BEF5" },
+    { color: "#DFDFFF" },
+    { color: "#DFDCDC" },
   ];
   // ✅ 초기값으로 선택된 색상 설정
-  const [selectedColor, setSelectedColor] = useState<Color | null>(() => {
+  const [selectedColor, setSelectedColor] = useState<ColorData | null>(() => {
     if (initialColor) {
       return colors.find((c) => c.color === initialColor.color) || null;
     }
     return null;
   });
 
-  const handleColorChange = (color: Color) => {
+  const handleColorChange = (color: ColorData) => {
     setSelectedColor(color);
     onColorChange?.(color); // ✅ 부모에게 알림
   };
@@ -57,9 +52,9 @@ const ColorChange = ({
         <div className="flex items-center gap-5">
           {colors.map((color) => (
             <div
-              key={color.name}
+              key={color.color}
               className={`w-10 h-10 rounded-full cursor-pointer ${
-                selectedColor?.name === color.name
+                selectedColor?.color === color.color
                   ? "border-5 border-border-mid"
                   : ""
               }`}

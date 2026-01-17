@@ -9,14 +9,10 @@ import DatePicker from "@/components/ticket/DatePicker";
 import DiaryText from "@/components/diary/DiaryText";
 import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 import { DiaryFooter } from "@/components/diary/DiaryFooter";
+import type { ColorData } from "@/types/calendar";
 
 export type DiaryFormData = {
   CreateDiaryRequest: CreateDiaryRequest;
-};
-
-type Color = {
-  name: string;
-  color: string;
 };
 
 type ImageItem = {
@@ -29,15 +25,15 @@ const DiaryWritePage = () => {
   const { archiveId } = useParams();
   const navigate = useNavigate();
 
-  const colors: Color[] = [
-    { name: "pink", color: "#FFDFE7" },
-    { name: "red", color: "#FFABAB" },
-    { name: "orange", color: "#FFDEBF" },
-    { name: "yellow", color: "#FFEEBB" },
-    { name: "green", color: "#CEEBCC" },
-    { name: "blue", color: "#82BEF5" },
-    { name: "purple", color: "#DFDFFF" },
-    { name: "gray", color: "#DFDCDC" },
+  const colors: ColorData[] = [
+    { color: "#FFDFE7" }, //핑크
+    { color: "#FFABAB" }, //빨강
+    { color: "#FFDEBF" }, //오렌지
+    { color: "#FFEEBB" }, //노랑
+    { color: "#CEEBCC" }, //초록
+    { color: "#82BEF5" }, //파랑
+    { color: "#DFDFFF" }, //보라
+    { color: "#DFDCDC" }, //회색
   ];
 
   const { register, handleSubmit, watch, setValue, reset } =
@@ -59,8 +55,7 @@ const DiaryWritePage = () => {
 
   // ✅ form에서 현재 색상 가져오기
   const currentColor = watch("CreateDiaryRequest.color");
-  const selectedColor =
-    colors.find((c) => c.color === currentColor) || colors[5];
+  const selectedColor = { color: currentColor }; // ✅ 현재 선택된 색상
 
   const recordedAt = watch("CreateDiaryRequest.recordedAt");
   const title = watch("CreateDiaryRequest.title");
@@ -183,6 +178,7 @@ const DiaryWritePage = () => {
         {/* ✅ 이미지 첨부 영역 - 여러 이미지 업로드 지원 */}
         <div className="w-full">
           <DiaryImage
+            isEditMode={false}
             images={imageItems}
             onImageAdd={handleImageAdd}
             onImageDelete={handleImageDelete}
@@ -234,6 +230,7 @@ const DiaryWritePage = () => {
         </div>
       </div>
       <DiaryFooter
+        onEdit={() => {}}
         onSave={handleSave}
         onCancel={() => navigate(-1)}
         isDisabled={!isFormValid} // ✅ 필수 필드 검증 결과 전달
