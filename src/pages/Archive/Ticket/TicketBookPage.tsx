@@ -47,7 +47,7 @@ export default function TicketBookPage() {
     if (!ids || ids.length === 0) return;
 
     ids.forEach((ticketId) => {
-      deleteTicket({ ticketid: Number(ticketId) });
+      deleteTicket({ ticketId: Number(ticketId) });
     });
   };
 

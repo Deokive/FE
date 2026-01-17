@@ -9,9 +9,9 @@ import type {
 export const getTicket = async (
   data: GetTicketRequest
 ): Promise<GetTicketResponse> => {
-  const { ticketid } = data;
+  const { ticketId } = data;
   const response = await axiosInstance.get<GetTicketResponse>(
-    `/api/v1/tickets/${ticketid}`
+    `/api/v1/tickets/${ticketId}`
   );
   return response.data;
 };

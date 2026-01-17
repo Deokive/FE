@@ -10,9 +10,9 @@ import type {
 
 export const useGetTicket = (params: GetTicketRequest) => {
   return useQuery<GetTicketResponse>({
-    queryKey: queryKeys.ticket.detail(params.ticketid),
+    queryKey: queryKeys.ticket.detail(params.ticketId),
     queryFn: () => getTicket(params),
-    enabled: !!params.ticketid,
+    enabled: !!params.ticketId,
     retry: false,
   });
 };

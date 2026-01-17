@@ -23,7 +23,7 @@ export type Ticket = {
 };
 
 type TicketId = {
-  ticketid: number;
+  ticketId: number;
 };
 
 type ArchiveId = {

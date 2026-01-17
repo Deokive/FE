@@ -9,9 +9,9 @@ import type {
 export const updateTicket = async (
   data: UpdateTicketRequest
 ): Promise<UpdateTicketResponse> => {
-  const { ticketid, ...body } = data;
+  const { ticketId, ...body } = data;
   const response = await axiosInstance.patch<UpdateTicketResponse>(
-    `/api/v1/tickets/${ticketid}`,
+    `/api/v1/tickets/${ticketId}`,
     body
   );
   return response.data;
