@@ -14,6 +14,7 @@ import type { CreateDiaryRequest, DiaryDetailResponse } from "@/types/diary";
 import { MediaType } from "@/enums/mediaType";
 import { MediaRole } from "@/enums/mediaRole";
 import dayjs from "dayjs";
+import { BtnBasic } from "@/components/common/Button/Btn";
 // TODO: API 함수 import
 // import { useQuery } from "@tanstack/react-query";
 // import { getDiary, updateDiary, deleteDiary } from "@/apis/...";
@@ -66,8 +67,8 @@ const DiaryDetailPage = () => {
     ],
   };
   // ✅ 작성자 여부 확인 => 작성자라면 수정 가능
-  // const isOwner = currentUser?.id === diary.createdBy ? true : false;
-  const isOwner = false;
+  const isOwner = currentUser?.id === diary.createdBy ? true : false;
+  // const isOwner = false;
 
   // ✅ 편집 모드 상태
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -301,6 +302,7 @@ const DiaryDetailPage = () => {
           )}
         </div>
         <ConfirmModal
+          trigger={<></>}
           open={deleteModalOpen}
           onOpenChange={setDeleteModalOpen}
           title="해당 일기장을 삭제하시겠어요?"
