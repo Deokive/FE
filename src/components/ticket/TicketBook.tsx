@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { Fragment, useMemo, type Dispatch, type SetStateAction } from "react";
 import type { Ticket } from "@/types/ticket";
 import TicketCard from "./TicketCard";
 import TicketEmptyCard from "./TicketEmptyCard";
@@ -8,16 +8,26 @@ import { Pencil, PlusIcon, SquareX } from "lucide-react";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import TrashIcon from "@/assets/icon/TrashIcon";
 
-export default function TicketBook({
-  tickets,
-  onDeleteMany,
-}: {
+type TicketBookProps = {
+  archiveId: number;
   tickets: Ticket[];
+  editMode: boolean;
+  setEditMode: Dispatch<SetStateAction<boolean>>;
+  checkedMap: Record<string, boolean>;
+  setCheckedMap: Dispatch<SetStateAction<Record<string, boolean>>>;
   onDeleteMany?: (ids: string[]) => void;
-}) {
+};
+
+export default function TicketBook({
+  archiveId,
+  tickets,
+  editMode,
+  setEditMode,
+  checkedMap,
+  setCheckedMap,
+  onDeleteMany,
+}: TicketBookProps) {
   const navigate = useNavigate();
-  const [editMode, setEditMode] = useState(false);
-  const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
 
   const hasTickets = tickets.length > 0;
 
@@ -41,8 +51,16 @@ export default function TicketBook({
     setEditMode(false);
   };
 
+  const handleToggleEditMode = () => {
+    setEditMode(!editMode);
+    if (editMode) {
+      setCheckedMap({});
+    }
+  };
+
   const placementIndices = [0, 1, 2, 3];
 
+  // 서버에서 이미 createdAt 기준이지만 안정성을 위해 한 번 더 정렬로 생각하고 납두겠습니다
   const orderedTickets: Ticket[] = (() => {
     if (!tickets || tickets.length === 0) return [];
 
@@ -80,7 +98,7 @@ export default function TicketBook({
           <>
             {!editMode && (
               <BtnIcon
-                onClick={() => navigate("/ticket/create")}
+                onClick={() => navigate(`/archive/${archiveId}/ticket/create`)}
                 startIcon={<PlusIcon className="size-6 text-color-high" />}
               >
                 티켓 추가
@@ -95,10 +113,7 @@ export default function TicketBook({
               </BtnIcon>
             )}
             <BtnIcon
-              onClick={() => {
-                setEditMode((s) => !s);
-                setCheckedMap({});
-              }}
+              onClick={handleToggleEditMode}
               startIcon={
                 editMode ? (
                   <SquareX className="size-6 text-color-high" />
@@ -130,12 +145,14 @@ export default function TicketBook({
                   return (
                     <div key={idx} className="w-[430px]">
                       <TicketEmptyCard
-                        onCreate={() => navigate("/ticket/create")}
+                        onCreate={() =>
+                          navigate(`/archive/${archiveId}/ticket/create`)
+                        }
                       />
                     </div>
                   );
                 }
-                return <React.Fragment key={idx} />;
+                return <Fragment key={idx} />;
               }
 
               if (slotTicket) {
@@ -151,7 +168,10 @@ export default function TicketBook({
                             slotTicket.id,
                             !checkedMap[slotTicket.id]
                           );
-                        else navigate(`/ticket/edit/${slotTicket.id}`);
+                        else
+                          navigate(
+                            `/archive/${archiveId}/ticket/${slotTicket.id}/edit/`
+                          );
                       }}
                       selectable={editMode}
                       checked={!!checkedMap[slotTicket.id]}
@@ -160,7 +180,7 @@ export default function TicketBook({
                   </div>
                 );
               }
-              return <React.Fragment key={idx} />;
+              return <Fragment key={idx} />;
             })}
           </div>
         </div>

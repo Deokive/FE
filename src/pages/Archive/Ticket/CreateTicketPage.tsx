@@ -1,16 +1,32 @@
 import TicketForm from "@/components/ticket/TicketForm";
-import { useTickets } from "@/hooks/useTickets";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import type { Ticket } from "@/types/ticket";
+import { useAddTicket } from "@/apis/mutations/ticket/usePostTicket";
 
 export default function CreateTicketPage() {
-  const { addTicket } = useTickets(); // 실제는 상위에서 context or api 사용 권장
+  const { archiveId } = useParams<{ archiveId: string }>();
   const navigate = useNavigate();
+  const { mutate: addTicket } = useAddTicket();
 
   const handleSave = (payload: Ticket) => {
-    addTicket(payload);
-    // 페이지 이동 혹은 토스트
-    navigate(-1);
+    addTicket(
+      {
+        archiveId: Number(archiveId),
+        title: payload.eventName,
+        date: payload.dateTime ?? new Date().toISOString(),
+        location: payload.place,
+        seat: payload.seat,
+        casting: payload.casting,
+        score: payload.rating,
+        review: payload.review,
+        fileId: payload.fileId,
+      },
+      {
+        onSuccess: () => {
+          navigate(-1);
+        },
+      }
+    );
   };
 
   return (
