@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "./styles/ticket.css";
+@import "./styles/theme.css";
 
 @font-face {
   font-family: "HakgyoansimBadasseugi-B";

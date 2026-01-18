@@ -1,8 +1,7 @@
 import ImgCard from "../common/Card/ImgCard";
 import { twMerge } from "tailwind-merge";
 import type { Ticket } from "@/types/ticket";
-import ticketLeft from "@/assets/images/ticket_left.png";
-import ticketRight from "@/assets/images/ticket_right.png";
+import TicketSvg from "@/components/common/icons/TicketSvg";
 import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 import ticketThumbnail from "@/assets/images/ticketThumbnail.png";
 import Rating from "./Rating";
@@ -39,9 +38,6 @@ export default function TicketCard({
     review,
   } = ticket;
 
-  // 좌우에 따라 사용할 배경 이미지 선택
-  const bgImage = side === "left" ? ticketLeft : ticketRight;
-
   return (
     <div>
       {/* 이벤트명 (항상 표시) */}
@@ -53,14 +49,16 @@ export default function TicketCard({
       <div
         role="group"
         onClick={() => onClick()}
-        className="relative w-107.5 h-60 overflow-hidden"
-        style={{
-          backgroundImage: `url(${bgImage})`,
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-        }}
+        className="relative w-107.5 h-60 overflow-hidden rounded-lg"
       >
+        {/* 티켓 SVG 배경 */}
+        <TicketSvg
+          width={430}
+          height={240}
+          className="absolute inset-0 duration-50 ease-in-out"
+          mainColor={checked ? "#A2AAB2" : "#CBD5DF"}
+          side={side}
+        />
         {/* 편집 체크박스 */}
         {selectable && (
           <button
