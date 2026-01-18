@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "HakgyoansimBadasseugi-B";
-  src: url("../assets/fonts/Hakgyoansim Badasseugi OTF B.otf")
+  src: url("/src/assets/fonts/Hakgyoansim Badasseugi OTF B.otf")
     format("opentype");
   font-weight: 600;
   font-style: normal;
@@ -13,7 +13,7 @@
 
 @font-face {
   font-family: "HakgyoansimBadasseugi-L";
-  src: url("../assets/fonts/Hakgyoansim Badasseugi OTF L.otf")
+  src: url("/src/assets/fonts/Hakgyoansim Badasseugi OTF L.otf")
     format("opentype");
   font-weight: 300;
   font-style: normal;

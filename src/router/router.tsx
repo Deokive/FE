@@ -43,11 +43,11 @@ const router = createBrowserRouter([
       { path: "community", element: <Community /> },
       { path: "community/:postId", element: <CommunityDetail /> },
       { path: "archive", element: <Archive /> },
-      { path: "archive/:id", element: <ArchiveDetail /> },
-      { path: "archive/:id/diary", element: <DiaryPage /> }, // 아카이브 내 다이어리 목록 보기
-      { path: "archive/:id/ticket-book", element: <TicketBookPage /> },
-      { path: "archive/:id/gallery", element: <Gallery /> },
-      { path: "archive/:id/repost", element: <RepostingPage /> },
+      { path: "archive/:archiveId", element: <ArchiveDetail /> },
+      { path: "archive/:archiveId/diary", element: <DiaryPage /> }, // 아카이브 내 다이어리 목록 보기
+      { path: "archive/:archiveId/ticket-book", element: <TicketBookPage /> },
+      { path: "archive/:archiveId/gallery", element: <Gallery /> },
+      { path: "archive/:archiveId/repost", element: <RepostingPage /> },
       { path: "profile/:userId", element: <VisitProfilePage /> },
       { path: "profile/:userId/archives", element: <VisitArchivePage /> },
       { path: "*", element: <NotFound /> },
