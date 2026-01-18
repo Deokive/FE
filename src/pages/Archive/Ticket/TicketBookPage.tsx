@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import TicketBook from "@/components/ticket/TicketBook";
 import type { Ticket } from "@/types/ticket";
 import Pagination from "@/components/common/Pagination";
@@ -12,9 +12,10 @@ import { formatDateTime } from "@/utils/date";
 export default function TicketBookPage() {
   const { id } = useParams<{ id: string }>();
   const archiveId = Number(id);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Pagination state
-  const [page, setPage] = useState<number>(1);
+  const page = Number(searchParams.get("page")) || 1;
   const pageSize = 4;
 
   // 편집 모드 상태
@@ -49,6 +50,11 @@ export default function TicketBookPage() {
     ids.forEach((ticketId) => {
       deleteTicket({ ticketId: Number(ticketId) });
     });
+  };
+
+  // 페이지 변경 처리
+  const handleOnChangePage = (newPage: number) => {
+    setSearchParams({ page: String(newPage) });
   };
 
   if (isLoading) return <div>로딩 중...</div>;
@@ -100,7 +106,7 @@ export default function TicketBookPage() {
             pageSize={pageSize}
             visiblePages={5}
             currentPage={page}
-            onChange={setPage}
+            onChange={handleOnChangePage}
           />
         </div>
       </div>
