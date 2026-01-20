@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import ArchiveCard from "../ArchiveCard";
-import type { Archive } from "@/types/archive";
+import type { GetArchiveResponse } from "@/types/archive";
+
 
 type Props = ArchiveListProps & {
   isEditMode?: boolean;
 };
 
 interface ArchiveListProps {
-  archive: Archive[];
+  archive: GetArchiveResponse["content"] | [];
   checkedMap?: Record<string, boolean>;
   onToggleCheck?: (id: string, checked: boolean) => void;
 }
@@ -24,10 +25,9 @@ const ArchiveList = ({
         <ArchiveCard
           key={archive.archiveId}
           archiveId={archive.archiveId}
-          userId={archive.userId}
-          title={archive.title}
-          bannerUrl={archive.bannerUrl}
-          image={archive.image}
+        bannerUrl={archive.thumbnailUrl}
+        viewCount={archive.viewCount}
+        likeCount={archive.likeCount}
           isEditMode={isEditMode}
           checked={!!checkedMap[String(archive.archiveId)]}
           onToggleCheck={onToggleCheck}

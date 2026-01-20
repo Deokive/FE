@@ -1,40 +1,57 @@
+// ... 기존 import
 import { useMemo } from "react";
 import TrashIcon from "@/assets/icon/TrashIcon";
 import ArchiveList from "@/components/archive/List/ArchiveList";
 import EmptyArchive from "@/components/archive/Empty/EmptyArchive";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import Banner from "@/components/community/Banner";
-import { archiveDataMock } from "@/mockData/archiveData";
+// import { archiveDataMock } from "@/mockData/archiveData";  // ❌ 제거
 import { Pencil, Plus, SquareX } from "lucide-react";
 import { useState } from "react";
-
+import EditableTitle from "@/components/common/EditableTitle";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useQuery } from "@tanstack/react-query";
+import { getArchive } from "@/apis/queries/archive/getArchive";
+import Pagination from "@/components/common/Pagination";
 
 const Archive = () => {
-  // 현재 로그인한 사용자 ID (test용) => 실제로는 API에서 가져올 데이터
-  // userID = 1,2 은 존재하는 아카이브를 가지고 있는 사용자 ID 나머지는 빈 아카이브
-  const user = {
-    userId: 1,
-    nickname: "홍길동",
-  };
+  // 현재 로그인한 사용자 정보
+  const user = useAuthStore((state) => state.user);
 
-  // 아카이브 데이터 조회 (test용) => 실제로는 API에서 가져올 데이터
-  const initialData = archiveDataMock.filter(
-    (archive) => archive.userId === user.userId
-  );
+  // ✅ 페이지 상태 (1부터 시작)
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
-  const [archives, setArchives] = useState(() => initialData);
-  const [isEditMode, setIsEditMode] = useState<boolean>(false); // 편집 모드 여부
+  // 실제 API로 아카이브 목록 조회
+  const {
+    data: archivesData,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["archives", user?.id],
+    queryFn: () =>
+      getArchive(Number(user?.id), {
+        page: page - 1,
+        size: 10,
+        sort: "createdAt",
+        direction: "DESC",
+      }),
+  });
+
+  // ✅ 서버에서 받아온 실제 아카이브 리스트
+  const archives = archivesData?.content ?? [];
+
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
 
   const handleEditMode = () => {
     setIsEditMode((prev) => {
       const next = !prev;
-      if (!next) setCheckedMap({}); // 편집 종료 시 선택 초기화
+      if (!next) setCheckedMap({});
       return next;
     });
   };
 
-  // 체크 토글: ArchiveCard 또는 체크버튼에서 호출
   const toggleCheck = (id: string, checked: boolean) => {
     setCheckedMap((prev) => {
       const next = { ...prev };
@@ -44,13 +61,11 @@ const Archive = () => {
     });
   };
 
-  // 체크된 id 배열
   const checkedIds = useMemo(
     () => Object.keys(checkedMap).filter((k) => checkedMap[k]),
     [checkedMap]
   );
 
-  // 선택 삭제
   const handleDeleteSelected = () => {
     if (checkedIds.length === 0) {
       alert("삭제할 아카이브를 선택하세요.");
@@ -58,12 +73,9 @@ const Archive = () => {
     }
     if (!confirm(`${checkedIds.length}개의 아카이브를 삭제하시겠어요?`)) return;
 
-    // TODO: 서버 연동 시 서버 요청 후 성공 시 상태 갱신
-    setArchives((prev) =>
-      prev.filter((a) => !checkedIds.includes(String(a.archiveId)))
-    );
+    // TODO: 서버에서 삭제 API 호출 후 성공 시 refetch
+    // queryClient.invalidateQueries({ queryKey: ["archives", user.id] });
 
-    // 초기화 / 편집 모드 종료
     setCheckedMap({});
     setIsEditMode(false);
   };
@@ -72,11 +84,24 @@ const Archive = () => {
     <div className="flex flex-col items-center justify-center">
       <Banner />
       <div className="w-310 h-10 my-15">
-        <p className="typo-h1 text-color-highest">마이 아카이브</p>
+        <EditableTitle
+          value="마이 아카이브"
+          onSave={(next) => {
+            console.log("title", next);
+          }}
+          placeholder="마이 아카이브"
+          maxLength={50}
+        />
       </div>
       <div className="max-w-[1920px] mx-auto mb-40">
-        {/* 아카이브가 존재하면 아카이브 카드를 보여줍니다. */}
-        {archives.length > 0 ? (
+        {/* ✅ 로딩 / 에러 / 데이터 없는 경우 처리 */}
+        {isLoading ? (
+          <p className="typo-h2 text-color-mid">아카이브 불러오는 중...</p>
+        ) : isError ? (
+          <p className="typo-h2 text-color-accent">
+            아카이브를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.
+          </p>
+        ) : archives.length > 0 ? (
           <div className="flex flex-col gap-10">
             {isEditMode ? (
               <div className="flex items-center justify-end gap-5">
@@ -115,12 +140,26 @@ const Archive = () => {
               </div>
             )}
 
+            {/* ✅ 실제 API 응답으로 리스트 렌더링 */}
             <ArchiveList
               archive={archives}
               isEditMode={isEditMode}
               checkedMap={checkedMap}
               onToggleCheck={toggleCheck}
             />
+
+            <div className="flex justify-center mt-12">
+              {/* ✅ 페이지네이션 */}
+              <Pagination
+                totalItems={archivesData?.page.totalElements ?? 0}
+                pageSize={archivesData?.page.size ?? pageSize}
+                currentPage={page}                 // ✅ 1-based
+                visiblePages={5}
+                onChange={(nextPage) => {
+                  setPage(nextPage);              // ✅ 클릭 시 페이지 변경 → useQuery 재요청
+                }}
+              />
+            </div>
           </div>
         ) : (
           <EmptyArchive />

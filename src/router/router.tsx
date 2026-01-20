@@ -42,8 +42,6 @@ const router = createBrowserRouter([
       { path: "feed/:id", element: <FeedDetail /> },
       { path: "community", element: <Community /> },
       { path: "community/:postId", element: <CommunityDetail /> },
-      { path: "archive", element: <Archive /> },
-      { path: "archive/:archiveId", element: <ArchiveDetail /> },
       { path: "archive/:archiveId/diary", element: <DiaryPage /> }, // 아카이브 내 다이어리 목록 보기
       { path: "archive/:archiveId/ticket-book", element: <TicketBookPage /> },
       { path: "archive/:archiveId/gallery", element: <Gallery /> },
@@ -71,6 +69,8 @@ const router = createBrowserRouter([
     path: "/",
     element: <ProtectedLayout />,
     children: [
+      { path: "archive", element: <Archive /> },
+      { path: "archive/:archiveId", element: <ArchiveDetail /> },
       {
         path: "archive/:archiveId/ticket/create",
         element: <CreateTicketPage />,
