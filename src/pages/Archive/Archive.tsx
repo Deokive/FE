@@ -5,13 +5,12 @@ import ArchiveList from "@/components/archive/List/ArchiveList";
 import EmptyArchive from "@/components/archive/Empty/EmptyArchive";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import Banner from "@/components/community/Banner";
-// import { archiveDataMock } from "@/mockData/archiveData";  // ❌ 제거
 import { Pencil, Plus, SquareX } from "lucide-react";
 import { useState } from "react";
 import EditableTitle from "@/components/common/EditableTitle";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getArchive } from "@/apis/queries/archive/getArchive";
+import { GetUserArchive } from "@/apis/queries/archive/getArchive";
 import Pagination from "@/components/common/Pagination";
 import { CreateArchive } from "@/apis/mutations/archive/archive";
 import { Visibility } from "@/types/archive";
@@ -34,7 +33,7 @@ const Archive = () => {
   } = useQuery({
     queryKey: ["archives", user?.id, page, pageSize],
     queryFn: () =>
-      getArchive(Number(user?.id), {
+      GetUserArchive(Number(user?.id), {
         page: page - 1,
         size: pageSize,
         sort: "createdAt",

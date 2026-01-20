@@ -7,11 +7,10 @@ type Props = {
   archiveId?: number;
   userId?: number;
   title?: string;
-  bannerUrl?: string;
+  // bannerUrl?: string;
   image?: string;
-  viewCount?: number;
-  likeCount?: number;
   onClick?: () => void;
+  //편집 & 선택 관련
   isEditMode?: boolean;
   checked?: boolean;
   onToggleCheck?: (id: string, checked: boolean) => void;
@@ -21,7 +20,7 @@ const ArchiveCard = ({
   archiveId,
   userId,
   title,
-  bannerUrl,
+  // bannerUrl,
   image,
   onClick,
   isEditMode = false,
@@ -64,7 +63,6 @@ const ArchiveCard = ({
     <div
       data-archive-id={archiveId}
       data-user-id={userId}
-      data-banner-url={bannerUrl}
       onClick={handleCardClick}
       className="pt-[25px] px-5 flex flex-col items-center justify-center w-90 h-75 rounded-[10px] bg-brand-blue-400 cursor-pointer"
     >

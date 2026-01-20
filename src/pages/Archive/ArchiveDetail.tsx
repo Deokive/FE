@@ -14,19 +14,25 @@ import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
 import type { LabelData } from "@/types/calendar";
 import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();
 
   const urlParams = useParams();
-  const archiveId = urlParams.id;
+  const archiveId = urlParams.archiveId;
 
-  // 아카이브 데이터 조회 => 추후에 실제 API로 연결
-  const archive = archiveDataMock.find(
-    (archive) => archive.archiveId === Number(archiveId)
+  const { data: archive } = useQuery({
+    queryKey: ["archive", archiveId],
+    queryFn: () => GetArchiveDetail(Number(archiveId)),
+  });
+
+  const archivedData = archiveDataMock.find(
+    (archived) => archived.archiveId === Number(archiveId)
   );
 
-  const hasTickets = (archive?.Ticket?.length ?? 0) > 0;
+  const hasTickets = (archivedData?.Ticket?.length ?? 0) > 0;
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -56,10 +62,10 @@ const ArchiveDetail = () => {
                 if (!archiveId) return;
                 navigate(`/archive/${archiveId}/diary`);
               }}
-              isMore={(archive?.Diary?.length ?? 0) > 0}
+              isMore={(archivedData?.Diary?.length ?? 0) > 0}
             />
-            {archive?.Diary?.length ?? 0 > 0 ? (
-              <DiaryList diary={archive?.Diary} limit={3} />
+            {archivedData?.Diary?.length ?? 0 > 0 ? (
+              <DiaryList diary={archivedData?.Diary} limit={3} />
             ) : (
               <EmptyList
                 title="일기 추가"
@@ -76,10 +82,10 @@ const ArchiveDetail = () => {
                 if (!archiveId) return;
                 navigate(`/archive/${archiveId}/gallery`);
               }}
-              isMore={(archive?.Gallery?.length ?? 0) > 0}
+              isMore={(archivedData?.Gallery?.length ?? 0) > 0}
             />
-            {archive?.Gallery?.length ?? 0 > 0 ? (
-              <GalleryList gallery={archive?.Gallery} />
+            {archivedData?.Gallery?.length ?? 0 > 0 ? (
+              <GalleryList gallery={archivedData?.Gallery} />
             ) : (
               <EmptyList
                 title="사진 추가"
@@ -101,7 +107,7 @@ const ArchiveDetail = () => {
               isMore={hasTickets}
             />
             {hasTickets ? (
-              <TicketList ticket={archive?.Ticket} />
+              <TicketList ticket={archivedData?.Ticket} />
             ) : (
               <EmptyList
                 title="티켓 추가"
@@ -119,10 +125,10 @@ const ArchiveDetail = () => {
                 if (!archiveId) return;
                 navigate(`/archive/${archiveId}/repost`);
               }}
-              isMore={(archive?.Repost?.length ?? 0) > 0}
+              isMore={(archivedData?.Repost?.length ?? 0) > 0}
             />
-            {archive?.Repost?.length ?? 0 > 0 ? (
-              <RepostList repost={archive?.Repost} />
+            {archivedData?.Repost?.length ?? 0 > 0 ? (
+              <RepostList repost={archivedData?.Repost} />
             ) : (
               <EmptyList
                 title="링크 첨부"
