@@ -8,6 +8,7 @@ import { archiveDataMock } from "@/mockData/archiveData";
 import { Pencil, Plus, SquareX } from "lucide-react";
 import { useState } from "react";
 
+
 const Archive = () => {
   // 현재 로그인한 사용자 ID (test용) => 실제로는 API에서 가져올 데이터
   // userID = 1,2 은 존재하는 아카이브를 가지고 있는 사용자 ID 나머지는 빈 아카이브

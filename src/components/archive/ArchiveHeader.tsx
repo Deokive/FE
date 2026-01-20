@@ -53,7 +53,7 @@ const ArchiveHeader = ({
   return (
     <div className="w-full flex flex-col items-start  gap-[20px]">
       <div className="w-full flex items-center justify-between">
-        <p className="typo-h1 text-color-highest">{title}</p>
+        <p className="typo-h1 text-color-highest">{title || "아카이브명 (사용자 지정)"}</p>
         {isMenu && (
           <div className="relative">
             <button ref={buttonRef} onClick={handleMenuClick}>
