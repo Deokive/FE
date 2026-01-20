@@ -3,6 +3,7 @@ import UserIcon from "@/assets/icon/S.svg";
 import { Ellipsis } from "lucide-react";
 import SettngModal from "./SettngModal";
 import { useEffect, useRef, useState } from "react";
+import EditableTitle from "../common/EditableTitle";
 
 interface ArchiveHeaderProps {
   title?: string;
@@ -53,7 +54,15 @@ const ArchiveHeader = ({
   return (
     <div className="w-full flex flex-col items-start  gap-[20px]">
       <div className="w-full flex items-center justify-between">
-        <p className="typo-h1 text-color-highest">{title || "아카이브명 (사용자 지정)"}</p>
+        {/* <p className="typo-h1 text-color-highest">{title || "아카이브명 (사용자 지정)"}</p> */}
+        <EditableTitle
+          value={title ?? "아카이브명 (사용자 지정)"}
+          onSave={(next) => {
+            console.log("title", next);
+          }}
+          placeholder="아카이브명"
+          maxLength={50}
+        />
         {isMenu && (
           <div className="relative">
             <button ref={buttonRef} onClick={handleMenuClick}>
