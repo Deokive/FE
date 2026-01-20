@@ -23,7 +23,7 @@ const Event = ({ onClose, startDate, editData }: EventProps) => {
     isAllDay: editData ? !editData.hasTime : false,
   });
   const [tags, setTags] = useState<string[]>(editData?.hashtags || []);
-  const [color, setColor] = useState<ColorData>(editData?.color || null);
+  const [color, setColor] = useState<ColorData>(editData?.color || { color: "" });
 
   const handleConfirm = () => {
     console.log("========== 일정 정보 ==========");
@@ -64,7 +64,7 @@ const Event = ({ onClose, startDate, editData }: EventProps) => {
       {/* 색상설정 */}
       <ColorChange
         initialColor={color}
-        onColorChange={(data) => setColor(data || null)}
+        onColorChange={(data) => setColor(data || { color: "" })}
       />
       {/* 확인버튼 */}
       <div className="w-full flex justify-end">

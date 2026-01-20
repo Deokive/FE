@@ -30,7 +30,7 @@ const Sports = ({ onClose, startDate, editData }: SportsProps) => {
   });
 
   const [tags, setTags] = useState<string[]>(editData?.hashtags || []);
-  const [color, setColor] = useState<ColorData>(editData?.color || null);
+  const [color, setColor] = useState<ColorData>(editData?.color || { color: "" });
   const [scoreData, setScoreData] = useState<ScoreData>({
     teamName: editData?.sportInfo?.team1 || "",
     score: editData?.sportInfo?.score1 || 0,
@@ -74,7 +74,7 @@ const Sports = ({ onClose, startDate, editData }: SportsProps) => {
       {/* 색상설정 */}
       <ColorChange
         initialColor={color}
-        onColorChange={(data) => setColor(data || null)}
+        onColorChange={(data) => setColor(data || { color: "" })}
       />
       {/* 경기결과 */}
       <div className="w-165 flex gap-5 items-center">
