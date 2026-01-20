@@ -3,21 +3,19 @@ import ArchiveCard from "../ArchiveCard";
 import type { GetArchiveResponse } from "@/types/archive";
 
 
-type Props = ArchiveListProps & {
-  isEditMode?: boolean;
-};
 
 interface ArchiveListProps {
   archive: GetArchiveResponse["content"] | [];
   checkedMap?: Record<string, boolean>;
   onToggleCheck?: (id: string, checked: boolean) => void;
+  isEditMode?: boolean;
 }
 const ArchiveList = ({
   archive,
   isEditMode = false,
   checkedMap = {},
   onToggleCheck,
-}: Props) => {
+}: ArchiveListProps) => {
   const navigate = useNavigate();
   return (
     <div className="w-310 flex flex-wrap items-start justify-start gap-x-20 gap-y-15">
