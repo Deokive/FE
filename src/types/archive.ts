@@ -42,7 +42,7 @@ export type ArchiveResponse = {
 export type CreateArchiveRequest = {
   title: string;
   visibility: Visibility;
-  bannerImageId: number;
+  bannerImageId: number | null;
 }
 
 export type GetArchiveRequest = {

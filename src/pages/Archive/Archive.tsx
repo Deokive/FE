@@ -10,9 +10,12 @@ import { Pencil, Plus, SquareX } from "lucide-react";
 import { useState } from "react";
 import EditableTitle from "@/components/common/EditableTitle";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getArchive } from "@/apis/queries/archive/getArchive";
 import Pagination from "@/components/common/Pagination";
+import { CreateArchive } from "@/apis/mutations/archive/archive";
+import { Visibility } from "@/types/archive";
+import { useNavigate } from "react-router-dom";
 
 const Archive = () => {
   // 현재 로그인한 사용자 정보
@@ -20,7 +23,8 @@ const Archive = () => {
 
   // ✅ 페이지 상태 (1부터 시작)
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 9;
+  const navigate = useNavigate();
 
   // 실제 API로 아카이브 목록 조회
   const {
@@ -28,14 +32,24 @@ const Archive = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["archives", user?.id],
+    queryKey: ["archives", user?.id, page, pageSize],
     queryFn: () =>
       getArchive(Number(user?.id), {
         page: page - 1,
-        size: 10,
+        size: pageSize,
         sort: "createdAt",
         direction: "DESC",
       }),
+  });
+
+  const createArchiveMutation = useMutation({
+    mutationFn: CreateArchive,
+    onSuccess: () => {
+      console.log("createArchive success");
+    },
+    onError: (error) => {
+      console.log("createArchive error", error);
+    },
   });
 
   // ✅ 서버에서 받아온 실제 아카이브 리스트
@@ -126,7 +140,16 @@ const Archive = () => {
                 <BtnIcon
                   startIcon={<Plus className="w-6 h-6 text-color-high" />}
                   onClick={() => {
-                    console.log("덕카이브 추가 버튼 클릭");
+                    createArchiveMutation.mutate({
+                      title: "아카이브명",
+                      visibility: Visibility.PUBLIC,
+                      bannerImageId: null,
+                    }, {
+                      onSuccess: (data) => {
+                        console.log("createArchive success", data);
+                        navigate('/archive/' + data.id);
+                      },
+                    });
                   }}
                 >
                   덕카이브

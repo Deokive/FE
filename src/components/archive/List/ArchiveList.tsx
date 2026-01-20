@@ -25,9 +25,9 @@ const ArchiveList = ({
         <ArchiveCard
           key={archive.archiveId}
           archiveId={archive.archiveId}
-        bannerUrl={archive.thumbnailUrl}
-        viewCount={archive.viewCount}
-        likeCount={archive.likeCount}
+          bannerUrl={archive.thumbnailUrl}
+          viewCount={archive.viewCount}
+          likeCount={archive.likeCount}
           isEditMode={isEditMode}
           checked={!!checkedMap[String(archive.archiveId)]}
           onToggleCheck={onToggleCheck}
