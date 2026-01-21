@@ -4,6 +4,11 @@ import { Ellipsis } from "lucide-react";
 import SettngModal from "./SettngModal";
 import { useEffect, useRef, useState } from "react";
 import EditableTitle from "../common/EditableTitle";
+import FansBadge from "@/assets/icon/badge/fans";
+import NewbieBadge from "@/assets/icon/badge/newbie";
+import StanBadge from "@/assets/icon/badge/stan";
+import SupporterBadge from "@/assets/icon/badge/supporter";
+import MasterBadge from "@/assets/icon/badge/Master";
 
 interface ArchiveHeaderProps {
   title?: string;
@@ -97,9 +102,14 @@ const ArchiveHeader = ({
         </button>
         {/* 배지 */}
         <div className="flex gap-[20px] justify-center">
-          <div className="flex justify-center items-center px-[20px] py-[10px] rounded-[10px] bg-surface-container-40 text-color-high">
+          {/* <div className="flex justify-center items-center px-[20px] py-[10px] rounded-[10px] bg-surface-container-40 text-color-high">
             {badge}
-          </div>
+          </div> */}
+          {badge === "NEWBIE" && <NewbieBadge />} {/* 신입 */}
+          {badge === "FANS" && <FansBadge />} {/* 팬 */}
+          {badge === "SUPPORTER" && <SupporterBadge />} {/* 후원자 */}
+          {badge === "STAN" && <StanBadge />} {/* 스탠 */}
+          {badge === "MASTER" && <MasterBadge />} {/* 마스터 */}
           {/* 디데이 부분 */}
           <div
             className="h-[51px] flex justify-center items-center px-[10px] py-[4px] rounded-[4px]
