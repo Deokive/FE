@@ -17,31 +17,98 @@ import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
 import { UpdateArchive } from "@/apis/mutations/archive/archive";
-import type { UpdateArchiveRequest } from "@/types/archive";
+import { Visibility, type UpdateArchiveRequest } from "@/types/archive";
+import { useFileUpload } from "@/hooks/useFileUpload";
+import { MediaRole } from "@/enums/mediaRole";
+import { UploadStatus } from "@/enums/uploadStatus";
+import { useRef, useState } from "react";
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();
+  // ✅ 리렌더링을 위한 상태
+  const [updateKey, setUpdateKey] = useState(0);
 
   const urlParams = useParams();
   const archiveId = urlParams.archiveId;
+  const archiveIdNum = Number(archiveId);
   const queryClient = useQueryClient(); // ✅ 전역 인스턴스 가져오기
 
+  // ✅ 업로드 중복 실행 방지
+  const uploadInProgressRef = useRef(false);
+
   const { data: archive } = useQuery({
-    queryKey: ["archive", archiveId],
-    queryFn: () => GetArchiveDetail(Number(archiveId)),
+    queryKey: ["archive", archiveIdNum],
+    queryFn: () => GetArchiveDetail(archiveIdNum),
   });
+
+
+
+
 
   const updateArchiveMutation = useMutation({
     mutationFn: (data: UpdateArchiveRequest) => UpdateArchive(Number(archiveId), data),
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["archive", Number(archiveId)] }); // 상세 페이지 갱신
-      queryClient.invalidateQueries({ queryKey: ["archives"] }); // 목록도 갱신
-      queryClient.invalidateQueries({ queryKey: ["myArchives"] }); // 마이 아카이브도 갱신
+    onSuccess: (updatedArchive) => {
+      // ✅ 쿼리 캐시 업데이트
+      queryClient.setQueryData(["archive", archiveIdNum], updatedArchive);
+
+      uploadInProgressRef.current = false;
+
+      // ✅ 성공 메시지 표시 후 새로고침
+      // alert("배너가 변경되었습니다.");
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 100); // 0.1초 후 새로고침
+    },
+    onError: () => {
+      uploadInProgressRef.current = false; // 업로드 실패 시 상태 초기화
+    },
+  });
+
+  // ✅ useFileUpload - onSuccess를 직접 정의
+  const { upload } = useFileUpload({
+    onSuccess: (response) => {
+      // ✅ 중복 실행 방지
+      if (uploadInProgressRef.current || !response?.fileId) return;
+
+      uploadInProgressRef.current = true;
+      updateArchiveMutation.mutate({
+        title: null,
+        visibility: null,
+        bannerImageId: response.fileId,
+      });
+    },
+    onError: (error) => {
+      console.error("배너 이미지 업로드 실패:", error);
+      alert("배너 이미지 업로드에 실패했습니다. 다시 시도해주세요.");
+      uploadInProgressRef.current = false;
     },
   });
 
   const handleTitleSave = (title: string) => {
     updateArchiveMutation.mutate({ title: title ?? null, visibility: null, bannerImageId: null });
+  };
+
+  // ✅ 배너 저장 핸들러 (파일 업로드 시작)
+  const handleBannerSave = async (file: File) => {
+    // ✅ 이미 업로드 중이면 무시
+    if (uploadInProgressRef.current) {
+      console.log("이미 업로드 중입니다.");
+      return;
+    }
+
+    try {
+      await upload({
+        file,
+        mediaRole: MediaRole.CONTENT,
+      });
+    } catch (error) {
+      console.error("배너 업로드 시작 실패:", error);
+      uploadInProgressRef.current = false;
+    }
+  };
+
+  const handleVisibilitySave = (visibility: Visibility) => {
+    updateArchiveMutation.mutate({ visibility: visibility ?? null, bannerImageId: null, title: null });
   };
 
   const archivedData = archiveDataMock.find(
@@ -51,8 +118,11 @@ const ArchiveDetail = () => {
   const hasTickets = (archivedData?.Ticket?.length ?? 0) > 0;
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <Banner image={archive?.bannerUrl} isEdit={archive?.isOwner} />
+    <div className="flex flex-col items-center justify-center" key={updateKey}>
+      <Banner image={archive?.bannerUrl}
+        isEdit={archive?.isOwner}
+        onBannerSave={handleBannerSave}
+      />
       {/* 배너 밑부분 */}
       <div className="max-w-[1920px] mx-auto flex flex-col items-start mt-[60px] gap-[60px]">
         <div className="w-310">

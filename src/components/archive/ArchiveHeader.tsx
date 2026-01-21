@@ -4,11 +4,13 @@ import { Ellipsis } from "lucide-react";
 import SettngModal from "./SettngModal";
 import { useEffect, useRef, useState } from "react";
 import EditableTitle from "../common/EditableTitle";
-import FansBadge from "@/assets/icon/badge/fans";
-import NewbieBadge from "@/assets/icon/badge/newbie";
-import StanBadge from "@/assets/icon/badge/stan";
-import SupporterBadge from "@/assets/icon/badge/supporter";
-import MasterBadge from "@/assets/icon/badge/Master";
+// ArchiveHeader.tsx의 import 부분 수정
+import FansBadge from "@/assets/icon/badge/Fans.tsx";
+import NewbieBadge from "@/assets/icon/badge/Newbie.tsx";
+import StanBadge from "@/assets/icon/badge/Stan.tsx";
+import SupporterBadge from "@/assets/icon/badge/Supporter.tsx";
+import MasterBadge from "@/assets/icon/badge/Master.tsx";
+
 
 interface ArchiveHeaderProps {
   title?: string;
