@@ -5,6 +5,7 @@ import Banner from "@/components/community/Banner";
 import ArchiveList from "@/components/archive/List/ArchiveList";
 import Pagination from "@/components/common/Pagination";
 import { GetUserArchive } from "@/apis/queries/archive/getArchive";
+import { Sort } from "@/enums/sort";
 
 export default function VisitArchivePage() {
   const { userId } = useParams<{ userId: string }>();
@@ -22,7 +23,7 @@ export default function VisitArchivePage() {
       GetUserArchive(Number(userId), {
         page: page - 1, // 0-based
         size: pageSize,
-        sort: "createdAt",
+        sort: Sort.CREATED_AT,
         direction: "DESC",
       }),
     enabled: !!userId, // userId 있을 때만 호출
