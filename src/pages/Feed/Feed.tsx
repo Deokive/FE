@@ -1,8 +1,11 @@
+import { GetArchiveFeed } from "@/apis/queries/archive/getArchive";
 import type { SelectBoxOption } from "@/components/common/Button/SelectBox";
 import SelectBox from "@/components/common/Button/SelectBox";
 import Pagination from "@/components/common/Pagination";
 import FeedCard from "@/components/feed/FeedCard";
+import { Sort } from "@/enums/sort";
 import { feedDataMock } from "@/mockData/feedData";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +16,25 @@ const FEED_OPTIONS: SelectBoxOption[] = [
 
 const Feed = () => {
   // 샘플 데이터 (실제로는 API에서 가져올 데이터)
-  const feedData = feedDataMock;
+  // const feedData = feedDataMock;
+
+  // ✅ 페이지 상태 (1부터 시작)
+  const [page, setPage] = useState(1);
+  const pageSize = 9;
+  // const navigate = useNavigate();
+
+  const { data: feedData, isLoading, isError } = useQuery({
+    queryKey: ["feed", page, pageSize],
+    queryFn: () => GetArchiveFeed({
+      page: page - 1,
+      size: pageSize,
+      sort: Sort.CREATED_AT,
+      direction: "DESC",
+    }),
+  });
+
+  const feed = feedData?.content ?? [];
+  console.log(feed);
 
   const navigate = useNavigate();
 
@@ -31,10 +52,11 @@ const Feed = () => {
         </div>
 
         <div className="w-310 flex flex-wrap gap-x-[80px] gap-y-[60px]">
-          {feedData.map((feed) => (
+          {feed.map((feed) => (
             <FeedCard
-              key={feed.id}
-              image={feed.image}
+              key={feed.archiveId}
+              id={feed.archiveId}
+              image={feed.thumbnailUrl}
               title={feed.title}
               onClick={() => {
                 navigate(`/feed/${feed.archiveId}`);
@@ -46,11 +68,13 @@ const Feed = () => {
       </div>
       <Pagination
         className="w-310 flex justify-center items-center mx-auto"
-        totalItems={feedData.length}
-        pageSize={10}
+        totalItems={feedData?.page.totalElements ?? 0}
+        pageSize={pageSize}
+        currentPage={page}
         visiblePages={5}
-        currentPage={1}
-        onChange={() => {}}
+        onChange={(nextPage) => {
+          setPage(nextPage);
+        }}
       />
     </div>
   );

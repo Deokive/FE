@@ -1,3 +1,4 @@
+import type { Sort } from "@/enums/sort";
 import type { DefaultPaginationResponse } from "./pagination";
 
 export enum Visibility {
@@ -48,7 +49,7 @@ export type CreateArchiveRequest = {
 export type GetArchiveRequest = {
   page?: number;
   size?: number;
-  sort?: "createdAt" | "viewCount" | "likeCount" | "hotScore";
+  sort?: Sort;
   direction?: "ASC"|"DESC"|"asc"|"desc";  
 }
 

@@ -15,6 +15,7 @@ import Pagination from "@/components/common/Pagination";
 import { CreateArchive } from "@/apis/mutations/archive/archive";
 import { Visibility } from "@/types/archive";
 import { useNavigate } from "react-router-dom";
+import { Sort } from "@/enums/sort";
 
 const Archive = () => {
   // 현재 로그인한 사용자 정보
@@ -36,7 +37,7 @@ const Archive = () => {
       GetUserArchive(Number(user?.id), {
         page: page - 1,
         size: pageSize,
-        sort: "createdAt",
+        sort: Sort.CREATED_AT,
         direction: "DESC",
       }),
   });

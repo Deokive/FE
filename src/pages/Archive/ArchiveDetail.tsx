@@ -136,6 +136,7 @@ const ArchiveDetail = () => {
         <div className="w-310">
           {/* 아카이브 헤더 */}
           <ArchiveHeader
+            isFeed={false}
             onTitleSave={(title) => {
               handleTitleSave(title);
             }}

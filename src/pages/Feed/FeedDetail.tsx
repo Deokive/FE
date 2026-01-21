@@ -17,6 +17,8 @@ import ButtonLike from "@/components/archive/ButtonLike";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import EmptyFeedList from "@/components/feed/EmptyFeedList";
 import type { LabelData } from "@/types/calendar";
+import { useQuery } from "@tanstack/react-query";
+import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
 
 const FeedDetail = () => {
   const navigate = useNavigate();
@@ -24,9 +26,13 @@ const FeedDetail = () => {
   const urlParams = useParams();
   const archiveId = urlParams.id;
   // 아카이브 데이터 조회
-  const feed = feedDataMock.find(
-    (feed) => feed.archiveId === Number(archiveId)
-  );
+  // const feed = feedDataMock.find(
+  //   (feed) => feed.archiveId === Number(archiveId)
+  // );
+  const { data: feed } = useQuery({
+    queryKey: ["feed", archiveId],
+    queryFn: () => GetArchiveDetail(Number(archiveId)),
+  });
   // 덕질 일기 데이터 조회
   const diary = diaryDataMock.filter(
     (diary) => diary.archiveId === Number(archiveId)
@@ -45,7 +51,7 @@ const FeedDetail = () => {
   );
   return (
     <div className="flex flex-col items-center justify-center">
-      <Banner image={feed?.bannerUrl} />
+      <Banner image={feed?.bannerUrl ?? ""} />
       {/* 배너 밑부분 */}
       <div className="max-w-[1920px] mx-auto flex flex-col items-start mt-[60px] gap-[60px]">
         {/* 아카이브 헤더 */}
@@ -54,6 +60,7 @@ const FeedDetail = () => {
           ownerNickname={feed?.ownerNickname}
           badge={feed?.badge}
           createdAt={feed?.createdAt}
+          isFeed={true}
         />
         {/* 아카이브 달력 */}
         <Calendar

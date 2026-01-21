@@ -20,6 +20,7 @@ interface ArchiveHeaderProps {
   createdAt?: string;
   isMenu?: boolean;
   visibility?: Visibility;
+  isFeed?: boolean;
   onTitleSave?: (title: string) => void;
   onVisibilitySave?: (visibility: Visibility) => void;
   onDeleteArchive?: () => void;
@@ -32,6 +33,7 @@ const ArchiveHeader = ({
   createdAt,
   isMenu = false,
   visibility,
+  isFeed = false,
   onTitleSave,
   onVisibilitySave,
   onDeleteArchive,
@@ -75,15 +77,19 @@ const ArchiveHeader = ({
     <div className="w-full flex flex-col items-start  gap-[20px]">
       <div className="w-full flex items-center justify-between">
         {/* <p className="typo-h1 text-color-highest">{title || "아카이브명 (사용자 지정)"}</p> */}
-        <EditableTitle
-          value={title ?? "아카이브명 (사용자 지정)"}
-          onSave={(next) => {
-            console.log("title", next);
-            onTitleSave?.(next); // 부모 컴포넌트에서 전달받은 함수 호출
-          }}
-          placeholder="아카이브명"
-          maxLength={50}
-        />
+        {isFeed ? (
+          <p className="typo-h1 text-color-highest">{title || "아카이브명 (사용자 지정)"}</p>
+        ) : (
+          <EditableTitle
+            value={title ?? "아카이브명 (사용자 지정)"}
+            onSave={(next) => {
+              console.log("title", next);
+              onTitleSave?.(next); // 부모 컴포넌트에서 전달받은 함수 호출
+            }}
+            placeholder="아카이브명"
+            maxLength={50}
+          />
+        )}
         {isMenu && (
           <div className="relative">
             <button ref={buttonRef} onClick={handleMenuClick}>

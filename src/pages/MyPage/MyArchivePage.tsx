@@ -9,6 +9,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 import { GetUserArchive } from "@/apis/queries/archive/getArchive";
 import Pagination from "@/components/common/Pagination";
+import { Sort } from "@/enums/sort";
 
 const MyArchivePage = () => {
   // 현재 로그인한 사용자 정보
@@ -30,7 +31,7 @@ const MyArchivePage = () => {
       GetUserArchive(Number(user?.id), {
         page: page - 1, // 0-based
         size: pageSize,
-        sort: "createdAt",
+        sort: Sort.CREATED_AT,
         direction: "DESC",
       }),
     enabled: !!user?.id, // 로그인 유저 있을 때만 호출
