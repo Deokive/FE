@@ -17,12 +17,10 @@ const SignupStep3 = ({ email, onComplete }: SignupStep3Props) => {
     mutationFn: verifyEmailCode,
     onSuccess: (data) => {
       console.log("인증번호 확인 성공:", data);
-
       setIsVerified(true);
     },
     onError: (error) => {
       console.error("인증번호 확인 실패:", error);
-      setIsVerifying(false);
     },
   });
 

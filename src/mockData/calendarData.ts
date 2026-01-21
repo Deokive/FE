@@ -71,22 +71,6 @@ const defaultLabelData: LabelData[] = [
     isSportType: false,
   },
   {
-    date: "2026-01-04",
-    title: "콘서트 관람",
-    hasTime: false,
-    color: colors[1],
-    hashtags: ["콘서트", "라이브", "블랙핑크"],
-    isSportType: false,
-  },
-  {
-    date: "2026-01-04",
-    title: "콘서트 관람",
-    hasTime: false,
-    color: colors[1],
-    hashtags: ["콘서트", "라이브", "블랙핑크"],
-    isSportType: false,
-  },
-  {
     date: "2026-01-05",
     title: "콘서트 관람",
     time: "18:00",
@@ -107,15 +91,9 @@ const defaultLabelData: LabelData[] = [
 ];
 
 const defaultStickerData: Record<string, string> = {
-  "2026-01-01": "sticker",
-  "2026-01-02": "sticker",
-  "2026-01-03": "sticker",
-  "2026-01-04": "sticker",
-  "2026-01-05": "sticker",
-  "2026-01-06": "sticker",
-  "2026-01-07": "sticker",
-  "2026-01-08": "sticker",
-  "2026-01-09": "sticker",
+  "2025-12-01": "sticker",
+  "2025-12-02": "sticker",
+  "2025-12-03": "sticker",
 };
 
 export {

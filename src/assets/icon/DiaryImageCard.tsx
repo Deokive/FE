@@ -29,7 +29,6 @@ const DiaryImageCard = ({
       role={ariaHidden ? undefined : "img"}
       aria-label={ariaLabel}
       aria-hidden={ariaHidden}
-      onClick={onClick}
     >
       <g clipPath="url(#clip0_1002_28689)">
         <g clipPath="url(#clip1_1002_28689)">

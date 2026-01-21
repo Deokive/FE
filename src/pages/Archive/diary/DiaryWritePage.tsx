@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { BtnBasic } from "@/components/common/Button/Btn";
 import type { CreateDiaryRequest } from "@/types/diary";
 import ColorChange from "@/components/common/ColorChange";
 import DiaryImage from "@/components/diary/DiaryImage";
@@ -35,7 +36,7 @@ const DiaryWritePage = () => {
     { color: "#DFDCDC" }, //회색
   ];
 
-  const { handleSubmit, watch, setValue, reset } =
+  const { register, handleSubmit, watch, setValue, reset } =
     useForm<DiaryFormData>({
       defaultValues: {
         CreateDiaryRequest: {

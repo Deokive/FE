@@ -6,7 +6,7 @@ export const feedDataMock = [
     archiveId: 12,
     title: "나의 첫 아카이브",
     visibility: "PUBLIC",
-    badge: "FANS",
+    badge: "NEWBIE",
     bannerUrl: banner,
     image: "https://picsum.photos/201/300",
     viewCount: 150,

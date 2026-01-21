@@ -1,5 +1,6 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
+import { Trash2, Edit2, X, Check } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import ConfirmModal from "@/components/common/ConfirmModal";
@@ -13,6 +14,7 @@ import type { CreateDiaryRequest, DiaryDetailResponse } from "@/types/diary";
 import { MediaType } from "@/enums/mediaType";
 import { MediaRole } from "@/enums/mediaRole";
 import dayjs from "dayjs";
+import { BtnBasic } from "@/components/common/Button/Btn";
 // TODO: API 함수 import
 // import { useQuery } from "@tanstack/react-query";
 // import { getDiary, updateDiary, deleteDiary } from "@/apis/...";
@@ -29,10 +31,9 @@ type ImageItem = {
 
 const DiaryDetailPage = () => {
   const { archiveId, diaryId } = useParams();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // 현재 로그인된 사용자 정보
   const currentUser = useAuthStore((state) => state.user);
-  console.log("currentUser", currentUser);
 
   // 임시 데이터 (실제로는 API에서 가져옴)
   const diary: DiaryDetailResponse = {
@@ -43,7 +44,7 @@ const DiaryDetailPage = () => {
     color: "#82BEF5",
     visibility: "PUBLIC",
     diaryBookId: Number(archiveId),
-    createdBy: 1, // ✅ 작성자 ID
+    createdBy: currentUser?.id || 1, // ✅ 작성자 ID
     files: [
       {
         fileId: 1,
@@ -66,7 +67,8 @@ const DiaryDetailPage = () => {
     ],
   };
   // ✅ 작성자 여부 확인 => 작성자라면 수정 가능
-  const isOwner = currentUser?.id === diary.createdBy;
+  const isOwner = currentUser?.id === diary.createdBy ? true : false;
+  // const isOwner = false;
 
   // ✅ 편집 모드 상태
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -90,8 +92,8 @@ const DiaryDetailPage = () => {
   const title = watch("CreateDiaryRequest.title");
   const content = watch("CreateDiaryRequest.content");
   const recordedAt = watch("CreateDiaryRequest.recordedAt");
-  // const currentColor = watch("CreateDiaryRequest.color");
-  // const selectedColor = diary.color; // 임시 데이터의 색상.
+  const currentColor = watch("CreateDiaryRequest.color");
+  const selectedColor = diary.color; // 임시 데이터의 색상.
 
   // ✅ 필수 필드 검증
   const isFormValid = useMemo(() => {

@@ -1,61 +1,55 @@
-// src/components/community/Banner.tsx (간단 버전)
-import { useRef } from "react";
-import { BtnBasic } from "../common/Button/Btn";
+// src/components/community/Banner.tsx
+import { useState } from "react";
+import banner from "@/assets/images/banner.png";
 
 interface BannerProps {
   image?: string;
-  isEdit?: boolean;
-  onBannerSave?: (file: File) => void;
 }
 
-const Banner = ({ image, isEdit = false, onBannerSave }: BannerProps) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+const Banner = ({ image }: BannerProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && onBannerSave) {
-      onBannerSave(file);
-    }
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
-  const handleBannerEditClick = () => {
-    fileInputRef.current?.click();
-  };
-
+  // 이미지가 있고 로딩 중일 때 스켈레톤 UI
+  const isLoading = image && !imageLoaded && !imageError;
 
   return (
     <div className="flex justify-center items-center w-full relative">
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleFileChange}
-        className="hidden"
-      />
-
-      {/* ✅ 로딩 처리 없이 바로 표시 */}
-      {image ? (
-        <img
-          key={image} // ✅ key로 URL 변경 감지
-          src={image}
-          alt="banner"
-          role="img"
-          className="w-full h-50 object-cover"
-        />
-      ) : (
-        <div className="w-full h-50 bg-brand-blue-200 animate-pulse" />
+      {/* 스켈레톤 UI - 이미지가 있고 로딩 중일 때 */}
+      {isLoading && (
+        <div className="w-full h-50 bg-surface-container-20 animate-pulse rounded-lg" />
       )}
 
-      {isEdit && (
-        <BtnBasic
-          onClick={handleBannerEditClick}
-          className="p-2.5 absolute top-8 right-16 typo-body2-semibold 
-        bg-brand-blue-100 text-color-high w-27.5 h-11 rounded-[8px] shadow-[0_0_4px_0_#CBD5DF]">
-          배너 편집
-        </BtnBasic>
+      {/* 이미지 - 로드 완료되면 표시 */}
+      {image && (
+        <>
+          <img
+            src={image}
+            alt="banner"
+            role="img"
+            className={imageLoaded ? "block w-full" : "hidden"}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => {
+              setImageError(true);
+              setImageLoaded(false);
+            }}
+          />
+          {/* 숨겨진 이미지로 로딩 트리거 */}
+          {!imageLoaded && !imageError && (
+            <img
+              src={image}
+              alt="preload"
+              className="hidden"
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageError(true)}
+            />
+          )}
+        </>
+      )}
+
+      {/* 이미지가 없거나 로드 실패했을 때 기본 배너 */}
+      {(!image || imageError) && !isLoading && (
+        <img src={banner} alt="banner" role="img" className="w-full" />
       )}
     </div>
   );
