@@ -16,7 +16,7 @@ import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
-import { DeleteArchive, UpdateArchive } from "@/apis/mutations/archive/archive";
+import { DeleteArchive, LikeArchive, UpdateArchive } from "@/apis/mutations/archive/archive";
 import { Visibility, type UpdateArchiveRequest } from "@/types/archive";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { MediaRole } from "@/enums/mediaRole";
@@ -60,6 +60,17 @@ const ArchiveDetail = () => {
     onError: (error) => {
       console.error("아카이브 삭제 실패:", error);
       alert("아카이브 삭제에 실패했습니다. 다시 시도해주세요.");
+    },
+  });
+
+  const likeArchiveMutation = useMutation({
+    mutationFn: () => LikeArchive(archiveIdNum),
+    onSuccess: (likedArchive) => {
+      queryClient.setQueryData(["archive", archiveIdNum], likedArchive);
+    },
+    onError: (error) => {
+      console.error("좋아요 실패:", error);
+      alert("좋아요에 실패했습니다. 다시 시도해주세요.");
     },
   });
 
@@ -244,9 +255,10 @@ const ArchiveDetail = () => {
           </div>
           {/* 좋아요 */}
           <ButtonLike
-            liked={archive?.liked}
+            liked={archive?.isLiked}
             likeCount={archive?.likeCount}
             onClick={() => {
+              likeArchiveMutation.mutate();
               console.log("좋아요 클릭");
             }}
           />

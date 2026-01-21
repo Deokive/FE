@@ -77,3 +77,10 @@ export type UpdateArchiveRequest = {
   visibility: Visibility | null;
   bannerImageId: number | null;
 }
+
+export type ArchiveLikeResponse = {
+  archiveId: number;
+  likeCount: number;
+  liked: boolean | null;
+  isLiked: boolean | null;
+}

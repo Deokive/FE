@@ -4,7 +4,6 @@ import { diaryDataMock } from "@/mockData/diaryData";
 import { galleryDataMock } from "@/mockData/galleryData";
 import { ticketDataMock } from "@/mockData/ticketData";
 import Banner from "@/components/community/Banner";
-import { feedDataMock } from "@/mockData/feedData";
 import { useParams } from "react-router-dom";
 import ArchiveHeader from "@/components/archive/ArchiveHeader";
 import Calendar from "@/components/calendar/Calendar";
@@ -17,21 +16,30 @@ import ButtonLike from "@/components/archive/ButtonLike";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import EmptyFeedList from "@/components/feed/EmptyFeedList";
 import type { LabelData } from "@/types/calendar";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
+import { LikeArchive } from "@/apis/mutations/archive/archive";
 
 const FeedDetail = () => {
   const navigate = useNavigate();
-
+  const queryClient = useQueryClient();
   const urlParams = useParams();
   const archiveId = urlParams.id;
-  // 아카이브 데이터 조회
-  // const feed = feedDataMock.find(
-  //   (feed) => feed.archiveId === Number(archiveId)
-  // );
+
   const { data: feed } = useQuery({
     queryKey: ["feed", archiveId],
     queryFn: () => GetArchiveDetail(Number(archiveId)),
+  });
+
+  const likeArchiveMutation = useMutation({
+    mutationFn: () => LikeArchive(Number(archiveId)),
+    onSuccess: (likedArchive) => {
+      queryClient.setQueryData(["feed", archiveId], likedArchive);
+    },
+    onError: (error) => {
+      console.error("좋아요 실패:", error);
+      alert("좋아요에 실패했습니다. 다시 시도해주세요.");
+    },
   });
   // 덕질 일기 데이터 조회
   const diary = diaryDataMock.filter(
@@ -126,9 +134,10 @@ const FeedDetail = () => {
         )}
         {/* 좋아요 */}
         <ButtonLike
-          liked={feed?.liked}
+          liked={feed?.isLiked}
           likeCount={feed?.likeCount ?? 0}
           onClick={() => {
+            likeArchiveMutation.mutate();
             console.log("좋아요 클릭");
           }}
         />

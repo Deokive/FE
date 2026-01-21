@@ -1,5 +1,5 @@
 import axiosInstance from "@/apis/axios";
-import type { ArchiveResponse, CreateArchiveRequest, UpdateArchiveRequest } from "@/types/archive";
+import type { ArchiveLikeResponse, ArchiveResponse, CreateArchiveRequest, UpdateArchiveRequest } from "@/types/archive";
 
 export const CreateArchive = async (data: CreateArchiveRequest): Promise<ArchiveResponse> => {
   const response = await axiosInstance.post<ArchiveResponse>(
@@ -24,4 +24,13 @@ export const DeleteArchive = async(
   archiveId: number
 ): Promise<void> => {
   await axiosInstance.delete(`/api/v1/archives/${archiveId}`);
+};
+
+export const LikeArchive = async(
+  archiveId: number
+): Promise<ArchiveLikeResponse> => {
+  const response = await axiosInstance.post<ArchiveLikeResponse>(
+    `/api/v1/archives/${archiveId}/like`
+  );
+  return response.data;
 };
