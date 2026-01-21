@@ -6,15 +6,19 @@ import { BtnIcon } from "@/components/common/Button/Btn";
 import Banner from "@/components/community/Banner";
 import { Pencil, SquareX } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetUserArchive } from "@/apis/queries/archive/getArchive";
 import Pagination from "@/components/common/Pagination";
 import { Sort } from "@/enums/sort";
+import { DeleteArchive } from "@/apis/mutations/archive/archive";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 const MyArchivePage = () => {
   // 현재 로그인한 사용자 정보
   const user = useAuthStore((state) => state.user);
-
+  const queryClient = useQueryClient();
+  // 삭제 모달 상태
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // ✅ 추가
   // ✅ 페이지 상태 (1부터 시작)
   const [page, setPage] = useState(1);
   const pageSize = 9;
@@ -35,6 +39,26 @@ const MyArchivePage = () => {
         direction: "DESC",
       }),
     enabled: !!user?.id, // 로그인 유저 있을 때만 호출
+  });
+
+  // ✅ 여러 개 아카이브 삭제 mutation
+  const deleteArchivesMutation = useMutation({
+    mutationFn: async (ids: string[]) => {
+      await Promise.all(ids.map((id) => DeleteArchive(Number(id))));
+    },
+    onSuccess: () => {
+      // 목록 새로고침
+      queryClient.invalidateQueries({ queryKey: ["myArchives"], exact: false });
+      // 선택/편집 상태 초기화
+      setCheckedMap({});
+      setIsEditMode(false);
+      setIsDeleteModalOpen(false);
+    },
+    onError: (error) => {
+      console.error("아카이브 삭제 실패:", error);
+      alert("아카이브 삭제에 실패했습니다. 다시 시도해주세요.");
+      setIsDeleteModalOpen(false);
+    },
   });
 
   // ✅ 서버에서 받아온 실제 아카이브 리스트
@@ -67,22 +91,22 @@ const MyArchivePage = () => {
     [checkedMap]
   );
 
-  // 삭제
+  // ✅ 삭제 버튼 클릭 시: 모달만 오픈
   const handleDeleteSelected = () => {
     if (checkedIds.length === 0) {
       alert("삭제할 아카이브를 선택하세요.");
       return;
     }
-    if (!confirm(`${checkedIds.length}개의 아카이브를 삭제하시겠어요?`)) return;
+    setIsDeleteModalOpen(true);
+  };
 
-    // TODO: 서버에서 삭제 API 호출 후 성공 시 refetch
-    // 예: await deleteArchives(checkedIds.map(id => Number(id)))
-    // 성공 시:
-    // queryClient.invalidateQueries({ queryKey: ["myArchives", user?.id] });
+  // ✅ 모달에서 확인 눌렀을 때 실제 삭제 실행
+  const handleConfirmDelete = () => {
+    deleteArchivesMutation.mutate(checkedIds);
+  };
 
-    // 초기화 / 편집 모드 종료
-    setCheckedMap({});
-    setIsEditMode(false);
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -156,6 +180,19 @@ const MyArchivePage = () => {
           <EmptyArchive />
         )}
       </div>
+      {/* ✅ 여러 개 삭제용 ConfirmModal */}
+      <ConfirmModal
+        trigger={<></>}                         // 외부 버튼에서 열기 때문에 비워둠
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        title={`${checkedIds.length}개의 아카이브를 삭제하시겠어요?`}
+        description="아카이브와 내부에 포함된 모든 데이터가 영구 삭제됩니다."
+        confirmLabel="삭제"
+        cancelLabel="취소"
+        confirmVariant="blue"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </div>
   );
 };

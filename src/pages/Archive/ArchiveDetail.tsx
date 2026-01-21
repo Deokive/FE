@@ -20,7 +20,8 @@ import { DeleteArchive, LikeArchive, UpdateArchive } from "@/apis/mutations/arch
 import { Visibility, type UpdateArchiveRequest } from "@/types/archive";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { MediaRole } from "@/enums/mediaRole";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();
@@ -30,12 +31,17 @@ const ArchiveDetail = () => {
   const archiveIdNum = Number(archiveId);
   const queryClient = useQueryClient(); // ✅ 전역 인스턴스 가져오기
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // ✅ 추가
+
+
+
   // ✅ 업로드 중복 실행 방지
   const uploadInProgressRef = useRef(false);
 
   const { data: archive } = useQuery({
     queryKey: ["archive", archiveIdNum],
     queryFn: () => GetArchiveDetail(archiveIdNum),
+    retry: false,              // ✅ 404 나도 재시도하지 않기
   });
 
   const updateArchiveMutation = useMutation({
@@ -54,7 +60,13 @@ const ArchiveDetail = () => {
   const deleteArchiveMutation = useMutation({
     mutationFn: () => DeleteArchive(archiveIdNum),
     onSuccess: () => {
+      // ✅ 아카이브 상세 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: ["archive", archiveIdNum] });
+      // ✅ 아카이브 목록 쿼리 무효화 (페이지/유저 등 붙은 키까지 포함)
+      queryClient.invalidateQueries({ queryKey: ["archives"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["myArchives"], exact: false });
+
+      // ✅ 리스트 페이지로 이동
       navigate("/archive");
     },
     onError: (error) => {
@@ -118,16 +130,21 @@ const ArchiveDetail = () => {
   const handleVisibilitySave = (visibility: Visibility) => {
     updateArchiveMutation.mutate({ visibility: visibility, bannerImageId: null, title: null });
   };
+
+  // 삭제버튼 클릭 시 모달 오픈
+  const handleDeleteModalOpen = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  // 모달 오픈 시 모달 취소 버튼
+  const handleDeleteModalClose = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+
   // ✅ 아카이브 삭제 핸들러
   const handleDeleteArchive = () => {
-    const confirmed = confirm(
-      "아카이브와 내부에 포함된 모든 데이터가 영구 삭제됩니다.\n" +
-      "정말 삭제하시겠습니까?"
-    );
-
-    if (confirmed) {
-      deleteArchiveMutation.mutate();
-    }
+    deleteArchiveMutation.mutate();
   };
 
   const archivedData = archiveDataMock.find(
@@ -158,7 +175,7 @@ const ArchiveDetail = () => {
             isMenu={true}
             onVisibilitySave={handleVisibilitySave}
             visibility={archive?.visibility}
-            onDeleteArchive={handleDeleteArchive}
+            onDeleteArchive={handleDeleteModalOpen}
           />
           {/* 아카이브 달력 */}
           <Calendar
@@ -264,6 +281,18 @@ const ArchiveDetail = () => {
           />
         </div>
       </div>
+      <ConfirmModal
+        trigger={<></>}
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        title="아카이브 삭제"
+        description="아카이브와 내부에 포함된 모든 데이터가 영구 삭제됩니다."
+        confirmLabel="삭제"
+        cancelLabel="취소"
+        confirmVariant="blue"
+        onConfirm={handleDeleteArchive}
+        onCancel={handleDeleteModalClose}
+      />
     </div>
   );
 };
