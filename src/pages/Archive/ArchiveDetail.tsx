@@ -16,7 +16,7 @@ import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
-import { UpdateArchive } from "@/apis/mutations/archive/archive";
+import { DeleteArchive, UpdateArchive } from "@/apis/mutations/archive/archive";
 import { Visibility, type UpdateArchiveRequest } from "@/types/archive";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { MediaRole } from "@/enums/mediaRole";
@@ -39,10 +39,6 @@ const ArchiveDetail = () => {
     queryFn: () => GetArchiveDetail(archiveIdNum),
   });
 
-
-
-
-
   const updateArchiveMutation = useMutation({
     mutationFn: (data: UpdateArchiveRequest) => UpdateArchive(Number(archiveId), data),
     onSuccess: (updatedArchive) => {
@@ -50,15 +46,21 @@ const ArchiveDetail = () => {
       queryClient.setQueryData(["archive", archiveIdNum], updatedArchive);
 
       uploadInProgressRef.current = false;
-
-      // ✅ 성공 메시지 표시 후 새로고침
-      // alert("배너가 변경되었습니다.");
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 100); // 0.1초 후 새로고침
     },
     onError: () => {
       uploadInProgressRef.current = false; // 업로드 실패 시 상태 초기화
+    },
+  });
+
+  const deleteArchiveMutation = useMutation({
+    mutationFn: () => DeleteArchive(archiveIdNum),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["archive", archiveIdNum] });
+      navigate("/archive");
+    },
+    onError: (error) => {
+      console.error("아카이브 삭제 실패:", error);
+      alert("아카이브 삭제에 실패했습니다. 다시 시도해주세요.");
     },
   });
 
@@ -106,7 +108,17 @@ const ArchiveDetail = () => {
   const handleVisibilitySave = (visibility: Visibility) => {
     updateArchiveMutation.mutate({ visibility: visibility, bannerImageId: null, title: null });
   };
+  // ✅ 아카이브 삭제 핸들러
+  const handleDeleteArchive = () => {
+    const confirmed = confirm(
+      "아카이브와 내부에 포함된 모든 데이터가 영구 삭제됩니다.\n" +
+      "정말 삭제하시겠습니까?"
+    );
 
+    if (confirmed) {
+      deleteArchiveMutation.mutate();
+    }
+  };
 
   const archivedData = archiveDataMock.find(
     (archived) => archived.archiveId === Number(archiveId)
@@ -135,6 +147,7 @@ const ArchiveDetail = () => {
             isMenu={true}
             onVisibilitySave={handleVisibilitySave}
             visibility={archive?.visibility}
+            onDeleteArchive={handleDeleteArchive}
           />
           {/* 아카이브 달력 */}
           <Calendar

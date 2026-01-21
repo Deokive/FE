@@ -22,6 +22,7 @@ interface ArchiveHeaderProps {
   visibility?: Visibility;
   onTitleSave?: (title: string) => void;
   onVisibilitySave?: (visibility: Visibility) => void;
+  onDeleteArchive?: () => void;
 }
 
 const ArchiveHeader = ({
@@ -33,6 +34,7 @@ const ArchiveHeader = ({
   visibility,
   onTitleSave,
   onVisibilitySave,
+  onDeleteArchive,
 }: ArchiveHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -68,6 +70,7 @@ const ArchiveHeader = ({
     setIsMenuOpen(false);
   };
 
+
   return (
     <div className="w-full flex flex-col items-start  gap-[20px]">
       <div className="w-full flex items-center justify-between">
@@ -98,6 +101,7 @@ const ArchiveHeader = ({
                   onVisibilitySave={onVisibilitySave}
                   initialVisibility={visibility}
                   onClose={handleCloseModal}
+                  onDeleteArchive={onDeleteArchive}
                 />
               </div>
             )}

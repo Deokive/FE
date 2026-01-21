@@ -8,12 +8,14 @@ interface SettngModalProps {
   onVisibilitySave?: (visibility: Visibility) => void;
   initialVisibility?: Visibility; // ✅ 초기값 prop 추가
   onClose?: () => void; // ✅ 모달 닫기 콜백 추가
+  onDeleteArchive?: () => void; // ✅ 아카이브 삭제 콜백 추가
 }
 
 const SettngModal = ({
   onVisibilitySave,
   initialVisibility = Visibility.PUBLIC,
   onClose,
+  onDeleteArchive,
 }: SettngModalProps) => {
   const [privacy, setPrivacy] = useState<Visibility>(initialVisibility);
 
@@ -31,6 +33,8 @@ const SettngModal = ({
     onVisibilitySave?.(newVisibility);
     onClose?.();
   };
+
+
 
   return (
     <div
@@ -69,6 +73,7 @@ const SettngModal = ({
           variant="gray"
           onClick={() => {
             console.log("삭제하기");
+            onDeleteArchive?.();
           }}
           className="w-55 bg-surface-container-30"
         >

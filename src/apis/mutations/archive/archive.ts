@@ -19,3 +19,9 @@ export const UpdateArchive = async(
   );
   return response.data;
 };
+
+export const DeleteArchive = async(
+  archiveId: number
+): Promise<void> => {
+  await axiosInstance.delete(`/api/v1/archives/${archiveId}`);
+};
