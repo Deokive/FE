@@ -6,6 +6,7 @@ import CommunityCard from "@/components/community/CommunityCard";
 import Pagination from "@/components/common/Pagination";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import SelectBox from "@/components/common/Button/SelectBox";
+import type { Sort } from "@/enums/sort";
 
 type ListOption = { label: string; value: string };
 
@@ -105,7 +106,7 @@ const Community = () => {
             </BtnIcon>
             <SelectBox
               options={LIST_OPTIONS}
-              value={sortBy}
+              value={sortBy as Sort}
               onChange={setSortBy}
             />
           </div>
