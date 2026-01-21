@@ -25,8 +25,6 @@ import { useRef, useState } from "react";
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();
-  // ✅ 리렌더링을 위한 상태
-  const [updateKey, setUpdateKey] = useState(0);
 
   const urlParams = useParams();
   const archiveId = urlParams.archiveId;
@@ -83,11 +81,10 @@ const ArchiveDetail = () => {
       uploadInProgressRef.current = false;
     },
   });
-
+  // ✅ 아카이브명 저장 핸들러
   const handleTitleSave = (title: string) => {
     updateArchiveMutation.mutate({ title: title ?? null, visibility: null, bannerImageId: null });
   };
-
   // ✅ 배너 저장 핸들러 (파일 업로드 시작)
   const handleBannerSave = async (file: File) => {
     // ✅ 이미 업로드 중이면 무시
@@ -95,7 +92,6 @@ const ArchiveDetail = () => {
       console.log("이미 업로드 중입니다.");
       return;
     }
-
     try {
       await upload({
         file,
@@ -106,10 +102,11 @@ const ArchiveDetail = () => {
       uploadInProgressRef.current = false;
     }
   };
-
+  // ✅ 공개 기준 저장 핸들러
   const handleVisibilitySave = (visibility: Visibility) => {
-    updateArchiveMutation.mutate({ visibility: visibility ?? null, bannerImageId: null, title: null });
+    updateArchiveMutation.mutate({ visibility: visibility, bannerImageId: null, title: null });
   };
+
 
   const archivedData = archiveDataMock.find(
     (archived) => archived.archiveId === Number(archiveId)
@@ -118,7 +115,7 @@ const ArchiveDetail = () => {
   const hasTickets = (archivedData?.Ticket?.length ?? 0) > 0;
 
   return (
-    <div className="flex flex-col items-center justify-center" key={updateKey}>
+    <div className="flex flex-col items-center justify-center">
       <Banner image={archive?.bannerUrl}
         isEdit={archive?.isOwner}
         onBannerSave={handleBannerSave}
@@ -136,6 +133,8 @@ const ArchiveDetail = () => {
             badge={archive?.badge}
             createdAt={archive?.createdAt}
             isMenu={true}
+            onVisibilitySave={handleVisibilitySave}
+            visibility={archive?.visibility}
           />
           {/* 아카이브 달력 */}
           <Calendar

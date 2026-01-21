@@ -44,7 +44,7 @@ const Banner = ({ image, isEdit = false, onBannerSave }: BannerProps) => {
           src={image}
           alt="banner"
           role="img"
-          className="w-full"
+          className="w-full h-50 object-cover"
         />
       ) : (
         <div className="w-full h-50 bg-brand-blue-200 animate-pulse" />

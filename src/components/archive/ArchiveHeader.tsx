@@ -10,6 +10,7 @@ import NewbieBadge from "@/assets/icon/badge/Newbie.tsx";
 import StanBadge from "@/assets/icon/badge/Stan.tsx";
 import SupporterBadge from "@/assets/icon/badge/Supporter.tsx";
 import MasterBadge from "@/assets/icon/badge/Master.tsx";
+import type { Visibility } from "@/types/archive";
 
 
 interface ArchiveHeaderProps {
@@ -18,7 +19,9 @@ interface ArchiveHeaderProps {
   badge?: string;
   createdAt?: string;
   isMenu?: boolean;
+  visibility?: Visibility;
   onTitleSave?: (title: string) => void;
+  onVisibilitySave?: (visibility: Visibility) => void;
 }
 
 const ArchiveHeader = ({
@@ -27,7 +30,9 @@ const ArchiveHeader = ({
   badge,
   createdAt,
   isMenu = false,
+  visibility,
   onTitleSave,
+  onVisibilitySave,
 }: ArchiveHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -59,6 +64,9 @@ const ArchiveHeader = ({
     setIsMenuOpen((prev) => !prev);
     console.log("메뉴 버튼 클릭");
   };
+  const handleCloseModal = () => {
+    setIsMenuOpen(false);
+  };
 
   return (
     <div className="w-full flex flex-col items-start  gap-[20px]">
@@ -86,7 +94,11 @@ const ArchiveHeader = ({
                   e.stopPropagation(); // 모달 영역 클릭 시 메뉴 버튼 클릭 방지
                 }}
               >
-                <SettngModal />
+                <SettngModal
+                  onVisibilitySave={onVisibilitySave}
+                  initialVisibility={visibility}
+                  onClose={handleCloseModal}
+                />
               </div>
             )}
           </div>
