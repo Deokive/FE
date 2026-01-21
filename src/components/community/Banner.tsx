@@ -1,6 +1,5 @@
 // src/components/community/Banner.tsx (간단 버전)
-import { useEffect, useRef } from "react";
-import banner from "@/assets/images/banner.png";
+import { useRef } from "react";
 import { BtnBasic } from "../common/Button/Btn";
 
 interface BannerProps {

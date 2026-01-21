@@ -20,8 +20,7 @@ import { DeleteArchive, UpdateArchive } from "@/apis/mutations/archive/archive";
 import { Visibility, type UpdateArchiveRequest } from "@/types/archive";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { MediaRole } from "@/enums/mediaRole";
-import { UploadStatus } from "@/enums/uploadStatus";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();
