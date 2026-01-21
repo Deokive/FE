@@ -46,8 +46,6 @@ const router = createBrowserRouter([
       { path: "archive/:archiveId/ticket-book", element: <TicketBookPage /> },
       { path: "archive/:archiveId/gallery", element: <Gallery /> },
       { path: "archive/:archiveId/repost", element: <RepostingPage /> },
-      { path: "profile/:userId", element: <VisitProfilePage /> },
-      { path: "profile/:userId/archives", element: <VisitArchivePage /> },
       { path: "*", element: <NotFound /> },
     ],
   },
@@ -93,6 +91,8 @@ const router = createBrowserRouter([
         path: "/archive/:archiveId/diary/new", // 다이어리 작성
         element: <DiaryWritePage />,
       },
+      { path: "profile/:userId", element: <VisitProfilePage /> },
+      { path: "profile/:userId/archives", element: <VisitArchivePage /> },
     ],
   },
 ]);

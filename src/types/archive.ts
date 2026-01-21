@@ -52,19 +52,21 @@ export type GetArchiveRequest = {
   direction?: "ASC"|"DESC"|"asc"|"desc";  
 }
 
+export type ArchiveListItem = {
+  archiveId: number;
+  title: string;
+  thumbnailUrl: string;
+  viewCount: number;
+  likeCount: number;
+  hotScore: number;
+  visibility: Visibility;
+  createdAt: string;
+  lastModifiedAt: string;
+  ownerNickname: string;
+};
+
 export type GetArchiveResponse = {
   title: string;
-  content: [{
-    archiveId: number;
-    title: string;
-    thumbnailUrl: string;
-    viewCount: number;
-    likeCount: number;
-    hotScore: number;
-    visibility: Visibility;
-    createdAt: string;
-    lastModifiedAt: string;
-    ownerNickname: string;
-  }],
+  content: ArchiveListItem[];
   page: DefaultPaginationResponse;
-}
+};
