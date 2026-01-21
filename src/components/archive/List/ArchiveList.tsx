@@ -21,6 +21,8 @@ const ArchiveList = ({
         <ArchiveCard
           key={archive.archiveId}
           archiveId={archive.archiveId}
+          title={archive.title}
+          image={archive.thumbnailUrl}
           isEditMode={isEditMode}
           checked={!!checkedMap[String(archive.archiveId)]}
           onToggleCheck={onToggleCheck}

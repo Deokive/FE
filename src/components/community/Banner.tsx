@@ -1,12 +1,14 @@
 // src/components/community/Banner.tsx
 import { useState } from "react";
 import banner from "@/assets/images/banner.png";
+import { BtnBasic } from "../common/Button/Btn";
 
 interface BannerProps {
   image?: string;
+  isEdit?: boolean;
 }
 
-const Banner = ({ image }: BannerProps) => {
+const Banner = ({ image, isEdit = false }: BannerProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -50,6 +52,12 @@ const Banner = ({ image }: BannerProps) => {
       {/* 이미지가 없거나 로드 실패했을 때 기본 배너 */}
       {(!image || imageError) && !isLoading && (
         <img src={banner} alt="banner" role="img" className="w-full" />
+      )}
+      {isEdit && (
+        <BtnBasic onClick={() => { }} className="p-2.5 absolute top-8 right-16 typo-body2-semibold 
+        bg-brand-blue-100 text-color-high w-27.5 h-11 rounded-[8px] shadow-[0_0_4px_0_#CBD5DF]">
+          배너 편집
+        </BtnBasic>
       )}
     </div>
   );

@@ -70,3 +70,9 @@ export type GetArchiveResponse = {
   content: ArchiveListItem[];
   page: DefaultPaginationResponse;
 };
+
+export type UpdateArchiveRequest = {
+  title: string | null;
+  visibility: Visibility | null;
+  bannerImageId: number | null;
+}

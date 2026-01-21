@@ -16,6 +16,7 @@ interface ArchiveHeaderProps {
   badge?: string;
   createdAt?: string;
   isMenu?: boolean;
+  onTitleSave?: (title: string) => void;
 }
 
 const ArchiveHeader = ({
@@ -24,6 +25,7 @@ const ArchiveHeader = ({
   badge,
   createdAt,
   isMenu = false,
+  onTitleSave,
 }: ArchiveHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -64,6 +66,7 @@ const ArchiveHeader = ({
           value={title ?? "아카이브명 (사용자 지정)"}
           onSave={(next) => {
             console.log("title", next);
+            onTitleSave?.(next); // 부모 컴포넌트에서 전달받은 함수 호출
           }}
           placeholder="아카이브명"
           maxLength={50}

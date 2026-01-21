@@ -14,19 +14,35 @@ import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
 import type { LabelData } from "@/types/calendar";
 import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
+import { UpdateArchive } from "@/apis/mutations/archive/archive";
+import type { UpdateArchiveRequest } from "@/types/archive";
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();
 
   const urlParams = useParams();
   const archiveId = urlParams.archiveId;
+  const queryClient = useQueryClient(); // ✅ 전역 인스턴스 가져오기
 
   const { data: archive } = useQuery({
     queryKey: ["archive", archiveId],
     queryFn: () => GetArchiveDetail(Number(archiveId)),
   });
+
+  const updateArchiveMutation = useMutation({
+    mutationFn: (data: UpdateArchiveRequest) => UpdateArchive(Number(archiveId), data),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["archive", Number(archiveId)] }); // 상세 페이지 갱신
+      queryClient.invalidateQueries({ queryKey: ["archives"] }); // 목록도 갱신
+      queryClient.invalidateQueries({ queryKey: ["myArchives"] }); // 마이 아카이브도 갱신
+    },
+  });
+
+  const handleTitleSave = (title: string) => {
+    updateArchiveMutation.mutate({ title: title ?? null, visibility: null, bannerImageId: null });
+  };
 
   const archivedData = archiveDataMock.find(
     (archived) => archived.archiveId === Number(archiveId)
@@ -36,12 +52,15 @@ const ArchiveDetail = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <Banner image={archive?.bannerUrl} />
+      <Banner image={archive?.bannerUrl} isEdit={archive?.isOwner} />
       {/* 배너 밑부분 */}
       <div className="max-w-[1920px] mx-auto flex flex-col items-start mt-[60px] gap-[60px]">
         <div className="w-310">
           {/* 아카이브 헤더 */}
           <ArchiveHeader
+            onTitleSave={(title) => {
+              handleTitleSave(title);
+            }}
             title={archive?.title}
             ownerNickname={archive?.ownerNickname}
             badge={archive?.badge}
