@@ -1,5 +1,4 @@
 import Image from "@/assets/images/diaryTextBackground.png";
-import Image2 from "@/assets/images/diary_input.png";
 
 type Props = {
   title?: string;

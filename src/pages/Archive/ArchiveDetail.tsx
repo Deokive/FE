@@ -14,33 +14,168 @@ import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
 import type { LabelData } from "@/types/calendar";
 import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
+import { DeleteArchive, LikeArchive, UpdateArchive } from "@/apis/mutations/archive/archive";
+import { Visibility, type UpdateArchiveRequest } from "@/types/archive";
+import { useFileUpload } from "@/hooks/useFileUpload";
+import { MediaRole } from "@/enums/mediaRole";
+import { useRef, useState } from "react";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();
 
   const urlParams = useParams();
-  const archiveId = urlParams.id;
+  const archiveId = urlParams.archiveId;
+  const archiveIdNum = Number(archiveId);
+  const queryClient = useQueryClient(); // ✅ 전역 인스턴스 가져오기
 
-  // 아카이브 데이터 조회 => 추후에 실제 API로 연결
-  const archive = archiveDataMock.find(
-    (archive) => archive.archiveId === Number(archiveId)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // ✅ 추가
+
+
+
+  // ✅ 업로드 중복 실행 방지
+  const uploadInProgressRef = useRef(false);
+
+  const { data: archive } = useQuery({
+    queryKey: ["archive", archiveIdNum],
+    queryFn: () => GetArchiveDetail(archiveIdNum),
+    retry: false,              // ✅ 404 나도 재시도하지 않기
+  });
+
+  const updateArchiveMutation = useMutation({
+    mutationFn: (data: UpdateArchiveRequest) => UpdateArchive(Number(archiveId), data),
+    onSuccess: (updatedArchive) => {
+      // ✅ 쿼리 캐시 업데이트
+      queryClient.setQueryData(["archive", archiveIdNum], updatedArchive);
+
+      uploadInProgressRef.current = false;
+    },
+    onError: () => {
+      uploadInProgressRef.current = false; // 업로드 실패 시 상태 초기화
+    },
+  });
+
+  const deleteArchiveMutation = useMutation({
+    mutationFn: () => DeleteArchive(archiveIdNum),
+    onSuccess: () => {
+      // ✅ 아카이브 상세 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey: ["archive", archiveIdNum] });
+      // ✅ 아카이브 목록 쿼리 무효화 (페이지/유저 등 붙은 키까지 포함)
+      queryClient.invalidateQueries({ queryKey: ["archives"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["myArchives"], exact: false });
+
+      // ✅ 리스트 페이지로 이동
+      navigate("/archive");
+    },
+    onError: (error) => {
+      console.error("아카이브 삭제 실패:", error);
+      alert("아카이브 삭제에 실패했습니다. 다시 시도해주세요.");
+    },
+  });
+
+  const likeArchiveMutation = useMutation({
+    mutationFn: () => LikeArchive(archiveIdNum),
+    onSuccess: (likedArchive) => {
+      queryClient.setQueryData(["archive", archiveIdNum], likedArchive);
+    },
+    onError: (error) => {
+      console.error("좋아요 실패:", error);
+      alert("좋아요에 실패했습니다. 다시 시도해주세요.");
+    },
+  });
+
+  // ✅ useFileUpload - onSuccess를 직접 정의
+  const { upload } = useFileUpload({
+    onSuccess: (response) => {
+      // ✅ 중복 실행 방지
+      if (uploadInProgressRef.current || !response?.fileId) return;
+
+      uploadInProgressRef.current = true;
+      updateArchiveMutation.mutate({
+        title: null,
+        visibility: null,
+        bannerImageId: response.fileId,
+      });
+    },
+    onError: (error) => {
+      console.error("배너 이미지 업로드 실패:", error);
+      alert("배너 이미지 업로드에 실패했습니다. 다시 시도해주세요.");
+      uploadInProgressRef.current = false;
+    },
+  });
+  // ✅ 아카이브명 저장 핸들러
+  const handleTitleSave = (title: string) => {
+    updateArchiveMutation.mutate({ title: title ?? null, visibility: null, bannerImageId: null });
+  };
+  // ✅ 배너 저장 핸들러 (파일 업로드 시작)
+  const handleBannerSave = async (file: File) => {
+    // ✅ 이미 업로드 중이면 무시
+    if (uploadInProgressRef.current) {
+      console.log("이미 업로드 중입니다.");
+      return;
+    }
+    try {
+      await upload({
+        file,
+        mediaRole: MediaRole.CONTENT,
+      });
+    } catch (error) {
+      console.error("배너 업로드 시작 실패:", error);
+      uploadInProgressRef.current = false;
+    }
+  };
+  // ✅ 공개 기준 저장 핸들러
+  const handleVisibilitySave = (visibility: Visibility) => {
+    updateArchiveMutation.mutate({ visibility: visibility, bannerImageId: null, title: null });
+  };
+
+  // 삭제버튼 클릭 시 모달 오픈
+  const handleDeleteModalOpen = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  // 모달 오픈 시 모달 취소 버튼
+  const handleDeleteModalClose = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+
+  // ✅ 아카이브 삭제 핸들러
+  const handleDeleteArchive = () => {
+    deleteArchiveMutation.mutate();
+  };
+
+  const archivedData = archiveDataMock.find(
+    (archived) => archived.archiveId === Number(archiveId)
   );
 
-  const hasTickets = (archive?.Ticket?.length ?? 0) > 0;
+  const hasTickets = (archivedData?.Ticket?.length ?? 0) > 0;
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <Banner image={archive?.bannerUrl} />
+      <Banner image={archive?.bannerUrl}
+        isEdit={archive?.isOwner}
+        onBannerSave={handleBannerSave}
+      />
       {/* 배너 밑부분 */}
       <div className="max-w-[1920px] mx-auto flex flex-col items-start mt-[60px] gap-[60px]">
         <div className="w-310">
           {/* 아카이브 헤더 */}
           <ArchiveHeader
+            isFeed={false}
+            onTitleSave={(title) => {
+              handleTitleSave(title);
+            }}
             title={archive?.title}
             ownerNickname={archive?.ownerNickname}
             badge={archive?.badge}
             createdAt={archive?.createdAt}
             isMenu={true}
+            onVisibilitySave={handleVisibilitySave}
+            visibility={archive?.visibility}
+            onDeleteArchive={handleDeleteModalOpen}
           />
           {/* 아카이브 달력 */}
           <Calendar
@@ -56,10 +191,10 @@ const ArchiveDetail = () => {
                 if (!archiveId) return;
                 navigate(`/archive/${archiveId}/diary`);
               }}
-              isMore={(archive?.Diary?.length ?? 0) > 0}
+              isMore={(archivedData?.Diary?.length ?? 0) > 0}
             />
-            {archive?.Diary?.length ?? 0 > 0 ? (
-              <DiaryList diary={archive?.Diary} limit={3} />
+            {archivedData?.Diary?.length ?? 0 > 0 ? (
+              <DiaryList diary={archivedData?.Diary} limit={3} />
             ) : (
               <EmptyList
                 title="일기 추가"
@@ -76,10 +211,10 @@ const ArchiveDetail = () => {
                 if (!archiveId) return;
                 navigate(`/archive/${archiveId}/gallery`);
               }}
-              isMore={(archive?.Gallery?.length ?? 0) > 0}
+              isMore={(archivedData?.Gallery?.length ?? 0) > 0}
             />
-            {archive?.Gallery?.length ?? 0 > 0 ? (
-              <GalleryList gallery={archive?.Gallery} />
+            {archivedData?.Gallery?.length ?? 0 > 0 ? (
+              <GalleryList gallery={archivedData?.Gallery} />
             ) : (
               <EmptyList
                 title="사진 추가"
@@ -101,7 +236,7 @@ const ArchiveDetail = () => {
               isMore={hasTickets}
             />
             {hasTickets ? (
-              <TicketList ticket={archive?.Ticket} />
+              <TicketList ticket={archivedData?.Ticket} />
             ) : (
               <EmptyList
                 title="티켓 추가"
@@ -119,10 +254,10 @@ const ArchiveDetail = () => {
                 if (!archiveId) return;
                 navigate(`/archive/${archiveId}/repost`);
               }}
-              isMore={(archive?.Repost?.length ?? 0) > 0}
+              isMore={(archivedData?.Repost?.length ?? 0) > 0}
             />
-            {archive?.Repost?.length ?? 0 > 0 ? (
-              <RepostList repost={archive?.Repost} />
+            {archivedData?.Repost?.length ?? 0 > 0 ? (
+              <RepostList repost={archivedData?.Repost} />
             ) : (
               <EmptyList
                 title="링크 첨부"
@@ -137,14 +272,27 @@ const ArchiveDetail = () => {
           </div>
           {/* 좋아요 */}
           <ButtonLike
-            liked={archive?.liked}
+            liked={archive?.isLiked}
             likeCount={archive?.likeCount}
             onClick={() => {
+              likeArchiveMutation.mutate();
               console.log("좋아요 클릭");
             }}
           />
         </div>
       </div>
+      <ConfirmModal
+        trigger={<></>}
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        title="아카이브 삭제"
+        description="아카이브와 내부에 포함된 모든 데이터가 영구 삭제됩니다."
+        confirmLabel="삭제"
+        cancelLabel="취소"
+        confirmVariant="blue"
+        onConfirm={handleDeleteArchive}
+        onCancel={handleDeleteModalClose}
+      />
     </div>
   );
 };

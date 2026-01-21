@@ -42,14 +42,10 @@ const router = createBrowserRouter([
       { path: "feed/:id", element: <FeedDetail /> },
       { path: "community", element: <Community /> },
       { path: "community/:postId", element: <CommunityDetail /> },
-      { path: "archive", element: <Archive /> },
-      { path: "archive/:id", element: <ArchiveDetail /> },
-      { path: "archive/:id/diary", element: <DiaryPage /> }, // 아카이브 내 다이어리 목록 보기
-      { path: "archive/:id/ticket-book", element: <TicketBookPage /> },
-      { path: "archive/:id/gallery", element: <Gallery /> },
-      { path: "archive/:id/repost", element: <RepostingPage /> },
-      { path: "profile/:userId", element: <VisitProfilePage /> },
-      { path: "profile/:userId/archives", element: <VisitArchivePage /> },
+      { path: "archive/:archiveId/diary", element: <DiaryPage /> }, // 아카이브 내 다이어리 목록 보기
+      { path: "archive/:archiveId/ticket-book", element: <TicketBookPage /> },
+      { path: "archive/:archiveId/gallery", element: <Gallery /> },
+      { path: "archive/:archiveId/repost", element: <RepostingPage /> },
       { path: "*", element: <NotFound /> },
     ],
   },
@@ -71,6 +67,8 @@ const router = createBrowserRouter([
     path: "/",
     element: <ProtectedLayout />,
     children: [
+      { path: "archive", element: <Archive /> },
+      { path: "archive/:archiveId", element: <ArchiveDetail /> },
       {
         path: "archive/:archiveId/ticket/create",
         element: <CreateTicketPage />,
@@ -93,6 +91,8 @@ const router = createBrowserRouter([
         path: "/archive/:archiveId/diary/new", // 다이어리 작성
         element: <DiaryWritePage />,
       },
+      { path: "profile/:userId", element: <VisitProfilePage /> },
+      { path: "profile/:userId/archives", element: <VisitArchivePage /> },
     ],
   },
 ]);

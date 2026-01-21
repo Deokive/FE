@@ -72,6 +72,7 @@ export const DiaryFooter = ({
                 variant="blue"
                 onClick={() => onSave?.()}
                 className="px-8"
+                disabled={isDisabled}
               >
                 등록
               </BtnBasic>
