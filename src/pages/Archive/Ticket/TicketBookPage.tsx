@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import TicketBook from "@/components/ticket/TicketBook";
 import type { Ticket } from "@/types/ticket";
@@ -22,6 +22,9 @@ export default function TicketBookPage() {
   const [editMode, setEditMode] = useState(false);
   const [checkedMap, setCheckedMap] = useState<Record<number, boolean>>({});
 
+  // 티켓북 제목 상태 (첫 로드 시에만 API에서 가져옴)
+  const [ticketbookName, setTicketbookName] = useState<string | null>(null);
+
   // 티켓북 데이터 조회
   const { data, isLoading, isError } = useGetTicketBook({
     archiveId,
@@ -35,8 +38,16 @@ export default function TicketBookPage() {
   // 티켓 삭제
   const { mutate: deleteTicket } = useDeleteTicket();
 
+  // 첫 로드 시에만 티켓북 제목 설정
+  useEffect(() => {
+    if (data?.title && ticketbookName === null) {
+      setTicketbookName(data.title);
+    }
+  }, [data?.title, ticketbookName]);
+
   // 티켓북 이름 저장
   const handleSaveName = (nextName: string) => {
+    setTicketbookName(nextName);
     updateTicketBookName({
       archiveId,
       title: nextName,
@@ -77,14 +88,13 @@ export default function TicketBookPage() {
     })) ?? [];
 
   const totalItems = data?.page?.totalElements ?? 0;
-  const ticketbookName = data?.title ?? "티켓북";
 
   return (
     <div className="flex flex-col items-center">
       <div className="w-310">
         <div className="my-15">
           <EditableTitle
-            value={ticketbookName}
+            value={ticketbookName ?? "티켓북"}
             onSave={handleSaveName}
             placeholder="티켓북명을 입력하세요."
             maxLength={50}
