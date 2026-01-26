@@ -1,4 +1,5 @@
 import TicketForm from "@/components/ticket/TicketForm";
+import TicketFormSkeleton from "@/components/ticket/TicketFormSkeleton";
 import { useNavigate, useParams } from "react-router-dom";
 import type { Ticket, UpdateTicketRequest } from "@/types/ticket";
 import { useGetTicket } from "@/apis/queries/ticket/useGetTicket";
@@ -34,7 +35,11 @@ export default function EditTicketPage() {
     : undefined;
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return (
+      <div className="p-8">
+        <TicketFormSkeleton />
+      </div>
+    );
   }
 
   if (isError || !initial) {

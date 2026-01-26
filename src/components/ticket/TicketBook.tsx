@@ -166,7 +166,10 @@ export default function TicketBook({
                       side={side}
                       onClick={() => {
                         if (editMode)
-                          toggleCheck(slotTicket.id, !checkedMap[slotTicket.id]);
+                          toggleCheck(
+                            slotTicket.id,
+                            !checkedMap[slotTicket.id]
+                          );
                         else
                           navigate(
                             `/archive/${archiveId}/ticket/${slotTicket.id}/edit/`

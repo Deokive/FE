@@ -8,6 +8,7 @@ import { useGetTicketBook } from "@/apis/queries/ticket/useGetTicket";
 import { useUpdateTicketBook } from "@/apis/mutations/ticket/usePatchTicket";
 import { useDeleteTicket } from "@/apis/mutations/ticket/useDeleteTicket";
 import { formatDateTime } from "@/utils/date";
+import TicketBookSkeleton from "@/components/ticket/TicketBookSkeleton";
 
 export default function TicketBookPage() {
   const { archiveId: archiveIdParam } = useParams<{ archiveId: string }>();
@@ -68,7 +69,23 @@ export default function TicketBookPage() {
     setSearchParams({ page: String(newPage) });
   };
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center">
+        <div className="w-310">
+          <div className="my-15">
+            <div className="h-10 w-full bg-gray-200 rounded animate-pulse" />
+          </div>
+          <div className="mt-5 mb-15">
+            <TicketBookSkeleton />
+          </div>
+          <div className="flex justify-center mb-12">
+            <div className="h-10 w-64 bg-gray-200 rounded animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (isError) return <div>에러가 발생했습니다.</div>;
 
   // 데이터 변환: API 응답 → Ticket 타입
