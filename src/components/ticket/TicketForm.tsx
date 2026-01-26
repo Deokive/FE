@@ -11,6 +11,7 @@ import TextField from "../common/Form/TextField";
 import { BtnBasic } from "@/components/common/Button/Btn";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { MediaRole } from "@/enums/mediaRole";
+import { MediaType } from "@/enums/mediaType";
 
 type Props = {
   initial?: Partial<Ticket>;
@@ -231,7 +232,7 @@ export default function TicketForm({
             <ImgCard
               onClick={() => {}}
               img={imageUrl}
-              mediaType="image"
+              mediaType={MediaType.IMAGE}
               type="normal"
               readOnly={false}
               onDelete={handleRemoveImage}
