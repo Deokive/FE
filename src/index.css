@@ -133,12 +133,12 @@
 
   /* Font-hakgyoansim */
   .font-hakgyoansim-b {
-    font-family: "HakgyoansimBadasseugi-B", var(--font-sans), sans-serif;
+    font-family: "HakgyoansimBadasseugi-B", Pretendard, sans-serif;
     font-weight: 600;
   }
 
   .font-hakgyoansim-l {
-    font-family: "HakgyoansimBadasseugi-L", var(--font-sans), sans-serif;
+    font-family: "HakgyoansimBadasseugi-L", Pretendard, sans-serif;
     font-weight: 300;
   }
 
