@@ -71,6 +71,8 @@ export default function TicketBookPage() {
       seat: item.seat,
       place: item.location,
       casting: item.casting,
+      rating: item.score,
+      review: item.review,
       createdAt: item.createdAt,
     })) ?? [];
 

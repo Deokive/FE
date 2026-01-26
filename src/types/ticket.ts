@@ -63,6 +63,8 @@ type TicketBookContent = {
   seat?: string | null;
   location?: string | null;
   casting?: string | null;
+  score?: number | null;
+  review?: string | null;
   createdAt: string;
   lastModifiedAt: string;
 };
