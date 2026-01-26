@@ -6,28 +6,79 @@ import type { CommentModel } from "./CommentItem";
 import ButtonLike from "../archive/ButtonLike";
 import ProfileBadge from "../common/ProfileBadge";
 import type { User } from "@/types/user";
+import togglePostLike from "@/apis/mutations/community/toggleLike";
 
 type Props = {
+  postId?: string | number;
   initialComments?: CommentModel[]; // 서버에서 받아온 댓글 리스트(원댓글만, replies 포함 가능)
   currentUserId?: string | null;
   currentUser?: User | null;
   onSubmitComment?: (text: string) => Promise<CommentModel | null>; // 서버 연동 시
   onDeleteCommentApi?: (id: string) => Promise<boolean>;
+  initialLikeCount?: number;
+  initialIsLiked?: boolean;
 };
 
 export default function CommentSection({
+  postId,
   initialComments = [],
   currentUserId = null,
   currentUser,
   onSubmitComment,
   onDeleteCommentApi,
+  initialLikeCount = 0,
+  initialIsLiked = false,
 }: Props) {
   // 로컬 상태(UI 확인용)
   const [comments, setComments] = useState<CommentModel[]>(initialComments);
   const [open, setOpen] = useState(true); // 댓글 섹션 기본 열림
   const [input, setInput] = useState("");
 
+  // 좋아요 관련 상태
+  const [likeCount, setLikeCount] = useState<number>(initialLikeCount);
+  const [isLiked, setIsLiked] = useState<boolean>(initialIsLiked);
+  const [pendingLike, setPendingLike] = useState<boolean>(false);
+
   const currentUserNickname = currentUser?.nickname ?? "사용자";
+
+  // 좋아요 토글 핸들러 (낙관적 업데이트 + 실패 롤백)
+  const handleToggleLike = async () => {
+    if (!postId) {
+      console.warn("postId가 없어 좋아요를 요청할 수 없습니다.");
+      return;
+    }
+    if (pendingLike) return;
+    setPendingLike(true);
+
+    const prevLiked = isLiked;
+    const prevCount = likeCount;
+
+    // 낙관적 업데이트
+    setIsLiked(!prevLiked);
+    setLikeCount(prevLiked ? Math.max(0, prevCount - 1) : prevCount + 1);
+
+    try {
+      const res = await togglePostLike(postId);
+      if (res?.likeCount !== undefined) setLikeCount(res.likeCount);
+      if (typeof res?.liked === "boolean") setIsLiked(res.liked);
+      if (typeof res?.isLiked === "boolean") setIsLiked(res.isLiked);
+    } catch (err: any) {
+      // 롤백
+      setIsLiked(prevLiked);
+      setLikeCount(prevCount);
+
+      console.error("좋아요 요청 실패:", err);
+      if (err?.response?.status === 401) {
+        alert("로그인이 필요합니다. 로그인 후 다시 시도해 주세요.");
+      } else {
+        alert(
+          "좋아요 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+        );
+      }
+    } finally {
+      setPendingLike(false);
+    }
+  };
 
   // 댓글 개수 (원댓글 + 답글 모두 합산)
   const commentCount = useMemo(() => {
@@ -77,7 +128,6 @@ export default function CommentSection({
   const handleSubmitComment = async () => {
     if (!input.trim()) return;
     if (onSubmitComment) {
-      // optional: call API and use returned comment
       const res = await onSubmitComment(input.trim());
       if (res) setComments((s) => [res, ...s]);
     } else {
@@ -87,9 +137,7 @@ export default function CommentSection({
   };
 
   const handleAddReply = async (parentId: string, text: string) => {
-    // API integration optional; here local append
     if (onSubmitComment) {
-      // implement server reply submit
     } else {
       addReplyLocal(parentId, text);
     }
@@ -132,9 +180,11 @@ export default function CommentSection({
       <div className="flex items-center justify-between w-310 mb-5">
         <div>
           <ButtonLike
-            onClick={() => {
-              console.log("좋아요 클릭");
-            }}
+            onClick={handleToggleLike}
+            liked={isLiked}
+            likeCount={likeCount}
+
+            // disabled={pendingLike}
           />
         </div>
 
@@ -187,7 +237,7 @@ export default function CommentSection({
 
           <div className="mt-5 flex flex-col gap-2.5 bg-brand-blue-100 rounded-lg p-5">
             <ProfileBadge
-              avatarUrl={undefined} // 기본 이미지 사용
+              avatarUrl={undefined}
               displayName={currentUser?.nickname ?? "사용자명"}
               size="sm"
               className="flex-shrink-0"
