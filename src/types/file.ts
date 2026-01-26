@@ -87,6 +87,7 @@ export type UploadFileParams = {
   file: File;
   mediaRole: MediaRole;
   sequence?: number;
+  onProgress?: (progress: UploadProgress | number) => void;
 };
 
 export type UploadFilesParams = {
