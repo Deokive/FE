@@ -8,7 +8,7 @@ import { PaginationDirection } from "@/enums/paginationDirection";
 
 // 개발 편의를 위한 타입
 export type Ticket = {
-  id: string;
+  id: number;
   imageUrl?: string | null;
   isRepresentative?: boolean;
   eventName: string; // 필수

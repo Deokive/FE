@@ -22,8 +22,8 @@ export default function TicketCard({
   onClick: () => void;
   selectable?: boolean;
   checked?: boolean;
-  onToggleCheck?: (id: string, checked: boolean) => void;
-  onDelete?: (id: string) => void;
+  onToggleCheck?: (id: number, checked: boolean) => void;
+  onDelete?: (id: number) => void;
 }) {
   const {
     id,

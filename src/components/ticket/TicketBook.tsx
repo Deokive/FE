@@ -13,9 +13,9 @@ type TicketBookProps = {
   tickets: Ticket[];
   editMode: boolean;
   setEditMode: Dispatch<SetStateAction<boolean>>;
-  checkedMap: Record<string, boolean>;
-  setCheckedMap: Dispatch<SetStateAction<Record<string, boolean>>>;
-  onDeleteMany?: (ids: string[]) => void;
+  checkedMap: Record<number, boolean>;
+  setCheckedMap: Dispatch<SetStateAction<Record<number, boolean>>>;
+  onDeleteMany?: (ids: number[]) => void;
 };
 
 export default function TicketBook({
@@ -31,12 +31,15 @@ export default function TicketBook({
 
   const hasTickets = tickets.length > 0;
 
-  const toggleCheck = (id: string, checked: boolean) => {
+  const toggleCheck = (id: number, checked: boolean) => {
     setCheckedMap((p) => ({ ...p, [id]: checked }));
   };
 
   const checkedIds = useMemo(
-    () => Object.keys(checkedMap).filter((k) => checkedMap[k]),
+    () =>
+      Object.keys(checkedMap)
+        .map(Number)
+        .filter((k) => checkedMap[k]),
     [checkedMap]
   );
 
@@ -159,15 +162,11 @@ export default function TicketBook({
                 return (
                   <div key={slotTicket.id} className="w-[430px]">
                     <TicketCard
-                      key={slotTicket.id}
                       ticket={slotTicket}
                       side={side}
                       onClick={() => {
                         if (editMode)
-                          toggleCheck(
-                            slotTicket.id,
-                            !checkedMap[slotTicket.id]
-                          );
+                          toggleCheck(slotTicket.id, !checkedMap[slotTicket.id]);
                         else
                           navigate(
                             `/archive/${archiveId}/ticket/${slotTicket.id}/edit/`

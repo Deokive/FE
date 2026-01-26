@@ -20,7 +20,7 @@ export default function EditTicketPage() {
 
   const initial: Ticket | undefined = ticketData
     ? {
-        id: String(ticketData.id),
+        id: ticketData.id,
         eventName: ticketData.title,
         dateTime: ticketData.date,
         place: ticketData.location,
@@ -43,7 +43,7 @@ export default function EditTicketPage() {
 
   const handleSave = (payload: Ticket) => {
     const requestData: UpdateTicketRequest = {
-      ticketId: Number(payload.id),
+      ticketId: payload.id,
       title: payload.eventName,
       date: payload.dateTime || new Date().toISOString(),
       location: payload.place,

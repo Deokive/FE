@@ -10,8 +10,8 @@ import { useDeleteTicket } from "@/apis/mutations/ticket/useDeleteTicket";
 import { formatDateTime } from "@/utils/date";
 
 export default function TicketBookPage() {
-  const { id } = useParams<{ id: string }>();
-  const archiveId = Number(id);
+  const { archiveId: archiveIdParam } = useParams<{ archiveId: string }>();
+  const archiveId = Number(archiveIdParam);
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Pagination state
@@ -20,7 +20,7 @@ export default function TicketBookPage() {
 
   // 편집 모드 상태
   const [editMode, setEditMode] = useState(false);
-  const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
+  const [checkedMap, setCheckedMap] = useState<Record<number, boolean>>({});
 
   // 티켓북 데이터 조회
   const { data, isLoading, isError } = useGetTicketBook({
@@ -44,11 +44,11 @@ export default function TicketBookPage() {
   };
 
   // 티켓 삭제 처리
-  const handleDeleteMany = (ids: string[]) => {
+  const handleDeleteMany = (ids: number[]) => {
     if (!ids || ids.length === 0) return;
 
     ids.forEach((ticketId) => {
-      deleteTicket({ ticketId: Number(ticketId) });
+      deleteTicket({ ticketId });
     });
   };
 
@@ -63,7 +63,8 @@ export default function TicketBookPage() {
   // 데이터 변환: API 응답 → Ticket 타입
   const tickets: Ticket[] =
     data?.content?.map((item) => ({
-      id: String(item.id),
+      id: item.id,
+      archiveId: archiveId,
       eventName: item.title,
       imageUrl: item.thumbnail,
       dateTime: formatDateTime(item.date),
