@@ -5,6 +5,7 @@ import TicketSvg from "@/components/common/icons/TicketSvg";
 import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 import ticketThumbnail from "@/assets/images/ticketThumbnail.png";
 import Rating from "./Rating";
+import { MediaType } from "@/enums/mediaType";
 
 type Side = "left" | "right";
 
@@ -90,7 +91,7 @@ export default function TicketCard({
             <ImgCard
               onClick={() => {}}
               img={imageUrl ?? ticketThumbnail}
-              mediaType={imageUrl ? "image" : "image"}
+              mediaType={MediaType.IMAGE}
               type={isRepresentative ? "representative" : "normal"}
               readOnly={true}
               className="w-full h-full"
