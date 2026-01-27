@@ -34,7 +34,7 @@ type ArchiveId = {
 type DefaultTicketResponse = {
   id: number;
   title: string;
-  date: string;
+  date: string | null;
   location: string | null;
   seat: string | null;
   casting: string | null;
@@ -46,7 +46,7 @@ type DefaultTicketResponse = {
 
 type DefaultTicketRequest = {
   title: string;
-  date: string;
+  date?: string | null;
   location?: string | null;
   seat?: string | null;
   casting?: string | null;

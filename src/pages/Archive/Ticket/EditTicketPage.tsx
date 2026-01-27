@@ -50,12 +50,12 @@ export default function EditTicketPage() {
     const requestData: UpdateTicketRequest = {
       ticketId: payload.id,
       title: payload.eventName,
-      date: payload.dateTime || new Date().toISOString(),
-      location: payload.place,
-      seat: payload.seat,
-      casting: payload.casting,
+      date: payload.dateTime || null,
+      location: payload.place || null,
+      seat: payload.seat || null,
+      casting: payload.casting || null,
       score: payload.rating,
-      review: payload.review,
+      review: payload.review || null,
       fileId: payload.fileId,
       deleteFile: payload.fileId === null ? true : false,
     };
