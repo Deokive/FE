@@ -13,6 +13,7 @@ type DiaryImageProps = {
   onImageAdd?: (files: File[]) => void;
   onImageDelete?: (id: string) => void;
   isEditMode?: boolean;
+  color?: string;
 };
 
 const DiaryImage = ({
@@ -20,6 +21,7 @@ const DiaryImage = ({
   onImageAdd,
   onImageDelete,
   isEditMode = false,
+  color,
 }: DiaryImageProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -68,7 +70,7 @@ const DiaryImage = ({
                 className="cursor-pointer flex-shrink-0"
                 onClick={handleImageCardClick}
               >
-                <DiaryImageCard />
+                <DiaryImageCard color={color} />
               </div>
             )}
 

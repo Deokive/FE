@@ -7,7 +7,8 @@ import { useFileUpload } from "@/hooks/useFileUpload";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Visibility } from "@/enums/visibilty";
 import { MediaRole } from "@/enums/mediaRole";
-import { DEFAULT_DIARY_COLOR } from "@/constants/diaryColors";
+import { DEFAULT_DIARY_COLOR, getDiaryBgColor } from "@/constants/diaryColors";
+import { useDiaryColorStore } from "@/store/useDiaryColorStore";
 import ColorChange from "@/components/common/ColorChange";
 import DiaryImage from "@/components/diary/DiaryImage";
 import DatePicker from "@/components/ticket/DatePicker";
@@ -30,6 +31,14 @@ const DiaryDetailPage = () => {
 
   // 현재 로그인된 사용자 정보
   const currentUser = useAuthStore((state) => state.user);
+
+  // 전역 색상 상태
+  const { setColor: setGlobalColor, resetColor } = useDiaryColorStore();
+
+  // 페이지 벗어날 때 색상 초기화
+  useEffect(() => {
+    return () => resetColor();
+  }, [resetColor]);
 
   // API 훅
   const { data: diary, isLoading } = useGetDiary({ diaryId: Number(diaryId) });
@@ -61,6 +70,7 @@ const DiaryDetailPage = () => {
       setContent(diary.content);
       setRecordedAt(diary.recordedAt);
       setColor(diary.color);
+      setGlobalColor(diary.color);
       setVisibility(diary.visibility);
 
       // 기존 이미지 변환
@@ -72,7 +82,7 @@ const DiaryDetailPage = () => {
       }));
       setImages(existingImages);
     }
-  }, [diary]);
+  }, [diary, setGlobalColor]);
 
   const isFormValid =
     title.trim() !== "" && content.trim() !== "" && recordedAt !== "";
@@ -143,6 +153,7 @@ const DiaryDetailPage = () => {
       setContent(diary.content);
       setRecordedAt(diary.recordedAt);
       setColor(diary.color);
+      setGlobalColor(diary.color);
       setVisibility(diary.visibility);
 
       // 새로 추가한 이미지의 URL 해제
@@ -223,15 +234,25 @@ const DiaryDetailPage = () => {
     );
   }
 
+  // 표시할 색상: 편집 모드면 color state, 아니면 diary.color
+  const displayColor = isEditMode ? color : diary.color;
+
   return (
-    <div className="w-full h-full bg-[#EEF7FC]">
+    <div
+      className="w-full h-full"
+      style={{ backgroundColor: getDiaryBgColor(displayColor) }}
+    >
       <div className="flex flex-col items-center justify-center max-w-[1920px] mx-auto py-15 gap-15">
         {/* 색상 선택 - 소유자 & 편집 모드에서만 */}
         <div className="w-310 flex justify-start">
           {isOwner && isEditMode && (
             <ColorChange
               initialColor={{ color }}
-              onColorChange={(c) => setColor(c?.color || DEFAULT_DIARY_COLOR)}
+              onColorChange={(c) => {
+                const newColor = c?.color || DEFAULT_DIARY_COLOR;
+                setColor(newColor);
+                setGlobalColor(newColor);
+              }}
               className="font-hakgyoansim-b"
             />
           )}
@@ -244,6 +265,7 @@ const DiaryDetailPage = () => {
             onImageAdd={handleImageAdd}
             onImageDelete={handleImageDelete}
             isEditMode={!isOwner || !isEditMode}
+            color={displayColor}
           />
         </div>
 
@@ -271,6 +293,7 @@ const DiaryDetailPage = () => {
             content={content}
             onContentChange={(c) => setContent(c || "")}
             isEditable={isOwner && isEditMode}
+            color={displayColor}
           />
         </div>
 
@@ -317,9 +340,10 @@ const DiaryDetailPage = () => {
           onDelete={() => setDeleteModalOpen(true)}
           isEdit={!isEditMode}
           isDisabled={!isFormValid || isUpdating || isUploading || isDeleting}
+          color={displayColor}
         />
       ) : (
-        <DiaryFooter noBtn />
+        <DiaryFooter noBtn color={displayColor} />
       )}
     </div>
   );

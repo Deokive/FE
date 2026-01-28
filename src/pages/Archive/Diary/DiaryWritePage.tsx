@@ -1,10 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAddDiary } from "@/apis/mutations/diary/usePostDiary";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { Visibility } from "@/enums/visibilty";
 import { MediaRole } from "@/enums/mediaRole";
-import { DEFAULT_DIARY_COLOR } from "@/constants/diaryColors";
+import { DEFAULT_DIARY_COLOR, getDiaryBgColor } from "@/constants/diaryColors";
+import { useDiaryColorStore } from "@/store/useDiaryColorStore";
 import ColorChange from "@/components/common/ColorChange";
 import DiaryImage from "@/components/diary/DiaryImage";
 import DatePicker from "@/components/ticket/DatePicker";
@@ -25,11 +26,18 @@ const DiaryWritePage = () => {
   const { mutate: addDiary, isPending } = useAddDiary();
   const { uploadFiles, isUploading } = useFileUpload();
 
+  // 전역 색상 상태
+  const { color, setColor, resetColor } = useDiaryColorStore();
+
+  // 페이지 벗어날 때 색상 초기화
+  useEffect(() => {
+    return () => resetColor();
+  }, [resetColor]);
+
   // 폼 상태
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [recordedAt, setRecordedAt] = useState("");
-  const [color, setColor] = useState(DEFAULT_DIARY_COLOR);
   const [visibility, setVisibility] = useState<Visibility>(Visibility.PUBLIC);
   const [images, setImages] = useState<UploadedImage[]>([]);
 
@@ -71,7 +79,9 @@ const DiaryWritePage = () => {
     } else {
       // 업로드 실패 시 제거
       newImages.forEach((img) => URL.revokeObjectURL(img.previewUrl));
-      setImages((prev) => prev.filter((img) => !newImages.some((n) => n.id === img.id)));
+      setImages((prev) =>
+        prev.filter((img) => !newImages.some((n) => n.id === img.id))
+      );
       alert("이미지 업로드에 실패했습니다.");
     }
   };
@@ -115,7 +125,10 @@ const DiaryWritePage = () => {
   };
 
   return (
-    <div className="w-full h-full bg-[#EEF7FC]">
+    <div
+      className="w-full h-full"
+      style={{ backgroundColor: getDiaryBgColor(color) }}
+    >
       <div className="flex flex-col items-center justify-center max-w-[1920px] mx-auto py-15 gap-15">
         {/* 색상 선택 */}
         <div className="w-310 flex justify-start">
@@ -132,6 +145,7 @@ const DiaryWritePage = () => {
             images={images}
             onImageAdd={handleImageAdd}
             onImageDelete={handleImageDelete}
+            color={color}
           />
         </div>
 
@@ -152,6 +166,7 @@ const DiaryWritePage = () => {
             onTitleChange={(t) => setTitle(t || "")}
             content={content}
             onContentChange={(c) => setContent(c || "")}
+            color={color}
           />
         </div>
 
@@ -181,6 +196,7 @@ const DiaryWritePage = () => {
         onSave={handleSave}
         onCancel={() => navigate(-1)}
         isDisabled={!isFormValid || isPending || isUploading}
+        color={color}
       />
     </div>
   );
