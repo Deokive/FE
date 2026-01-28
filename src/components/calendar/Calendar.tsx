@@ -173,11 +173,11 @@ const Calendar = ({
             console.log(
               "우클릭:",
               String(date.getFullYear()) +
-                "년 " +
-                String(date.getMonth() + 1).padStart(2, "0") +
-                "월 " +
-                String(date.getDate()).padStart(2, "0") +
-                "일에 일정 추가 api 호출",
+              "년 " +
+              String(date.getMonth() + 1).padStart(2, "0") +
+              "월 " +
+              String(date.getDate()).padStart(2, "0") +
+              "일에 일정 추가 api 호출",
               clickDate
             );
           }}
@@ -213,7 +213,7 @@ const Calendar = ({
                   key={idx}
                   className="w-full typo-body1 text-left px-2 py-1 rounded-[4px] text-color-highest truncate cursor-pointer hover:opacity-80"
                   style={{
-                    backgroundColor: label.color?.color,
+                    backgroundColor: label.color,
                   }}
                 >
                   {label.title}

@@ -21,12 +21,26 @@ export type SportInfo = {
 };
 
 export type LabelData = {
-  title: string; //일정 이름
-  date: string; //날짜
-  time?: string; //시간
+  id: number;
+  title: string;
+  date: string;
+  time?: string;
   hasTime: boolean; //하루종일 버튼 체크 여부 false: 하루종일, true: 시간 선택
-  color: ColorData;
+  color: string;
+  isSportType?: boolean; //생성할 때 스포츠 타입 여부 true: 스포츠, false: 일반
   sportInfo?: SportInfo; //스포츠 정보
   hashtags?: string[]; //태그
-  isSportType: boolean; //스포츠 타입 여부
 };
+
+// 이벤트 목록, 조회 응답
+export type EventResponse = {
+  id: number;
+  title: string;
+  date: string;
+  time?: string;
+  hasTime: boolean; //하루종일 버튼 체크 여부 false: 하루종일, true: 시간 선택
+  color: string;
+  isSportType?: boolean; //생성할 때 스포츠 타입 여부 true: 스포츠, false: 일반
+  sportInfo?: SportInfo; //스포츠 정보
+  hashtags?: string[]; //태그
+}

@@ -10,7 +10,10 @@ import TicketList from "@/components/archive/List/TicketList";
 import Calendar from "@/components/calendar/Calendar";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
-import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
+import {
+  // labelDataMock,
+  stickerDataMock
+} from "@/mockData/calendarData";
 import type { LabelData } from "@/types/calendar";
 import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
@@ -22,6 +25,7 @@ import { useFileUpload } from "@/hooks/useFileUpload";
 import { MediaRole } from "@/enums/mediaRole";
 import { useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
+import { getMonthlyEvents } from "@/apis/queries/calendar/getCalendar";
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();
@@ -33,7 +37,10 @@ const ArchiveDetail = () => {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // ✅ 추가
 
-
+  const { data: monthlyEvents } = useQuery({
+    queryKey: ["monthlyEvents", archiveIdNum],
+    queryFn: () => getMonthlyEvents(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),
+  });
 
   // ✅ 업로드 중복 실행 방지
   const uploadInProgressRef = useRef(false);
@@ -179,7 +186,8 @@ const ArchiveDetail = () => {
           />
           {/* 아카이브 달력 */}
           <Calendar
-            labelData={labelDataMock as LabelData[]}
+            // labelData={labelDataMock as LabelData[]}
+            labelData={monthlyEvents}
             stickerData={stickerDataMock}
             mode="interactive"
           />
