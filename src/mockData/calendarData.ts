@@ -22,8 +22,6 @@ export type SportInfo = {
   score2: number;
 };
 
-
-
 const defaultLabelData: LabelData[] = [
   {
     id: 1,

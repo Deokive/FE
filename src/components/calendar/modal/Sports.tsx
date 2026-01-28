@@ -4,12 +4,13 @@ import CalendarTag from "../CalendarTag";
 import ColorChange from "@/components/common/ColorChange";
 import { BtnBasic } from "@/components/common/Button/Btn";
 import { useState } from "react";
-import type { ColorData, DateData, LabelData } from "@/types/calendar";
+import type { ColorData, CreateEventRequest, DateData, LabelData } from "@/types/calendar";
 
 type SportsProps = {
   onClose: () => void;
   startDate: Date | null;
   editData?: LabelData | null;
+  onSubmit: (base: Omit<CreateEventRequest, "isSportType">) => void;
 };
 
 type ScoreData = {
@@ -19,7 +20,7 @@ type ScoreData = {
   score2: number;
 };
 
-const Sports = ({ onClose, startDate, editData }: SportsProps) => {
+const Sports = ({ onClose, startDate, editData, onSubmit }: SportsProps) => {
   const isEditMode = !!editData;
 
   // ✅ editData가 있으면 해당 데이터로 초기화
@@ -30,7 +31,7 @@ const Sports = ({ onClose, startDate, editData }: SportsProps) => {
   });
 
   const [tags, setTags] = useState<string[]>(editData?.hashtags || []);
-  const [color, setColor] = useState<ColorData>(editData?.color || { color: "" });
+  const [color, setColor] = useState<string>(editData?.color || "");
   const [scoreData, setScoreData] = useState<ScoreData>({
     teamName: editData?.sportInfo?.team1 || "",
     score: editData?.sportInfo?.score1 || 0,
@@ -38,18 +39,36 @@ const Sports = ({ onClose, startDate, editData }: SportsProps) => {
     score2: editData?.sportInfo?.score2 || 0,
   });
 
-  // 실제 API 연결 로직 추가
   const handleConfirm = () => {
-    console.log("========== 스포츠 결과 정보 ==========");
-    console.log("모드:", isEditMode ? "수정" : "등록");
-    console.log("일정 시작:", dateData.startDate);
-    console.log("일정 종료:", dateData.endDate);
-    console.log("하루 종일:", dateData.isAllDay);
-    console.log("태그:", tags);
-    console.log("색상:", color);
-    console.log("경기결과:", scoreData);
-    console.log("================================");
-    onClose();
+    if (!dateData.startDate) {
+      alert("시작 날짜를 선택해주세요.");
+      return;
+    }
+
+    // ✅ 로컬 시간대 기준으로 YYYY-MM-DD 형식 만들기
+    const year = dateData.startDate.getFullYear();
+    const month = String(dateData.startDate.getMonth() + 1).padStart(2, "0");
+    const day = String(dateData.startDate.getDate()).padStart(2, "0");
+    const date = `${year}-${month}-${day}`;
+
+    const time = dateData.isAllDay ? undefined : editData?.time ?? "00:00";
+
+    const body: Omit<CreateEventRequest, "isSportType"> = {
+      title: `${scoreData.teamName} vs ${scoreData.teamName2}`,
+      date,
+      time,
+      hasTime: !dateData.isAllDay,
+      color,
+      hashtags: tags,
+      sportInfo: {
+        team1: scoreData.teamName,
+        team2: scoreData.teamName2,
+        score1: scoreData.score,
+        score2: scoreData.score2,
+      },
+    };
+
+    onSubmit(body); // ✅ 부모로 전달
   };
 
   return (
@@ -73,8 +92,8 @@ const Sports = ({ onClose, startDate, editData }: SportsProps) => {
       <CalendarTag tags={tags} onTagChange={(data) => setTags(data.tags)} />
       {/* 색상설정 */}
       <ColorChange
-        initialColor={color}
-        onColorChange={(data) => setColor(data || { color: "" })}
+        initialColor={{ color }}
+        onColorChange={(data) => setColor(data?.color || color)}
       />
       {/* 경기결과 */}
       <div className="w-165 flex gap-5 items-center">

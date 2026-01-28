@@ -44,3 +44,15 @@ export type EventResponse = {
   sportInfo?: SportInfo; //스포츠 정보
   hashtags?: string[]; //태그
 }
+
+// 이벤트 생성 요청
+export type CreateEventRequest = {
+  title: string;
+  date: string;
+  time?: string;
+  hasTime: boolean;
+  color: string;
+  sportInfo?: SportInfo;
+  hashtags?: string[];
+  isSportType?: boolean;
+}

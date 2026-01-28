@@ -129,16 +129,15 @@ const EventListModal = ({
             label.map((label, idx) => (
               <div
                 key={idx}
-                className={`w-165 h-25 flex items-center py-1 gap-3 rounded-lg transition-all ${
-                  isDeleteTarget(label)
+                className={`w-165 h-25 flex items-center py-1 gap-3 rounded-lg transition-all ${isDeleteTarget(label)
                     ? "bg-red-100 opacity-50" // ✅ 삭제 대상 스타일
                     : "bg-surface-container-10"
-                }`}
+                  }`}
               >
                 {/* 색상 인디케이터 */}
                 <div
                   className="w-5 h-25 rounded-l-lg flex-shrink-0"
-                  style={{ backgroundColor: label.color?.color || "#82BEF5" }}
+                  style={{ backgroundColor: label.color || "#82BEF5" }}
                 />
                 {/* 이벤트 정보 */}
                 <div className=" flex flex-col gap-2.5">
@@ -176,11 +175,10 @@ const EventListModal = ({
                     className="cursor-pointer p-2"
                   >
                     <Trash2
-                      className={`w-6 h-6 ${
-                        isDeleteTarget(label)
+                      className={`w-6 h-6 ${isDeleteTarget(label)
                           ? "text-red-500"
                           : "text-color-high"
-                      }`}
+                        }`}
                     />
                   </button>
                 )}

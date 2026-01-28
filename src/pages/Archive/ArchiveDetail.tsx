@@ -11,10 +11,8 @@ import Calendar from "@/components/calendar/Calendar";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
 import {
-  // labelDataMock,
   stickerDataMock
 } from "@/mockData/calendarData";
-import type { LabelData } from "@/types/calendar";
 import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -186,6 +184,7 @@ const ArchiveDetail = () => {
           />
           {/* 아카이브 달력 */}
           <Calendar
+            archiveId={archiveIdNum}
             // labelData={labelDataMock as LabelData[]}
             labelData={monthlyEvents}
             stickerData={stickerDataMock}

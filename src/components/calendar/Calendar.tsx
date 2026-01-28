@@ -10,6 +10,7 @@ import type { LabelData } from "@/types/calendar";
 import EventListModal from "./modal/EventListModal";
 
 interface CalendarProps {
+  archiveId: number; //아카이브 ID
   /** 날짜별 라벨 데이터 (키: "YYYY-MM-DD" 형식, 값: 라벨 텍스트 배열) */
   labelData?: LabelData[];
   /** 날짜별 스티커 데이터 (키: "YYYY-MM-DD" 형식, 값: 스티커 ID 또는 식별자) */
@@ -24,6 +25,7 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 type isSportType = true | false | null; //스포츠 타입 여부, null: 스티커 타입
 
 const Calendar = ({
+  archiveId,
   labelData,
   stickerData,
   stickerImage,
@@ -364,6 +366,7 @@ const Calendar = ({
         >
           {/* 이벤트 등록 모달 */}
           <EventModal
+            archiveId={archiveId}
             open={eventModalOpen}
             onClose={() => setEventModalOpen(false)}
             type={eventModalType}
