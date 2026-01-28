@@ -77,6 +77,7 @@ const DiaryImage = ({
                 <ImageCard
                   imageUrl={imageItem.previewUrl}
                   onClick={() => handleImageDelete(imageItem.id)}
+                  showDeleteButton={!isEditMode} // TODO : 기획 의도랑 다를 수 있음 확인 필요
                 />
               </div>
             ))}

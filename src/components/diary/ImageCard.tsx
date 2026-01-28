@@ -1,13 +1,13 @@
 type Props = {
-  onClick: () => void;
-  imageUrl?: string; // ✅ 이미지 URL prop 추가
+  onClick?: () => void;
+  imageUrl?: string;
+  showDeleteButton?: boolean;
 };
 
-const ImageCard = ({ onClick, imageUrl }: Props) => {
-  // ✅ X 버튼 클릭 핸들러
+const ImageCard = ({ onClick, imageUrl, showDeleteButton = true }: Props) => {
   const handleXClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 부모 클릭 이벤트 방지
-    onClick();
+    onClick?.();
   };
 
   return (
@@ -28,7 +28,7 @@ const ImageCard = ({ onClick, imageUrl }: Props) => {
           />
           <rect x="10" y="8" width="360" height="329.4" fill="#EEF7FC" />
 
-          {/* ✅ 이미지가 있으면 이미지 표시, 없으면 플레이스홀더 */}
+          {/* 이미지가 있으면 이미지 표시, 없으면 플레이스홀더 */}
           {imageUrl ? (
             <image
               href={imageUrl}
@@ -46,29 +46,31 @@ const ImageCard = ({ onClick, imageUrl }: Props) => {
             />
           )}
 
-          {/* ✅ X 버튼 영역 - 클릭 가능하게 */}
-          <g
-            opacity="0.5"
-            onClick={handleXClick}
-            style={{ cursor: "pointer" }}
-            className="cursor-pointer hover:opacity-70 transition-opacity"
-          >
-            <rect
-              x="317.062"
-              y="28"
-              width="31.7647"
-              height="31.7231"
-              rx="15.8615"
-              fill="#7D9AB2"
-            />
-            <path
-              d="M327.005 37.5082C327.198 37.3149 327.511 37.315 327.704 37.5082L333.133 42.9543L338.396 37.6767C338.589 37.4833 338.901 37.4833 339.093 37.6767C339.286 37.87 339.286 38.183 339.093 38.3763L333.831 43.6548L339.301 49.1413C339.494 49.3346 339.494 49.6484 339.301 49.8418C339.108 50.0351 338.795 50.0351 338.602 49.8418L333.133 44.3553L327.288 50.2183C327.095 50.4116 326.782 50.4116 326.59 50.2183C326.397 50.025 326.397 49.7119 326.59 49.5186L332.434 43.6548L327.005 38.2087C326.813 38.0154 326.812 37.7015 327.005 37.5082Z"
-              fill="white"
-            />
-          </g>
+          {/* X 버튼 영역 - 편집 모드일 때만 표시 */}
+          {showDeleteButton && (
+            <g
+              opacity="0.5"
+              onClick={handleXClick}
+              style={{ cursor: "pointer" }}
+              className="cursor-pointer hover:opacity-70 transition-opacity"
+            >
+              <rect
+                x="317.062"
+                y="28"
+                width="31.7647"
+                height="31.7231"
+                rx="15.8615"
+                fill="#7D9AB2"
+              />
+              <path
+                d="M327.005 37.5082C327.198 37.3149 327.511 37.315 327.704 37.5082L333.133 42.9543L338.396 37.6767C338.589 37.4833 338.901 37.4833 339.093 37.6767C339.286 37.87 339.286 38.183 339.093 38.3763L333.831 43.6548L339.301 49.1413C339.494 49.3346 339.494 49.6484 339.301 49.8418C339.108 50.0351 338.795 50.0351 338.602 49.8418L333.133 44.3553L327.288 50.2183C327.095 50.4116 326.782 50.4116 326.59 50.2183C326.397 50.025 326.397 49.7119 326.59 49.5186L332.434 43.6548L327.005 38.2087C326.813 38.0154 326.812 37.7015 327.005 37.5082Z"
+                fill="white"
+              />
+            </g>
+          )}
         </g>
         <defs>
-          {/* ✅ 이미지 클리핑 경로 */}
+          {/* 이미지 클리핑 경로 */}
           <clipPath id="imageClip">
             <rect x="10" y="8" width="360" height="329.4" rx="0" />
           </clipPath>
