@@ -3,7 +3,10 @@ import EmptyList from "@/components/archive/Empty/EmptyList";
 import DiaryCard from "@/components/common/Card/DiaryCard";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import Pagination from "@/components/common/Pagination";
+import EditableTitle from "@/components/common/EditableTitle";
 import { useGetDiaryBook } from "@/apis/queries/diary/useGetDiary";
+import { useUpdateDiaryBook } from "@/apis/mutations/diary/usePatchDiary";
+import { useDeleteDiary } from "@/apis/mutations/diary/useDeleteDiary";
 import { Pencil, Plus, X, Trash2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -24,9 +27,23 @@ const DiaryPage = () => {
     size: pageSize,
   });
 
+  // 다이어리북 이름 수정
+  const { mutate: updateDiaryBookName } = useUpdateDiaryBook();
+
+  // 다이어리 삭제
+  const { mutate: deleteDiary } = useDeleteDiary();
+
   const diaryList = data?.content ?? [];
   const totalItems = data?.page?.totalElements ?? 0;
   const diaryBookTitle = data?.title ?? "덕질 일기";
+
+  // 다이어리북 이름 저장
+  const handleSaveName = (nextName: string) => {
+    updateDiaryBookName({
+      archiveId,
+      title: nextName,
+    });
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -62,8 +79,10 @@ const DiaryPage = () => {
   const handleDelete = () => {
     if (selectedDiaryIds.length === 0) return;
 
-    // TODO: 삭제 API 호출
-    console.log("삭제할 다이어리:", selectedDiaryIds);
+    // 선택된 다이어리 삭제
+    selectedDiaryIds.forEach((diaryId) => {
+      deleteDiary({ diaryId });
+    });
 
     // 삭제 후 편집 모드 종료
     setIsEditMode(false);
@@ -74,7 +93,12 @@ const DiaryPage = () => {
     <div className="flex flex-col items-center justify-center">
       <div className="max-w-[1920px] mx-auto flex flex-col items-start mt-15 gap-15">
         <div className="w-310 flex flex-col gap-15">
-          <p className="w-full typo-h1 text-color-highest">{diaryBookTitle}</p>
+          <EditableTitle
+            value={diaryBookTitle}
+            onSave={handleSaveName}
+            placeholder="다이어리북명을 입력하세요."
+            maxLength={50}
+          />
 
           {diaryList.length > 0 ? (
             <div className="w-full flex flex-col gap-10">
@@ -116,7 +140,7 @@ const DiaryPage = () => {
                 )}
               </div>
 
-              {/* ✅ DiaryCard 목록 */}
+              {/* DiaryCard 목록 */}
               <div className="w-full flex flex-col items-start gap-[60px]">
                 <div className="flex flex-wrap items-start justify-between gap-[80px]">
                   {diaryList.map((diary) => (
