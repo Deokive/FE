@@ -5,6 +5,7 @@ import ColorChange from "@/components/common/ColorChange";
 import { BtnBasic } from "@/components/common/Button/Btn";
 import { useState } from "react";
 import type { ColorData, CreateEventRequest, DateData, LabelData } from "@/types/calendar";
+import EditableTitle from "@/components/common/EditableTitle";
 
 type SportsProps = {
   onClose: () => void;
@@ -23,6 +24,7 @@ type ScoreData = {
 const Sports = ({ onClose, startDate, editData, onSubmit }: SportsProps) => {
   const isEditMode = !!editData;
 
+  const [eventTitle, setEventTitle] = useState(editData?.title || "");
   // ✅ editData가 있으면 해당 데이터로 초기화
   const [dateData, setDateData] = useState<DateData>({
     startDate: editData ? new Date(editData.date) : startDate,
@@ -54,7 +56,7 @@ const Sports = ({ onClose, startDate, editData, onSubmit }: SportsProps) => {
     const time = dateData.isAllDay ? undefined : editData?.time ?? "00:00";
 
     const body: Omit<CreateEventRequest, "isSportType"> = {
-      title: `${scoreData.teamName} vs ${scoreData.teamName2}`,
+      title: eventTitle || "스포츠 결과 기록",
       date,
       time,
       hasTime: !dateData.isAllDay,
@@ -75,7 +77,13 @@ const Sports = ({ onClose, startDate, editData, onSubmit }: SportsProps) => {
     <div className="flex flex-col gap-12 items-start">
       {/* 일정 이름 */}
       <div className="w-full flex items-center justify-between">
-        <p className="typo-h1 text-color-highest text-left">스포츠 결과 기록</p>
+        {/* <p className="typo-h1 text-color-highest text-left">스포츠 결과 기록</p> */}
+        <EditableTitle
+          value={eventTitle || "스포츠 결과 기록"}
+          onSave={(next) => setEventTitle(next)}
+          placeholder="스포츠 결과 기록"
+          maxLength={50}
+        />
         <X
           className="w-12 h-12 text-color-highest cursor-pointer"
           onClick={onClose}
@@ -146,7 +154,9 @@ const Sports = ({ onClose, startDate, editData, onSubmit }: SportsProps) => {
       </div>
       {/* 확인버튼 */}
       <div className="w-full flex justify-end">
-        <BtnBasic onClick={handleConfirm}>확인</BtnBasic>
+        <BtnBasic onClick={handleConfirm}>
+          {isEditMode ? "수정" : "확인"}
+        </BtnBasic>
       </div>
     </div>
   );

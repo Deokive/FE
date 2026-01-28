@@ -202,6 +202,7 @@ const Calendar = ({
                     if (label) {
                       setEditLabelData(label);
                       setEventModalType(label.isSportType ? true : false);
+                      setClickDate(date);
                       setEventModalOpen(true);
                     }
 

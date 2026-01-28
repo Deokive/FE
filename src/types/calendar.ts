@@ -56,3 +56,14 @@ export type CreateEventRequest = {
   hashtags?: string[];
   isSportType?: boolean;
 }
+
+export type UpdateEventRequest = {
+  title?: string;
+  date?: string;
+  time?: string;
+  hasTime?: boolean;
+  color?: string;
+  sportInfo?: SportInfo;
+  hashtags?: string[];
+  isSportType?: boolean;
+}

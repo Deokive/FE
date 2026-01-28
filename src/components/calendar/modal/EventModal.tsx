@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import Event from "./Event";
 import Sports from "./Sports";
 import Sticker from "./Sticker";
-import type { CreateEventRequest, LabelData } from "@/types/calendar";
+import type { CreateEventRequest, LabelData, UpdateEventRequest } from "@/types/calendar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postCalendar } from "@/apis/mutations/calendar/postCalendar";
+import { patchCalendar, postCalendar } from "@/apis/mutations/calendar/Calendar";
 
 type ModalType = true | false | null;
 
@@ -26,6 +26,8 @@ const EventModal = ({
   editData,
 }: EventModalProps) => {
   const queryClient = useQueryClient();
+  const isEditMode = !!editData && editData.id != null;
+
   // ✅ 일정 생성 mutation
   const createEventMutation = useMutation({
     mutationFn: (body: CreateEventRequest) => postCalendar(archiveId, body),
@@ -40,13 +42,33 @@ const EventModal = ({
     },
   });
 
+  // ✅ 일정 수정 mutation
+  const updateEventMutation = useMutation({
+    mutationFn: (body: UpdateEventRequest) => patchCalendar(editData?.id as number, body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["monthlyEvents", archiveId] });
+      onClose();
+    },
+    onError: (error) => {
+      console.error("일정 수정 실패:", error);
+      alert("일정 수정에 실패했습니다. 다시 시도해주세요.");
+    },
+  });
+
   // ✅ 자식에서 보내주는 기본 데이터 + 여기서 isSportType만 세팅
   const handleSubmit = (base: Omit<CreateEventRequest, "isSportType">) => {
-    const payload: CreateEventRequest = {
+    const payload = {
       ...base,
-      isSportType: type === true, // 스포츠면 true, 아니면 false
+      isSportType: type === true,
     };
-    createEventMutation.mutate(payload);
+
+    if (isEditMode) {
+      // 수정 모달일 때
+      updateEventMutation.mutate(payload);
+    } else {
+      // 새로 등록할 때
+      createEventMutation.mutate(payload);
+    }
   };
 
 

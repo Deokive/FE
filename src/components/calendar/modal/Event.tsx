@@ -4,7 +4,8 @@ import CalendarTag from "../CalendarTag";
 import ColorChange from "@/components/common/ColorChange";
 import { BtnBasic } from "@/components/common/Button/Btn";
 import { useState } from "react";
-import type { ColorData, CreateEventRequest, DateData, LabelData } from "@/types/calendar";
+import type { CreateEventRequest, DateData, LabelData } from "@/types/calendar";
+import EditableTitle from "@/components/common/EditableTitle";
 
 type EventProps = {
   onClose: () => void;
@@ -17,7 +18,7 @@ const Event = ({ onClose, startDate, editData, onSubmit }: EventProps) => {
   const isEditMode = !!editData;
 
   // ✅ editData가 있으면 해당 데이터로 초기화
-  const [eventTitle, _] = useState(editData?.title || "");
+  const [eventTitle, setEventTitle] = useState(editData?.title || "");
   const [dateData, setDateData] = useState<DateData>({
     startDate: editData ? new Date(editData.date) : startDate,
     endDate: null,
@@ -57,11 +58,13 @@ const Event = ({ onClose, startDate, editData, onSubmit }: EventProps) => {
     <div className="flex flex-col gap-12 items-start">
       {/* 일정 이름 */}
       <div className="w-full flex items-center justify-between">
-        {eventTitle ? (
-          <p className="typo-h1 text-color-highest text-left ">{eventTitle}</p>
-        ) : (
-          <p className="typo-h1 text-color-mid text-left ">| 일정 이름</p>
-        )}
+
+        <EditableTitle
+          value={eventTitle || "일정 이름"}
+          onSave={(next) => setEventTitle(next)}
+          placeholder="일정 이름"
+          maxLength={50}
+        />
         <X
           className="w-12 h-12 text-color-highest cursor-pointer"
           onClick={onClose}
@@ -79,7 +82,7 @@ const Event = ({ onClose, startDate, editData, onSubmit }: EventProps) => {
       {/* 색상설정 */}
       <ColorChange
         initialColor={{ color }}
-        onColorChange={(data) => setColor(data?.color || color)}
+        onColorChange={(data) => setColor(data?.color || "")}
       />
       {/* 확인버튼 */}
       <div className="w-full flex justify-end">

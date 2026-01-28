@@ -14,14 +14,14 @@ const ColorChange = ({
   className,
 }: ColorChangeProps) => {
   const colors: ColorData[] = [
-    { color: "#FFDFE7" },
-    { color: "#FFABAB" },
-    { color: "#FFDEBF" },
-    { color: "#FFEEBB" },
-    { color: "#CEEBCC" },
-    { color: "#82BEF5" },
-    { color: "#DFDFFF" },
-    { color: "#DFDCDC" },
+    { color: "#FFDFE7" }, // 핑크
+    { color: "#FFABAB" }, // 주황
+    { color: "#FFDEBF" }, // 오렌지
+    { color: "#FFEEBB" }, // 노랑
+    { color: "#CEEBCC" }, // 초록
+    { color: "#82BEF5" }, // 파랑
+    { color: "#DFDFFF" }, // 보라
+    { color: "#DFDCDC" }, // 회색
   ];
   // ✅ 초기값으로 선택된 색상 설정
   const [selectedColor, setSelectedColor] = useState<ColorData | null>(() => {
@@ -53,11 +53,10 @@ const ColorChange = ({
           {colors.map((color) => (
             <div
               key={color.color}
-              className={`w-10 h-10 rounded-full cursor-pointer ${
-                selectedColor?.color === color.color
+              className={`w-10 h-10 rounded-full cursor-pointer ${selectedColor?.color === color.color
                   ? "border-5 border-border-mid"
                   : ""
-              }`}
+                }`}
               style={{ backgroundColor: color.color }}
               onClick={() => {
                 handleColorChange(color);
