@@ -4,7 +4,7 @@ import CalendarTag from "../CalendarTag";
 import ColorChange from "@/components/common/ColorChange";
 import { BtnBasic } from "@/components/common/Button/Btn";
 import { useState } from "react";
-import type { ColorData, CreateEventRequest, DateData, LabelData } from "@/types/calendar";
+import type { CreateEventRequest, DateData, LabelData } from "@/types/calendar";
 import EditableTitle from "@/components/common/EditableTitle";
 
 type SportsProps = {

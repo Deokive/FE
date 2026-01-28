@@ -9,7 +9,8 @@ import { PatchCalendar, PostCalendar } from "@/apis/mutations/calendar/Calendar"
 type ModalType = true | false | null;
 
 interface EventModalProps {
-  archiveId: number; //아카이브 ID
+  /** 아카이브 ID */
+  archiveId?: number;
   open: boolean;
   onClose: () => void;
   type: ModalType;
@@ -30,7 +31,7 @@ const EventModal = ({
 
   // ✅ 일정 생성 mutation
   const createEventMutation = useMutation({
-    mutationFn: (body: CreateEventRequest) => PostCalendar(archiveId, body),
+    mutationFn: (body: CreateEventRequest) => PostCalendar(archiveId as number, body),
     onSuccess: () => {
       // TODO: 월별 일정 refetch 필요하면 여기서 invalidateQueries
       queryClient.invalidateQueries({ queryKey: ["monthlyEvents", archiveId] });

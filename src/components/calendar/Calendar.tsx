@@ -1,4 +1,3 @@
-// src/components/Calendar.tsx
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReactCalendar from "react-calendar";
@@ -12,13 +11,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DeleteCalendar } from "@/apis/mutations/calendar/Calendar";
 
 interface CalendarProps {
-  archiveId: number; //아카이브 ID
   /** 날짜별 라벨 데이터 (키: "YYYY-MM-DD" 형식, 값: 라벨 텍스트 배열) */
   labelData?: LabelData[];
   /** 날짜별 스티커 데이터 (키: "YYYY-MM-DD" 형식, 값: 스티커 ID 또는 식별자) */
   stickerData?: Record<string, string>; //스티커는 날짜당 한개로 생각해서 string으로 처리
   /** 스티커 이미지 URL (스티커 영역에 표시할 이미지) */
   stickerImage?: string;
+  /** 아카이브 ID */
+  archiveId?: number;
   mode?: "interactive" | "readonly";
 }
 

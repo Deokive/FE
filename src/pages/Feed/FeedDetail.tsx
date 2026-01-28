@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
+import { stickerDataMock } from "@/mockData/calendarData";
 import { diaryDataMock } from "@/mockData/diaryData";
 import { galleryDataMock } from "@/mockData/galleryData";
 import { ticketDataMock } from "@/mockData/ticketData";
@@ -15,16 +15,21 @@ import { repostDataMock } from "@/mockData/repostData";
 import ButtonLike from "@/components/archive/ButtonLike";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import EmptyFeedList from "@/components/feed/EmptyFeedList";
-import type { LabelData } from "@/types/calendar";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
 import { LikeArchive } from "@/apis/mutations/archive/archive";
+import { getMonthlyEvents } from "@/apis/queries/calendar/getCalendar";
 
 const FeedDetail = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const urlParams = useParams();
   const archiveId = urlParams.id;
+
+  const { data: monthlyEvents } = useQuery({
+    queryKey: ["monthlyEvents", Number(archiveId)],
+    queryFn: () => getMonthlyEvents(Number(archiveId), new Date().getFullYear(), new Date().getMonth() + 1),
+  });
 
   const { data: feed } = useQuery({
     queryKey: ["feed", archiveId],
@@ -72,7 +77,7 @@ const FeedDetail = () => {
         />
         {/* 아카이브 달력 */}
         <Calendar
-          labelData={labelDataMock as unknown as LabelData[]}
+          labelData={monthlyEvents}
           stickerData={stickerDataMock}
           mode="readonly"
         />
