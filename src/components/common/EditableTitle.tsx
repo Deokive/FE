@@ -66,7 +66,7 @@ export default function EditableTitle({
   };
 
   return (
-    <div className={twMerge("inline-block", className)}>
+    <div className={twMerge("inline-block w-full", className)}>
       {editing ? (
         <input
           ref={inputRef}
@@ -82,7 +82,9 @@ export default function EditableTitle({
           onKeyDown={onKeyDown}
           aria-label="편집"
           placeholder={placeholder}
-          className={"border-0 focus:outline-none typo-h1 text-color-highest"}
+          className={
+            "border-0 focus:outline-none typo-h1 text-color-highest w-full"
+          }
         />
       ) : (
         <button

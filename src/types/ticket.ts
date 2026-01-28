@@ -8,7 +8,7 @@ import { PaginationDirection } from "@/enums/paginationDirection";
 
 // 개발 편의를 위한 타입
 export type Ticket = {
-  id: string;
+  id: number;
   imageUrl?: string | null;
   isRepresentative?: boolean;
   eventName: string; // 필수
@@ -34,7 +34,7 @@ type ArchiveId = {
 type DefaultTicketResponse = {
   id: number;
   title: string;
-  date: string;
+  date: string | null;
   location: string | null;
   seat: string | null;
   casting: string | null;
@@ -46,7 +46,7 @@ type DefaultTicketResponse = {
 
 type DefaultTicketRequest = {
   title: string;
-  date: string;
+  date?: string | null;
   location?: string | null;
   seat?: string | null;
   casting?: string | null;
@@ -63,6 +63,8 @@ type TicketBookContent = {
   seat?: string | null;
   location?: string | null;
   casting?: string | null;
+  score?: number | null;
+  review?: string | null;
   createdAt: string;
   lastModifiedAt: string;
 };
