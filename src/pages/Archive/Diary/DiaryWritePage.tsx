@@ -1,22 +1,20 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
-import type { CreateDiaryRequest } from "@/types/diary";
+import { useState } from "react";
+import { useAddDiary } from "@/apis/mutations/diary/usePostDiary";
+import { useFileUpload } from "@/hooks/useFileUpload";
+import { Visibility } from "@/enums/visibilty";
+import { MediaRole } from "@/enums/mediaRole";
+import { DEFAULT_DIARY_COLOR } from "@/constants/diaryColors";
 import ColorChange from "@/components/common/ColorChange";
 import DiaryImage from "@/components/diary/DiaryImage";
 import DatePicker from "@/components/ticket/DatePicker";
 import DiaryText from "@/components/diary/DiaryText";
 import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 import { DiaryFooter } from "@/components/diary/DiaryFooter";
-import type { ColorData } from "@/types/calendar";
 
-export type DiaryFormData = {
-  CreateDiaryRequest: CreateDiaryRequest;
-};
-
-type ImageItem = {
+type UploadedImage = {
   id: string;
-  file: File;
+  fileId: number;
   previewUrl: string;
 };
 
@@ -24,215 +22,165 @@ const DiaryWritePage = () => {
   const { archiveId } = useParams();
   const navigate = useNavigate();
 
-  const colors: ColorData[] = [
-    { color: "#FFDFE7" }, //핑크
-    { color: "#FFABAB" }, //빨강
-    { color: "#FFDEBF" }, //오렌지
-    { color: "#FFEEBB" }, //노랑
-    { color: "#CEEBCC" }, //초록
-    { color: "#82BEF5" }, //파랑
-    { color: "#DFDFFF" }, //보라
-    { color: "#DFDCDC" }, //회색
-  ];
+  const { mutate: addDiary, isPending } = useAddDiary();
+  const { uploadFiles, isUploading } = useFileUpload();
 
-  const { handleSubmit, watch, setValue, reset } =
-    useForm<DiaryFormData>({
-      defaultValues: {
-        CreateDiaryRequest: {
-          title: "",
-          content: "",
-          recordedAt: "",
-          color: colors[5].color,
-          visibility: "PUBLIC",
-          files: [],
-        },
-      },
+  // 폼 상태
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [recordedAt, setRecordedAt] = useState("");
+  const [color, setColor] = useState(DEFAULT_DIARY_COLOR);
+  const [visibility, setVisibility] = useState<Visibility>(Visibility.PUBLIC);
+  const [images, setImages] = useState<UploadedImage[]>([]);
+
+  const isFormValid =
+    title.trim() !== "" && content.trim() !== "" && recordedAt !== "";
+
+  // 이미지 추가 - 선택 즉시 일괄 업로드 (최대 3장)
+  const handleImageAdd = async (files: File[]) => {
+    const maxCount = 3;
+    const remaining = maxCount - images.length;
+    if (remaining <= 0) return;
+
+    const filesToUpload = files.slice(0, remaining);
+
+    const newImages = filesToUpload.map((file) => ({
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+      fileId: 0,
+      previewUrl: URL.createObjectURL(file),
+    }));
+    setImages((prev) => [...prev, ...newImages]);
+
+    const uploadResult = await uploadFiles({
+      files: filesToUpload,
+      mediaRole: MediaRole.CONTENT,
     });
 
-  // ✅ 이미지 파일 배열 상태 관리
-  const [imageItems, setImageItems] = useState<ImageItem[]>([]);
-
-  // ✅ form에서 현재 색상 가져오기
-  const currentColor = watch("CreateDiaryRequest.color");
-  const selectedColor = { color: currentColor }; // ✅ 현재 선택된 색상
-
-  const recordedAt = watch("CreateDiaryRequest.recordedAt");
-  const title = watch("CreateDiaryRequest.title");
-  const content = watch("CreateDiaryRequest.content");
-
-  // ✅ 필수 필드 검증 - title, content, recordedAt이 모두 입력되어야 함
-  const isFormValid = useMemo(() => {
-    return (
-      title.trim().length > 0 &&
-      content.trim().length > 0 &&
-      recordedAt.trim().length > 0
-    );
-  }, [title, content, recordedAt]);
-
-  // ✅ 이미지 추가 핸들러
-  const handleImageAdd = (file: File) => {
-    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-    const previewUrl = URL.createObjectURL(file);
-
-    const newImageItem: ImageItem = {
-      id,
-      file,
-      previewUrl,
-    };
-
-    setImageItems((prev) => [...prev, newImageItem]);
-
-    // ✅ form에 파일 정보 저장
-    const currentFiles = watch("CreateDiaryRequest.files");
-    setValue("CreateDiaryRequest.files", [
-      ...currentFiles,
-      {
-        fileId: 0,
-        mediaRole: "IMAGE",
-        sequence: currentFiles.length,
-      },
-    ]);
-  };
-
-  // ✅ 이미지 삭제 핸들러
-  const handleImageDelete = (id: string) => {
-    setImageItems((prev) => {
-      const itemToDelete = prev.find((item) => item.id === id);
-      if (itemToDelete) {
-        URL.revokeObjectURL(itemToDelete.previewUrl);
-      }
-      return prev.filter((item) => item.id !== id);
-    });
-
-    // ✅ form에서도 파일 정보 제거
-    const currentFiles = watch("CreateDiaryRequest.files");
-    const deletedIndex = imageItems.findIndex((item) => item.id === id);
-    const updatedFiles = currentFiles.filter(
-      (_, index) => index !== deletedIndex
-    );
-    setValue("CreateDiaryRequest.files", updatedFiles);
-  };
-
-  // ✅ 컴포넌트 언마운트 시 URL 정리
-  useEffect(() => {
-    return () => {
-      imageItems.forEach((item) => {
-        URL.revokeObjectURL(item.previewUrl);
+    if (uploadResult) {
+      // 업로드 성공 시 fileId 업데이트
+      setImages((prev) => {
+        const updated = [...prev];
+        newImages.forEach((img, index) => {
+          const target = updated.find((i) => i.id === img.id);
+          if (target && uploadResult[index]) {
+            target.fileId = uploadResult[index].fileId;
+          }
+        });
+        return updated;
       });
-    };
-  }, []);
-
-  // ✅ 폼 초기화 함수
-  const resetForm = () => {
-    // ✅ 폼 데이터 초기화
-    reset({
-      CreateDiaryRequest: {
-        title: "",
-        content: "",
-        recordedAt: "",
-        color: colors[5].color,
-        visibility: "PUBLIC",
-        files: [],
-      },
-    });
-
-    // ✅ 이미지 파일들 정리 및 초기화
-    imageItems.forEach((item) => {
-      URL.revokeObjectURL(item.previewUrl);
-    });
-    setImageItems([]);
+    } else {
+      // 업로드 실패 시 제거
+      newImages.forEach((img) => URL.revokeObjectURL(img.previewUrl));
+      setImages((prev) => prev.filter((img) => !newImages.some((n) => n.id === img.id)));
+      alert("이미지 업로드에 실패했습니다.");
+    }
   };
 
-  // ✅ onSubmit - handleSubmit을 사용하여 모든 데이터 가져오기
-  const onSubmit = async (data: DiaryFormData) => {
-    // TODO: API 호출
-    console.log("다이어리 저장:", data);
-    resetForm();
-    // TODO: API 호출 후 리다이렉트 => 작성자라면 수정페이지, 아니면 상세페이지
-    navigate(`/archive/${archiveId}/diary`);
+  // 이미지 삭제
+  const handleImageDelete = (id: string) => {
+    const target = images.find((img) => img.id === id);
+    if (target) URL.revokeObjectURL(target.previewUrl);
+    setImages((prev) => prev.filter((img) => img.id !== id));
   };
 
-  // ✅ handleSave - DiaryFooter에서 호출
+  // 저장
   const handleSave = () => {
-    handleSubmit(onSubmit)();
+    if (!archiveId) return;
+
+    // 이미 업로드된 이미지의 fileId 사용
+    const files = images
+      .filter((img) => img.fileId > 0)
+      .map((img, index) => ({
+        fileId: img.fileId,
+        mediaRole: MediaRole.CONTENT,
+        sequence: index,
+      }));
+
+    addDiary(
+      {
+        archiveId: Number(archiveId),
+        title,
+        content,
+        recordedAt,
+        color,
+        visibility,
+        files,
+      },
+      {
+        onSuccess: () => {
+          navigate(`/archive/${archiveId}/diary`);
+        },
+      }
+    );
   };
 
   return (
     <div className="w-full h-full bg-[#EEF7FC]">
-      <div className="flex flex-col items-center justify-center max-w-[1920px] mx-auto py-15 gap-15 ">
+      <div className="flex flex-col items-center justify-center max-w-[1920px] mx-auto py-15 gap-15">
         {/* 색상 선택 */}
         <div className="w-310 flex justify-start">
           <ColorChange
-            initialColor={selectedColor}
-            onColorChange={(color) =>
-              setValue(
-                "CreateDiaryRequest.color",
-                color?.color || colors[5].color
-              )
-            }
+            initialColor={{ color }}
+            onColorChange={(c) => setColor(c?.color || DEFAULT_DIARY_COLOR)}
             className="font-hakgyoansim-b"
           />
         </div>
 
-        {/* ✅ 이미지 첨부 영역 - 여러 이미지 업로드 지원 */}
+        {/* 이미지 첨부 영역 */}
         <div className="w-full">
           <DiaryImage
-            isEditMode={false}
-            images={imageItems}
+            images={images}
             onImageAdd={handleImageAdd}
             onImageDelete={handleImageDelete}
           />
         </div>
 
-        {/* ✅ 날짜 선택 - DatePicker 사용 */}
+        {/* 날짜 선택 및 일기 내용 */}
         <div className="w-310 flex flex-col gap-15">
           <div className="flex gap-5 items-center w-full">
             <p className="text-center typo-h1 text-color-high">날짜 : </p>
             <DatePicker
               value={recordedAt}
-              onChange={(date) => {
-                setValue("CreateDiaryRequest.recordedAt", date || "");
-              }}
+              onChange={(date) => setRecordedAt(date || "")}
               placeholder="날짜 입력"
               className="flex-1 w-50 justify-center items-center"
             />
           </div>
-          {/* 일기 내용 */}
+
           <DiaryText
-            title={watch("CreateDiaryRequest.title")}
-            onTitleChange={(title) => {
-              setValue("CreateDiaryRequest.title", title || "");
-            }}
-            content={watch("CreateDiaryRequest.content")}
-            onContentChange={(content) => {
-              setValue("CreateDiaryRequest.content", content || "");
-            }}
+            title={title}
+            onTitleChange={(t) => setTitle(t || "")}
+            content={content}
+            onContentChange={(c) => setContent(c || "")}
           />
         </div>
-        {/* 비공개 버튼 */}
+
+        {/* 비공개 체크박스 */}
         <div className="w-310 flex items-center justify-end gap-3">
           <div
             className="w-6 h-6 cursor-pointer"
             onClick={() => {
-              const currentVisibility = watch("CreateDiaryRequest.visibility");
-              const newVisibility =
-                currentVisibility === "PRIVATE" ? "PUBLIC" : "PRIVATE";
-              setValue("CreateDiaryRequest.visibility", newVisibility);
+              setVisibility((prev) =>
+                prev === Visibility.PRIVATE
+                  ? Visibility.PUBLIC
+                  : Visibility.PRIVATE
+              );
             }}
           >
             <CheckboxIcon
               size={24}
-              checked={watch("CreateDiaryRequest.visibility") === "PRIVATE"}
+              checked={visibility === Visibility.PRIVATE}
             />
           </div>
           <p className="typo-body1 text-color-highest text-center">비공개</p>
         </div>
       </div>
+
       <DiaryFooter
         onEdit={() => {}}
         onSave={handleSave}
         onCancel={() => navigate(-1)}
-        isDisabled={!isFormValid} // ✅ 필수 필드 검증 결과 전달
+        isDisabled={!isFormValid || isPending || isUploading}
       />
     </div>
   );

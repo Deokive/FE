@@ -1,13 +1,14 @@
 import type { Visibility } from "@/enums/visibilty";
+import type { MediaRole } from "@/enums/mediaRole";
 import type { FileCompleteResponse } from "./file";
 import type {
   DefaultPaginationRequest,
   DefaultPaginationResponse,
 } from "./pagination";
 
-type file = {
+export type DiaryFile = {
   fileId: number;
-  mediaRole: string;
+  mediaRole: MediaRole;
   sequence: number;
 };
 
@@ -37,7 +38,7 @@ type DefaultDiaryRequest = {
   recordedAt: string;
   color: string;
   visibility: Visibility;
-  files?: file[];
+  files?: DiaryFile[];
 };
 
 type DiaryBookContent = {
