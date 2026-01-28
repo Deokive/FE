@@ -1,3 +1,5 @@
+import type { StickerType } from "@/enums/sticker";
+
 export type EventProps = {
   onClose: () => void;
   startDate: Date | null;
@@ -66,4 +68,10 @@ export type UpdateEventRequest = {
   sportInfo?: SportInfo;
   hashtags?: string[];
   isSportType?: boolean;
+}
+
+export type StickerResponse= {
+  id: number;
+  date: string;
+  stickerType: StickerType;
 }

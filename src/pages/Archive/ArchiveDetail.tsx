@@ -23,7 +23,7 @@ import { useFileUpload } from "@/hooks/useFileUpload";
 import { MediaRole } from "@/enums/mediaRole";
 import { useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import { getMonthlyEvents } from "@/apis/queries/calendar/getCalendar";
+import { getMonthlyEvents } from "@/apis/queries/calendar/Calendar";
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();

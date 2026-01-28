@@ -128,14 +128,15 @@ const Archive = () => {
     <div className="flex flex-col items-center justify-center">
       <Banner />
       <div className="w-310 h-10 my-15">
-        <EditableTitle
+        {/* <EditableTitle
           value="마이 아카이브"
           onSave={(next) => {
             console.log("title", next);
           }}
           placeholder="마이 아카이브"
           maxLength={50}
-        />
+        /> */}
+        <p className="typo-h1 text-color-highest">마이 아카이브</p>
       </div>
       <div className="max-w-[1920px] mx-auto mb-40">
         {/* ✅ 로딩 / 에러 / 데이터 없는 경우 처리 */}

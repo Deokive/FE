@@ -18,7 +18,7 @@ import EmptyFeedList from "@/components/feed/EmptyFeedList";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
 import { LikeArchive } from "@/apis/mutations/archive/archive";
-import { getMonthlyEvents } from "@/apis/queries/calendar/getCalendar";
+import { getMonthlyEvents } from "@/apis/queries/calendar/Calendar";
 
 const FeedDetail = () => {
   const navigate = useNavigate();
