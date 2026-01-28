@@ -21,7 +21,7 @@ const DiaryList = ({
 }: DiaryListProps) => {
   const navigate = useNavigate();
 
-  const { data, isLoading } = useGetDiaryBook({
+  const { data } = useGetDiaryBook({
     archiveId: Number(archiveId),
     page: 0,
     size: limit,

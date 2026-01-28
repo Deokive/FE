@@ -12,18 +12,13 @@ const DiaryPage = () => {
   const archiveId = Number(params.archiveId);
   const navigate = useNavigate();
 
-  // ✅ 편집 모드 상태
   const [isEditMode, setIsEditMode] = useState(false);
 
-  // ✅ 선택된 다이어리 ID들
   const [selectedDiaryIds, setSelectedDiaryIds] = useState<number[]>([]);
 
-  // ✅ 페이지네이션 상태
   const [page, setPage] = useState(0);
   const pageSize = 9;
-
-  // ✅ API로 다이어리북 데이터 가져오기
-  const { data, isLoading } = useGetDiaryBook({
+  const { data } = useGetDiaryBook({
     archiveId,
     page,
     size: pageSize,
@@ -33,35 +28,29 @@ const DiaryPage = () => {
   const totalItems = data?.page?.totalElements ?? 0;
   const diaryBookTitle = data?.title ?? "덕질 일기";
 
-  // ✅ 페이지 변경 시 스크롤 맨 위로 (1-based로 변환해서 표시)
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page]);
 
-  // ✅ 편집 모드 종료 시 선택 초기화
   useEffect(() => {
     if (!isEditMode) {
       setSelectedDiaryIds([]);
     }
   }, [isEditMode]);
 
-  // ✅ 페이지 변경 핸들러 (Pagination은 1-based, API는 0-based)
   const handlePageChange = (newPage: number) => {
     setPage(newPage - 1);
   };
 
-  // ✅ 편집 모드 토글
   const handleEditToggle = () => {
     setIsEditMode((prev) => !prev);
   };
 
-  // ✅ 편집 취소
   const handleCancel = () => {
     setIsEditMode(false);
     setSelectedDiaryIds([]);
   };
 
-  // ✅ 다이어리 선택/해제
   const handleDiarySelect = (diaryId: number) => {
     setSelectedDiaryIds((prev) =>
       prev.includes(diaryId)
@@ -70,7 +59,6 @@ const DiaryPage = () => {
     );
   };
 
-  // ✅ 삭제 핸들러
   const handleDelete = () => {
     if (selectedDiaryIds.length === 0) return;
 
@@ -144,7 +132,9 @@ const DiaryPage = () => {
                       onSelect={() => handleDiarySelect(diary.diaryId)}
                       onClick={() => {
                         if (!isEditMode) {
-                          navigate(`/archive/${archiveId}/diary/${diary.diaryId}`);
+                          navigate(
+                            `/archive/${archiveId}/diary/${diary.diaryId}`
+                          );
                         }
                       }}
                     />
