@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import EmptyList from "@/components/archive/Empty/EmptyList";
 import DiaryCard from "@/components/common/Card/DiaryCard";
 import { BtnIcon } from "@/components/common/Button/Btn";
@@ -44,16 +44,6 @@ const DiaryPage = () => {
       title: nextName,
     });
   };
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [page]);
-
-  useEffect(() => {
-    if (!isEditMode) {
-      setSelectedDiaryIds([]);
-    }
-  }, [isEditMode]);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage - 1);
@@ -154,13 +144,9 @@ const DiaryPage = () => {
                       isEditMode={isEditMode}
                       isSelected={selectedDiaryIds.includes(diary.diaryId)}
                       onSelect={() => handleDiarySelect(diary.diaryId)}
-                      onClick={() => {
-                        if (!isEditMode) {
-                          navigate(
-                            `/archive/${archiveId}/diary/${diary.diaryId}`
-                          );
-                        }
-                      }}
+                      onClick={() =>
+                        navigate(`/archive/${archiveId}/diary/${diary.diaryId}`)
+                      }
                     />
                   ))}
                 </div>
