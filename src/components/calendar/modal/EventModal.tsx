@@ -4,7 +4,7 @@ import Sports from "./Sports";
 import Sticker from "./Sticker";
 import type { CreateEventRequest, LabelData, UpdateEventRequest } from "@/types/calendar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { patchCalendar, postCalendar } from "@/apis/mutations/calendar/Calendar";
+import { PatchCalendar, PostCalendar } from "@/apis/mutations/calendar/Calendar";
 
 type ModalType = true | false | null;
 
@@ -30,7 +30,7 @@ const EventModal = ({
 
   // ✅ 일정 생성 mutation
   const createEventMutation = useMutation({
-    mutationFn: (body: CreateEventRequest) => postCalendar(archiveId, body),
+    mutationFn: (body: CreateEventRequest) => PostCalendar(archiveId, body),
     onSuccess: () => {
       // TODO: 월별 일정 refetch 필요하면 여기서 invalidateQueries
       queryClient.invalidateQueries({ queryKey: ["monthlyEvents", archiveId] });
@@ -44,7 +44,7 @@ const EventModal = ({
 
   // ✅ 일정 수정 mutation
   const updateEventMutation = useMutation({
-    mutationFn: (body: UpdateEventRequest) => patchCalendar(editData?.id as number, body),
+    mutationFn: (body: UpdateEventRequest) => PatchCalendar(editData?.id as number, body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["monthlyEvents", archiveId] });
       onClose();

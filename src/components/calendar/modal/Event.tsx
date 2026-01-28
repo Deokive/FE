@@ -33,13 +33,19 @@ const Event = ({ onClose, startDate, editData, onSubmit }: EventProps) => {
       return;
     }
 
-    // ✅ 로컬 시간대 기준으로 YYYY-MM-DD 형식 만들기
+    // ✅ 로컬 기준 날짜 문자열
     const year = dateData.startDate.getFullYear();
     const month = String(dateData.startDate.getMonth() + 1).padStart(2, "0");
     const day = String(dateData.startDate.getDate()).padStart(2, "0");
     const date = `${year}-${month}-${day}`;
 
-    const time = dateData.isAllDay ? undefined : editData?.time ?? "00:00";
+    // ✅ 로컬 기준 시간 문자열 (하루종일이 아니면)
+    let time: string | undefined;
+    if (!dateData.isAllDay) {
+      const hours = String(dateData.startDate.getHours()).padStart(2, "0");
+      const minutes = String(dateData.startDate.getMinutes()).padStart(2, "0");
+      time = `${hours}:${minutes}`;
+    }
 
     const body: Omit<CreateEventRequest, "isSportType"> = {
       title: eventTitle || "무제 일정",
@@ -48,10 +54,9 @@ const Event = ({ onClose, startDate, editData, onSubmit }: EventProps) => {
       hasTime: !dateData.isAllDay,
       color,
       hashtags: tags,
-      // sportInfo 없음
     };
 
-    onSubmit(body);  // ✅ 부모로 전달
+    onSubmit(body);
   };
 
   return (

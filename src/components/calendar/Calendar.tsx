@@ -8,6 +8,8 @@ import AdditionalModal from "./modal/AdditionalModal";
 import EventModal from "./modal/EventModal";
 import type { LabelData } from "@/types/calendar";
 import EventListModal from "./modal/EventListModal";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { DeleteCalendar } from "@/apis/mutations/calendar/Calendar";
 
 interface CalendarProps {
   archiveId: number; //아카이브 ID
@@ -32,6 +34,32 @@ const Calendar = ({
   mode = "interactive",
 }: CalendarProps) => {
   const isReadonly = mode === "readonly";
+
+  // 컴포넌트 안
+  const queryClient = useQueryClient();
+
+  const deleteEventsMutation = useMutation({
+    mutationFn: async (ids: number[]) => {
+      await Promise.all(ids.map((id) => DeleteCalendar(id)));
+    },
+    onSuccess: () => {
+      // ✅ 이 아카이브의 월별 이벤트 쿼리 전부 리패치
+      queryClient.invalidateQueries({
+        queryKey: ["monthlyEvents", archiveId],
+        exact: false,
+      });
+    },
+    onError: (error) => {
+      console.error("이벤트 삭제 실패:", error);
+      alert("이벤트 삭제에 실패했습니다. 다시 시도해주세요.");
+    },
+  });
+
+  // EventListModal에 넘길 핸들러
+  const handleDeleteEvents = (targets: LabelData[]) => {
+    const ids = targets.map((t) => t.id);
+    deleteEventsMutation.mutate(ids);
+  };
 
   // 피그마처럼 초기에는 선택(Active) 상태가 없도록 null로 시작
   const [value, onChange] = useState<Value>(null);
@@ -382,6 +410,7 @@ const Calendar = ({
           onClose={() => setIsEventListModalOpen(false)}
           date={clickDate}
           label={selectedDateEvents}
+          onDelete={handleDeleteEvents}
         />
       )}
     </div>
