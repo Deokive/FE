@@ -1,14 +1,15 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import EmptyList from "@/components/archive/Empty/EmptyList";
-import DiaryList from "@/components/archive/List/DiaryList";
+import DiaryCard from "@/components/common/Card/DiaryCard";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import Pagination from "@/components/common/Pagination";
-import { diaryDataMock } from "@/mockData/diaryData";
+import { useGetDiaryBook } from "@/apis/queries/diary/useGetDiary";
 import { Pencil, Plus, X, Trash2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const DiaryPage = () => {
   const params = useParams();
+  const archiveId = Number(params.archiveId);
   const navigate = useNavigate();
 
   // ✅ 편집 모드 상태
@@ -18,22 +19,21 @@ const DiaryPage = () => {
   const [selectedDiaryIds, setSelectedDiaryIds] = useState<number[]>([]);
 
   // ✅ 페이지네이션 상태
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const pageSize = 9;
 
-  // ✅ 전체 다이어리 필터링 => 추후에 실제 API와 연동
-  const allDiary = diaryDataMock.filter(
-    (diary) => diary.archiveId === Number(params.id)
-  );
+  // ✅ API로 다이어리북 데이터 가져오기
+  const { data, isLoading } = useGetDiaryBook({
+    archiveId,
+    page,
+    size: pageSize,
+  });
 
-  // ✅ 현재 페이지에 해당하는 다이어리만 추출
-  const currentPageDiary = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    const end = start + pageSize;
-    return allDiary.slice(start, end);
-  }, [allDiary, page, pageSize]);
+  const diaryList = data?.content ?? [];
+  const totalItems = data?.page?.totalElements ?? 0;
+  const diaryBookTitle = data?.title ?? "덕질 일기";
 
-  // ✅ 페이지 변경 시 스크롤 맨 위로
+  // ✅ 페이지 변경 시 스크롤 맨 위로 (1-based로 변환해서 표시)
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page]);
@@ -45,9 +45,9 @@ const DiaryPage = () => {
     }
   }, [isEditMode]);
 
-  // ✅ 페이지 변경 핸들러
+  // ✅ 페이지 변경 핸들러 (Pagination은 1-based, API는 0-based)
   const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+    setPage(newPage - 1);
   };
 
   // ✅ 편집 모드 토글
@@ -86,9 +86,9 @@ const DiaryPage = () => {
     <div className="flex flex-col items-center justify-center">
       <div className="max-w-[1920px] mx-auto flex flex-col items-start mt-15 gap-15">
         <div className="w-310 flex flex-col gap-15">
-          <p className="w-full typo-h1 text-color-highest">일기 제목</p>
+          <p className="w-full typo-h1 text-color-highest">{diaryBookTitle}</p>
 
-          {allDiary.length > 0 ? (
+          {diaryList.length > 0 ? (
             <div className="w-full flex flex-col gap-10">
               {/* 버튼 영역 */}
               <div className="w-full flex justify-end gap-4">
@@ -113,9 +113,7 @@ const DiaryPage = () => {
                     <BtnIcon
                       startIcon={<Plus className="w-6 h-6 text-color-high" />}
                       onClick={() => {
-                        if (params.id) {
-                          navigate(`/archive/${params.id}/diary/new`);
-                        }
+                        navigate(`/archive/${archiveId}/diary/new`);
                       }}
                     >
                       일기 추가
@@ -130,22 +128,38 @@ const DiaryPage = () => {
                 )}
               </div>
 
-              {/* ✅ 편집 모드와 선택 상태 전달 */}
-              <DiaryList
-                diary={currentPageDiary}
-                isEditMode={isEditMode}
-                selectedIds={selectedDiaryIds}
-                onSelect={handleDiarySelect}
-              />
+              {/* ✅ DiaryCard 목록 */}
+              <div className="w-full flex flex-col items-start gap-[60px]">
+                <div className="flex flex-wrap items-start justify-between gap-[80px]">
+                  {diaryList.map((diary) => (
+                    <DiaryCard
+                      key={diary.diaryId}
+                      archiveId={archiveId}
+                      diaryId={diary.diaryId}
+                      title={diary.title}
+                      image={diary.thumbnailUrl ?? undefined}
+                      date={diary.recordedAt}
+                      isEditMode={isEditMode}
+                      isSelected={selectedDiaryIds.includes(diary.diaryId)}
+                      onSelect={() => handleDiarySelect(diary.diaryId)}
+                      onClick={() => {
+                        if (!isEditMode) {
+                          navigate(`/archive/${archiveId}/diary/${diary.diaryId}`);
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
 
               {/* 페이지네이션 */}
-              {allDiary.length > pageSize && (
+              {totalItems > pageSize && (
                 <div className="flex justify-center pt-5 pb-15">
                   <Pagination
-                    totalItems={allDiary.length}
+                    totalItems={totalItems}
                     pageSize={pageSize}
                     visiblePages={5}
-                    currentPage={page}
+                    currentPage={page + 1}
                     onChange={handlePageChange}
                   />
                 </div>
@@ -157,9 +171,7 @@ const DiaryPage = () => {
               description="아직 작성된 일기가 없어요."
               className="w-full h-135"
               onClick={() => {
-                if (params.id) {
-                  navigate(`/archive/${params.id}/diary/new`);
-                }
+                navigate(`/archive/${archiveId}/diary/new`);
               }}
             />
           )}
