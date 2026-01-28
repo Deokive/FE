@@ -199,6 +199,7 @@ const ArchiveDetail = () => {
                 navigate(`/archive/${archiveId}/diary`);
               }}
               isMore={(archivedData?.Diary?.length ?? 0) > 0}
+              isEditable={archive?.isOwner}
             />
             {archivedData?.Diary?.length ?? 0 > 0 ? (
               <DiaryList diary={archivedData?.Diary} limit={3} />
@@ -219,6 +220,7 @@ const ArchiveDetail = () => {
                 navigate(`/archive/${archiveId}/gallery`);
               }}
               isMore={(archivedData?.Gallery?.length ?? 0) > 0}
+              isEditable={archive?.isOwner}
             />
             {archivedData?.Gallery?.length ?? 0 > 0 ? (
               <GalleryList gallery={archivedData?.Gallery} />
@@ -241,6 +243,7 @@ const ArchiveDetail = () => {
                 navigate(`/archive/${archiveId}/ticket-book`);
               }}
               isMore={hasTickets}
+              isEditable={archive?.isOwner}
             />
             {hasTickets ? (
               <TicketList ticket={archivedData?.Ticket} />
@@ -262,6 +265,7 @@ const ArchiveDetail = () => {
                 navigate(`/archive/${archiveId}/repost`);
               }}
               isMore={(archivedData?.Repost?.length ?? 0) > 0}
+              isEditable={archive?.isOwner}
             />
             {archivedData?.Repost?.length ?? 0 > 0 ? (
               <RepostList repost={archivedData?.Repost} />

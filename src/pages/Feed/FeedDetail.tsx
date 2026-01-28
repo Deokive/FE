@@ -103,6 +103,7 @@ const FeedDetail = () => {
             navigate(`/archive/${archiveId}/gallery`);
           }}
           isMore={(gallery.length ?? 0) > 0}
+          isEditable={false}
         />
         {gallery.length ?? 0 > 0 ? (
           <GalleryList gallery={gallery} />
@@ -117,6 +118,7 @@ const FeedDetail = () => {
             navigate(`/archive/${archiveId}/ticket-book`);
           }}
           isMore={(ticket.length ?? 0) > 0}
+          isEditable={false}
         />
         {ticket.length ?? 0 > 0 ? (
           <TicketList ticket={ticket} />
@@ -131,6 +133,7 @@ const FeedDetail = () => {
             navigate(`/archive/${archiveId}/repost`);
           }}
           isMore={(repost.length ?? 0) > 0}
+          isEditable={false}
         />
         {repost.length ?? 0 > 0 ? (
           <RepostList repost={repost} />
