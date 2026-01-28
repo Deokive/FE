@@ -1,4 +1,9 @@
+import type { Visibility } from "@/enums/visibilty";
 import type { FileCompleteResponse } from "./file";
+import type {
+  DefaultPaginationRequest,
+  DefaultPaginationResponse,
+} from "./pagination";
 
 type file = {
   fileId: number;
@@ -6,25 +11,61 @@ type file = {
   sequence: number;
 };
 
-//다이어리 생성 요청 타입
-export type CreateDiaryRequest = {
+type DiaryId = {
+  diaryId: number;
+};
+
+type ArchiveId = {
+  archiveId: number;
+};
+
+type DefaultDiaryResponse = {
+  id: number;
   title: string;
   content: string;
   recordedAt: string;
   color: string;
-  visibility: string;
-  files: file[];
+  visibility: Visibility;
+  diaryBookId: number;
+  createdBy: number;
+  files: FileCompleteResponse[];
 };
 
-// ✅ 일기 상세 조회 응답 타입
-export type DiaryDetailResponse = {
-  id: number;
+type DefaultDiaryRequest = {
   title: string;
   content: string;
-  recordedAt: string; // "2026-01-17" 형식
+  recordedAt: string;
   color: string;
-  visibility: "PUBLIC" | "PRIVATE";
+  visibility: Visibility;
+  files?: file[];
+};
+
+type DiaryBookContent = {
+  diaryId: number;
+  title: string;
+  thumbnailUrl: string | null;
+  recordedAt: string;
+  visibility: Visibility;
+};
+
+export type AddDiaryRequest = ArchiveId & DefaultDiaryRequest;
+export type AddDiaryResponse = DefaultDiaryResponse;
+export type GetDiaryRequest = DiaryId;
+export type GetDiaryResponse = DefaultDiaryResponse;
+export type DeleteDiaryRequest = DiaryId;
+export type DeleteDiaryResponse = void;
+export type UpdateDiaryRequest = DiaryId & Partial<DefaultDiaryRequest>;
+export type UpdateDiaryResponse = DefaultDiaryResponse;
+export type GetDiaryBookRequest = ArchiveId & DefaultPaginationRequest;
+export type GetDiaryBookResponse = {
+  title: string;
+  content: DiaryBookContent[];
+  page: DefaultPaginationResponse;
+};
+export type UpdateDiaryBookRequest = ArchiveId & {
+  title: string;
+};
+export type UpdateDiaryBookResponse = {
   diaryBookId: number;
-  createdBy: number; // ✅ 작성자 ID
-  files: FileCompleteResponse[];
+  updatedTitle: string;
 };
