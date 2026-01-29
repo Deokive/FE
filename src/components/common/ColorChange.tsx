@@ -54,8 +54,8 @@ const ColorChange = ({
             <div
               key={color.color}
               className={`w-10 h-10 rounded-full cursor-pointer ${selectedColor?.color === color.color
-                  ? "border-5 border-border-mid"
-                  : ""
+                ? "border-5 border-border-mid"
+                : ""
                 }`}
               style={{ backgroundColor: color.color }}
               onClick={() => {

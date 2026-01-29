@@ -25,7 +25,7 @@ const Event = ({ onClose, startDate, editData, onSubmit }: EventProps) => {
     isAllDay: editData ? !editData.hasTime : false,
   });
   const [tags, setTags] = useState<string[]>(editData?.hashtags || []);
-  const [color, setColor] = useState<string>(editData?.color || "");
+  const [color, setColor] = useState<string>(editData?.color || "#82BEF5"); // 기본 파란색
 
   const handleConfirm = () => {
     if (!dateData.startDate) {

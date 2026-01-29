@@ -33,7 +33,7 @@ const Sports = ({ onClose, startDate, editData, onSubmit }: SportsProps) => {
   });
 
   const [tags, setTags] = useState<string[]>(editData?.hashtags || []);
-  const [color, setColor] = useState<string>(editData?.color || "");
+  const [color, setColor] = useState<string>(editData?.color || "#82BEF5"); // 기본 파란색
   const [scoreData, setScoreData] = useState<ScoreData>({
     teamName: editData?.sportInfo?.team1 || "",
     score: editData?.sportInfo?.score1 || 0,
