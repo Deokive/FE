@@ -72,7 +72,7 @@ const Home = () => {
             />
             <div className="w-full flex gap-20 ">
               <ArchiveCard
-                title="아카이브 만들기"
+                title="덕카이브 만들기"
                 image={undefined}
                 isCreateMode={true}
                 onClick={() => {
