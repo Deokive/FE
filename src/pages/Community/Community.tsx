@@ -152,7 +152,7 @@ const Community = () => {
                         mapCategoryToLabel(post.category) ?? post.category
                       }
                       categoryValue={post.category}
-                      content={""}
+                      content={post.summary ?? ""}
                       img={post.thumbnailUrl ?? undefined}
                       onClick={() => navigate(`/community/${post.postId}`)}
                       onClickShare={() => handleShare(post.postId)}
