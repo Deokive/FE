@@ -1,13 +1,41 @@
+import { CreateArchive } from "@/apis/mutations/archive/archive";
 import { GetArchiveFeed } from "@/apis/queries/archive/getArchive";
+import { getPosts } from "@/apis/queries/community/getPost";
+import ArchiveCard from "@/components/archive/ArchiveCard";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
+import CommunityCard from "@/components/community/CommunityCard";
 import FeedCard from "@/components/feed/FeedCard";
 import { Sort } from "@/enums/sort";
-import { useQuery } from "@tanstack/react-query";
+import { archiveDataMock } from "@/mockData/archiveData";
+import { Visibility, type CreateArchiveRequest } from "@/types/archive";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+
   const navigate = useNavigate();
 
+  const sampleArchiveData = archiveDataMock.slice(0, 2);
+
+  const createArchiveMutation = useMutation({
+    mutationFn: (data: CreateArchiveRequest) => CreateArchive(data),
+    onSuccess: (data) => {
+      console.log("createArchive success");
+      navigate(`/archive/${data.id}`);
+    },
+    onError: (error) => {
+      console.log("createArchive error", error);
+      alert("아카이브 생성에 실패했습니다. 다시 시도해주세요.");
+    },
+  });
+
+  const handleCreateArchive = () => {
+    createArchiveMutation.mutate({
+      title: "아카이브명",
+      visibility: Visibility.PUBLIC,
+      bannerImageId: null,
+    });
+  };
   const { data: hotFeedData } = useQuery({
     queryKey: ["hotFeed"],
     queryFn: () => GetArchiveFeed({
@@ -17,9 +45,18 @@ const Home = () => {
       direction: "DESC",
     })
   });
+  const { data: hotCommunityData } = useQuery({
+    queryKey: ["hotCommunity"],
+    queryFn: () => getPosts({
+      page: 0,
+      size: 3,
+      sortBy: "hotScore",
+      direction: "DESC",
+    })
+  });
+
 
   const hotFeed = hotFeedData?.content ?? [];
-  console.log(hotFeed);
   return (
     <div className="flex flex-col items-center justify-center my-15">
       <div className="max-w-[1920px] mx-auto flex flex-col items-center gap-[60px]">
@@ -28,11 +65,34 @@ const Home = () => {
             {/* 아카이브 만들기 */}
             <ArchiveTitle
               title="아카이브 만들기"
-              isEditable={true}
+              isEditable={false}
               onClick={() => {
                 navigate("/archive");
               }}
             />
+            <div className="w-full flex gap-20 ">
+              <ArchiveCard
+                title="아카이브 만들기"
+                image={undefined}
+                isCreateMode={true}
+                onClick={() => {
+                  handleCreateArchive();
+                }}
+              />
+              {sampleArchiveData.map((sampleArchive) => (
+                <ArchiveCard
+                  key={sampleArchive.archiveId}
+                  archiveId={sampleArchive.archiveId}
+                  image={sampleArchive.bannerUrl}
+                  isEditMode={false}
+                  title={sampleArchive.title}
+                  onClick={() => {
+                    navigate(`/archive/${sampleArchive.archiveId}`);
+                  }}
+                />
+              ))}
+            </div>
+
             {/* 지금 핫한 피드 */}
             <ArchiveTitle
               title="지금 핫한 피드"
@@ -63,6 +123,20 @@ const Home = () => {
                 navigate("/community");
               }}
             />
+            <div className="w-full flex gap-20 ">
+              {hotCommunityData?.content.map((hotCommunity) => (
+                <CommunityCard
+                  key={hotCommunity.postId}
+                  title={hotCommunity.title}
+                  img={hotCommunity.thumbnailUrl ?? undefined}
+                  categoryLabel={hotCommunity.category}
+                  content={hotCommunity.summary}
+                  onClick={() => {
+                    navigate(`/community/${hotCommunity.postId}`);
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

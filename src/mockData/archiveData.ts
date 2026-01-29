@@ -6,8 +6,8 @@ import { repostDataMock } from "./repostData";
 
 export const archiveDataMock = [
   {
-    archiveId: 1,
-    userId: 1,
+    archiveId: 9999,
+    userId: 9999,
     title: "나의 첫 아카이브",
     bannerUrl: banner,
     image: "https://picsum.photos/201/300",
@@ -19,14 +19,14 @@ export const archiveDataMock = [
     ownerNickname: "홍길동",
     badge: "덕카이브",
     liked: false,
-    Diary: diaryDataMock.filter((diary) => diary.archiveId === 1) ?? [],
-    Gallery: galleryDataMock.filter((gallery) => gallery.archiveId === 1) ?? [],
-    Ticket: ticketDataMock.filter((ticket) => ticket.archiveId === 1) ?? [],
-    Repost: repostDataMock.filter((repost) => repost.archiveId === 1) ?? [],
+    Diary: diaryDataMock.filter((diary) => diary.archiveId === 9999) ?? [],
+    Gallery: galleryDataMock.filter((gallery) => gallery.archiveId === 9999) ?? [],
+    Ticket: ticketDataMock.filter((ticket) => ticket.archiveId === 9999) ?? [],
+    Repost: repostDataMock.filter((repost) => repost.archiveId === 9999) ?? [],
   },
   {
-    archiveId: 2,
-    userId: 1,
+    archiveId: 9998,
+    userId: 9998,
     title: "나의 두번째 아카이브",
     bannerUrl: "https://picsum.photos/1920/200",
     image: "https://picsum.photos/202/300",

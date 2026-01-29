@@ -6,6 +6,7 @@ export type PostItem = {
   postId: number;
   title: string;
   category: string;
+  summary: string;
   thumbnailUrl?: string | null;
   writerNickname?: string;
   likeCount?: number;
@@ -25,7 +26,7 @@ type GetPostsOptions = {
   page?: number;
   size?: number;
   category?: string;
-  sortBy?: "newest" | "popular" | "like";
+  sortBy?: "newest" | "popular" | "like" | "hotScore";
   direction?: "ASC" | "DESC";
 };
 
@@ -36,6 +37,8 @@ function mapSortOption(sortBy?: string) {
       return { sort: "viewCount", direction: "DESC" };
     case "like":
       return { sort: "likeCount", direction: "DESC" };
+    case "hotScore":
+      return { sort: "hotScore", direction: "DESC" };
     case "newest":
     default:
       return { sort: "createdAt", direction: "DESC" };
