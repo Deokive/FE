@@ -38,10 +38,10 @@ export const archiveDataMock = [
     ownerNickname: "홍길동",
     badge: "덕카이브",
     liked: false,
-    Diary: diaryDataMock.filter((diary) => diary.archiveId === 2) ?? [],
-    Gallery: galleryDataMock.filter((gallery) => gallery.archiveId === 2) ?? [],
-    Ticket: ticketDataMock.filter((ticket) => ticket.archiveId === 2) ?? [],
-    Repost: repostDataMock.filter((repost) => repost.archiveId === 2) ?? [],
+    Diary: diaryDataMock.filter((diary) => diary.archiveId === 9998) ?? [],
+    Gallery: galleryDataMock.filter((gallery) => gallery.archiveId === 9998) ?? [],
+    Ticket: ticketDataMock.filter((ticket) => ticket.archiveId === 9998) ?? [],
+    Repost: repostDataMock.filter((repost) => repost.archiveId === 9998) ?? [],
   },
 
 ];
