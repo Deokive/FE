@@ -130,7 +130,7 @@ const Home = () => {
                   title={hotCommunity.title}
                   img={hotCommunity.thumbnailUrl ?? undefined}
                   categoryLabel={hotCommunity.category}
-                  content={hotCommunity.summary}
+                  content={hotCommunity.summary ?? "게시글 내용"}
                   onClick={() => {
                     navigate(`/community/${hotCommunity.postId}`);
                   }}
