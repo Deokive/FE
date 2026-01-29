@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { stickerDataMock } from "@/mockData/calendarData";
 import { diaryDataMock } from "@/mockData/diaryData";
 import { galleryDataMock } from "@/mockData/galleryData";
 import { ticketDataMock } from "@/mockData/ticketData";

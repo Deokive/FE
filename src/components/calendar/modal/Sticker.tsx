@@ -15,7 +15,6 @@ import MusicalNoteSticker from "@/assets/icon/sticker/musical_note.svg";
 import MoneySticker from "@/assets/icon/sticker/money.svg";
 import DisplayBoardSticker from "@/assets/icon/sticker/display_board.svg";
 import BaseballSticker from "@/assets/icon/sticker/baseball.svg";
-import type { StickerResponse } from "@/types/calendar";
 
 type StickerProps = {
   onClose: () => void;

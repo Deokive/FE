@@ -10,9 +10,6 @@ import TicketList from "@/components/archive/List/TicketList";
 import Calendar from "@/components/calendar/Calendar";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
-import {
-  stickerDataMock
-} from "@/mockData/calendarData";
 import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

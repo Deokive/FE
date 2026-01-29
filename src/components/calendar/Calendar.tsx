@@ -31,7 +31,7 @@ interface CalendarProps {
   /** 날짜별 스티커 데이터 (키: "YYYY-MM-DD" 형식, 값: 스티커 ID 또는 식별자) */
   stickerData?: StickerResponse[];
   /** 스티커 이미지 URL (스티커 영역에 표시할 이미지) */
-  stickerType?: StickerType;
+  // stickerType?: StickerType;
   /** 아카이브 ID */
   archiveId?: number;
   mode?: "interactive" | "readonly";
@@ -45,7 +45,7 @@ const Calendar = ({
   archiveId,
   labelData,
   stickerData,
-  stickerType,
+  // stickerType,
   mode = "interactive",
 }: CalendarProps) => {
   const isReadonly = mode === "readonly";
