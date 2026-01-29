@@ -127,6 +127,7 @@ const Calendar = ({
   const [stickerOptionModalOpen, setStickerOptionModalOpen] = useState(false);
   const [stickerOptionPos, setStickerOptionPos] = useState<{ x: number; y: number } | null>(null);
   const [selectedSticker, setSelectedSticker] = useState<StickerResponse | null>(null);
+  const [editStickerData, setEditStickerData] = useState<StickerResponse | null>(null);
 
   const calendarRootRef = useRef<HTMLDivElement | null>(null); // ✅ 추가
 
@@ -490,17 +491,20 @@ const Calendar = ({
             position: "absolute",
             left: 0,
             top: 0,
-            zIndex: 999999, // ✅ 최상단
+            zIndex: 999999,
           }}
         >
-          {/* 이벤트 등록 모달 */}
           <EventModal
             archiveId={archiveId}
             open={eventModalOpen}
-            onClose={() => setEventModalOpen(false)}
+            onClose={() => {
+              setEventModalOpen(false);
+              setEditStickerData(null); // ✅ 모달 닫을 때 초기화
+            }}
             type={eventModalType}
             startDate={clickDate}
             editData={editLabelData}
+            editStickerData={editStickerData} // ✅ 추가
           />
         </div>
       )}
@@ -513,7 +517,7 @@ const Calendar = ({
           onDelete={handleDeleteEvents}
         />
       )}
-      {/* 스티커 옵션 모달 */}
+   // StickerOptionModal의 onEdit 핸들러 수정
       {stickerOptionModalOpen && stickerOptionPos && (
         <div
           style={{
@@ -532,7 +536,8 @@ const Calendar = ({
               setSelectedSticker(null);
             }}
             onEdit={() => {
-              // 스티커 편집 모달 열기
+              // ✅ 스티커 편집 모달 열기
+              setEditStickerData(selectedSticker); // 선택된 스티커 데이터 전달
               setEventModalType(null); // 스티커 타입
               setEventModalOpen(true);
               setClickDate(selectedSticker ? new Date(selectedSticker.date) : null);

@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import Event from "./Event";
 import Sports from "./Sports";
 import Sticker from "./Sticker";
-import type { CreateEventRequest, LabelData, UpdateEventRequest } from "@/types/calendar";
+import type { CreateEventRequest, LabelData, StickerResponse, UpdateEventRequest } from "@/types/calendar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PatchCalendar, PostCalendar } from "@/apis/mutations/calendar/Calendar";
+import { PatchCalendar, PostCalendar, PostSticker, UpdateSticker } from "@/apis/mutations/calendar/Calendar";
+import type { StickerType } from "@/enums/sticker";
 
 type ModalType = true | false | null;
 
@@ -16,6 +17,7 @@ interface EventModalProps {
   type: ModalType;
   startDate: Date | null;
   editData?: LabelData | null;
+  editStickerData?: StickerResponse | null; // ✅ 스티커 수정 데이터 추가
 }
 
 const EventModal = ({
@@ -25,9 +27,11 @@ const EventModal = ({
   type,
   startDate,
   editData,
+  editStickerData,
 }: EventModalProps) => {
   const queryClient = useQueryClient();
   const isEditMode = !!editData && editData.id != null;
+  const isStickerEditMode = !!editStickerData && editStickerData.id != null; // ✅ 스티커 수정 모드
 
   // ✅ 일정 생성 mutation
   const createEventMutation = useMutation({
@@ -55,6 +59,32 @@ const EventModal = ({
       alert("일정 수정에 실패했습니다. 다시 시도해주세요.");
     },
   });
+  // ✅ 스티커 생성 mutation 추가
+  const createStickerMutation = useMutation({
+    mutationFn: (body: { date: string; stickerType: StickerType }) =>
+      PostSticker(archiveId as number, body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["monthlyStickers", archiveId] });
+      onClose();
+    },
+    onError: (error) => {
+      console.error("스티커 생성 실패:", error);
+      alert("스티커 생성에 실패했습니다. 다시 시도해주세요.");
+    },
+  });
+  // ✅ 스티커 수정 mutation 추가
+  const updateStickerMutation = useMutation({
+    mutationFn: (body: { date: string; stickerType: StickerType }) =>
+      UpdateSticker(editStickerData?.id as number, body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["monthlyEvents", archiveId] });
+      onClose();
+    },
+    onError: (error) => {
+      console.error("스티커 수정 실패:", error);
+      alert("스티커 수정에 실패했습니다. 다시 시도해주세요.");
+    },
+  });
 
   // ✅ 자식에서 보내주는 기본 데이터 + 여기서 isSportType만 세팅
   const handleSubmit = (base: Omit<CreateEventRequest, "isSportType">) => {
@@ -69,6 +99,30 @@ const EventModal = ({
     } else {
       // 새로 등록할 때
       createEventMutation.mutate(payload);
+    }
+  };
+  // ✅ 스티커 제출 핸들러 - 생성/수정 분기 처리
+  const handleStickerSubmit = (stickerType: StickerType) => {
+    if (!startDate && !editStickerData) {
+      alert("날짜를 선택해주세요.");
+      return;
+    }
+
+    // 날짜를 YYYY-MM-DD 형식으로 변환
+    const dateToUse = editStickerData ? new Date(editStickerData.date) : startDate!;
+    const year = dateToUse.getFullYear();
+    const month = String(dateToUse.getMonth() + 1).padStart(2, "0");
+    const day = String(dateToUse.getDate()).padStart(2, "0");
+    const date = `${year}-${month}-${day}`;
+
+    const body = { date, stickerType };
+
+    if (isStickerEditMode) {
+      // 스티커 수정
+      updateStickerMutation.mutate(body);
+    } else {
+      // 스티커 생성
+      createStickerMutation.mutate(body);
     }
   };
 
@@ -115,7 +169,7 @@ const EventModal = ({
         {type === true && (
           <Sports onClose={onClose} startDate={startDate} editData={editData} onSubmit={handleSubmit} />
         )}
-        {type === null && <Sticker onClose={onClose} />}
+        {type === null && <Sticker onClose={onClose} date={startDate} onSubmit={handleStickerSubmit} initialSticker={editStickerData?.stickerType} />}
       </div>
     </div>
   );
