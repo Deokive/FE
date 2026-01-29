@@ -10,34 +10,17 @@ import type {
   PostDetailDto,
   PostFileDto,
 } from "@/apis/queries/community/getDetailPost";
-
-const mockComments = [
-  {
-    id: "c1",
-    authorId: "u1",
-    authorName: "닉네임1",
-    text: "첫 댓글입니다",
-    createdAt: "2025.01.01",
-    replies: [
-      {
-        id: "r1",
-        authorId: "u2",
-        authorName: "닉네임2",
-        text: "답글입니다",
-        createdAt: "2025.01.02",
-      },
-    ],
-  },
-];
-
-const currentUser = {
-  id: "u3",
-  nickname: "테스트",
-  avatarUrl: "undefiend",
-};
+import { useAuthStore } from "@/store/useAuthStore";
+import type { User } from "@/types/user";
 
 export default function CommunityDetail() {
-  // const { postId } = useParams();
+  const rawUser = useAuthStore((s) => s.user);
+  const currentUser: User | null = rawUser
+    ? {
+        id: String(rawUser.id),
+        nickname: rawUser.nickname ?? null,
+      }
+    : null;
 
   const CONTAINER_WIDTH = 1240;
 
@@ -48,9 +31,6 @@ export default function CommunityDetail() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // 임시: 서버에서 가져올 댓글 구조가 다르면 여기에 맞추기
-  // const [comments, setComments] = useState<any[]>([]);
-
   useEffect(() => {
     if (!postId) return;
     const load = async () => {
@@ -59,9 +39,6 @@ export default function CommunityDetail() {
       try {
         const data = await fetchPostDetail(postId);
         setPost(data);
-
-        // 서버가 댓글을 함께 주지 않으면 별도 API로
-        // setComments(data.comments ?? []);
       } catch (e: any) {
         console.error("게시글 조회 실패", e);
         setError(e?.message || "게시글을 불러오지 못했습니다.");
@@ -175,8 +152,7 @@ export default function CommunityDetail() {
           </div>
           <CommentSection
             postId={post.id}
-            initialComments={mockComments}
-            currentUserId={currentUser.id}
+            currentUserId={currentUser?.id ?? null}
             currentUser={currentUser}
             initialLikeCount={post.likeCount ?? 0}
             initialIsLiked={post.isLiked ?? false}

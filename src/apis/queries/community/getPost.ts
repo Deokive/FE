@@ -6,6 +6,7 @@ export type PostItem = {
   postId: number;
   title: string;
   category: string;
+  summary?: string | null;
   thumbnailUrl?: string | null;
   writerNickname?: string;
   likeCount?: number;
