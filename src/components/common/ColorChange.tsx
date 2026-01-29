@@ -14,7 +14,8 @@ const ColorChange = ({
   onColorChange,
   className,
 }: ColorChangeProps) => {
-  // 초기값으로 선택된 색상 설정
+
+  // ✅ 초기값으로 선택된 색상 설정
   const [selectedColor, setSelectedColor] = useState<ColorData | null>(() => {
     if (initialColor) {
       return DIARY_COLORS.find((c) => c.color === initialColor.color) || null;
@@ -44,11 +45,10 @@ const ColorChange = ({
           {DIARY_COLORS.map((color) => (
             <div
               key={color.color}
-              className={`w-10 h-10 rounded-full cursor-pointer ${
-                selectedColor?.color === color.color
-                  ? "border-5 border-border-mid"
-                  : ""
-              }`}
+              className={`w-10 h-10 rounded-full cursor-pointer ${selectedColor?.color === color.color
+                ? "border-5 border-border-mid"
+                : ""
+                }`}
               style={{ backgroundColor: color.color }}
               onClick={() => {
                 handleColorChange(color);

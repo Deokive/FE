@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
 import { diaryDataMock } from "@/mockData/diaryData";
 import { galleryDataMock } from "@/mockData/galleryData";
 import { ticketDataMock } from "@/mockData/ticketData";
@@ -15,10 +14,10 @@ import { repostDataMock } from "@/mockData/repostData";
 import ButtonLike from "@/components/archive/ButtonLike";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import EmptyFeedList from "@/components/feed/EmptyFeedList";
-import type { LabelData } from "@/types/calendar";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
 import { LikeArchive } from "@/apis/mutations/archive/archive";
+import { getMonthlyEvents, getMonthlyStickers } from "@/apis/queries/calendar/Calendar";
 
 const FeedDetail = () => {
   const navigate = useNavigate();
@@ -26,6 +25,15 @@ const FeedDetail = () => {
   const urlParams = useParams();
   const archiveId = urlParams.id;
 
+  const { data: monthlyEvents } = useQuery({
+    queryKey: ["monthlyEvents", Number(archiveId)],
+    queryFn: () => getMonthlyEvents(Number(archiveId), new Date().getFullYear(), new Date().getMonth() + 1),
+  });
+
+  const { data: monthlyStickers } = useQuery({
+    queryKey: ["monthlyStickers", Number(archiveId)],
+    queryFn: () => getMonthlyStickers(Number(archiveId), new Date().getFullYear(), new Date().getMonth() + 1),
+  });
   const { data: feed } = useQuery({
     queryKey: ["feed", archiveId],
     queryFn: () => GetArchiveDetail(Number(archiveId)),
@@ -72,8 +80,8 @@ const FeedDetail = () => {
         />
         {/* 아카이브 달력 */}
         <Calendar
-          labelData={labelDataMock as unknown as LabelData[]}
-          stickerData={stickerDataMock}
+          labelData={monthlyEvents}
+          stickerData={monthlyStickers}
           mode="readonly"
         />
         {/* 덕질 일기 */}
@@ -98,6 +106,7 @@ const FeedDetail = () => {
             navigate(`/archive/${archiveId}/gallery`);
           }}
           isMore={(gallery.length ?? 0) > 0}
+          isEditable={false}
         />
         {(gallery.length ?? 0 > 0) ? (
           <GalleryList gallery={gallery} />
@@ -112,6 +121,7 @@ const FeedDetail = () => {
             navigate(`/archive/${archiveId}/ticket-book`);
           }}
           isMore={(ticket.length ?? 0) > 0}
+          isEditable={false}
         />
         {(ticket.length ?? 0 > 0) ? (
           <TicketList ticket={ticket} />
@@ -126,6 +136,7 @@ const FeedDetail = () => {
             navigate(`/archive/${archiveId}/repost`);
           }}
           isMore={(repost.length ?? 0) > 0}
+          isEditable={false}
         />
         {(repost.length ?? 0 > 0) ? (
           <RepostList repost={repost} />

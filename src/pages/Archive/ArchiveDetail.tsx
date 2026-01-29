@@ -10,8 +10,6 @@ import TicketList from "@/components/archive/List/TicketList";
 import Calendar from "@/components/calendar/Calendar";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
-import { labelDataMock, stickerDataMock } from "@/mockData/calendarData";
-import type { LabelData } from "@/types/calendar";
 import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -26,6 +24,7 @@ import { useFileUpload } from "@/hooks/useFileUpload";
 import { MediaRole } from "@/enums/mediaRole";
 import { useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
+import { getMonthlyEvents, getMonthlyStickers } from "@/apis/queries/calendar/Calendar";
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();
@@ -35,16 +34,28 @@ const ArchiveDetail = () => {
   const archiveIdNum = Number(archiveId);
   const queryClient = useQueryClient();
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // 월별 라벨 조회
+  const { data: monthlyEvents } = useQuery({
+    queryKey: ["monthlyEvents", archiveIdNum],
+    queryFn: () => getMonthlyEvents(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),
+  });
+  // 월별 스티커 조회
+  const { data: monthlyStickers } = useQuery({
+    queryKey: ["monthlyStickers", archiveIdNum],
+    queryFn: () => getMonthlyStickers(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),
+  });
+
 
   const uploadInProgressRef = useRef(false);
 
+  // 아카이브 상세 조회
   const { data: archive } = useQuery({
     queryKey: ["archive", archiveIdNum],
     queryFn: () => GetArchiveDetail(archiveIdNum),
     retry: false,
   });
 
+  // 아카이브 업데이트
   const updateArchiveMutation = useMutation({
     mutationFn: (data: UpdateArchiveRequest) =>
       UpdateArchive(Number(archiveId), data),
@@ -58,6 +69,7 @@ const ArchiveDetail = () => {
     },
   });
 
+  // 아카이브 삭제
   const deleteArchiveMutation = useMutation({
     mutationFn: () => DeleteArchive(archiveIdNum),
     onSuccess: () => {
@@ -72,6 +84,7 @@ const ArchiveDetail = () => {
     },
   });
 
+  // 아카이브 좋아요
   const likeArchiveMutation = useMutation({
     mutationFn: () => LikeArchive(archiveIdNum),
     onSuccess: (likedArchive) => {
@@ -181,8 +194,9 @@ const ArchiveDetail = () => {
           />
           {/* 아카이브 달력 */}
           <Calendar
-            labelData={labelDataMock as LabelData[]}
-            stickerData={stickerDataMock}
+            archiveId={archiveIdNum}
+            labelData={monthlyEvents}
+            stickerData={monthlyStickers}
             mode="interactive"
           />
           <div className="flex flex-col items-start justify-between gap-[60px] my-[60px]">
@@ -196,6 +210,7 @@ const ArchiveDetail = () => {
                 navigate(`/archive/${archiveId}/gallery`);
               }}
               isMore={(archivedData?.Gallery?.length ?? 0) > 0}
+              isEditable={archive?.isOwner}
             />
             {(archivedData?.Gallery?.length ?? 0 > 0) ? (
               <GalleryList gallery={archivedData?.Gallery} />
@@ -218,6 +233,7 @@ const ArchiveDetail = () => {
                 navigate(`/archive/${archiveId}/ticket-book`);
               }}
               isMore={hasTickets}
+              isEditable={archive?.isOwner}
             />
             {hasTickets ? (
               <TicketList ticket={archivedData?.Ticket} />
@@ -239,6 +255,7 @@ const ArchiveDetail = () => {
                 navigate(`/archive/${archiveId}/repost`);
               }}
               isMore={(archivedData?.Repost?.length ?? 0) > 0}
+              isEditable={archive?.isOwner}
             />
             {(archivedData?.Repost?.length ?? 0 > 0) ? (
               <RepostList repost={archivedData?.Repost} />

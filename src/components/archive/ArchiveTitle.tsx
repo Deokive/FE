@@ -4,22 +4,25 @@ interface ArchiveTitleProps {
   title?: string;
   onClick?: () => void;
   isMore?: boolean;
+  isEditable?: boolean;
 }
 
-const ArchiveTitle = ({ title, onClick, isMore = true }: ArchiveTitleProps) => {
+const ArchiveTitle = ({ title, onClick, isMore = true, isEditable = false }: ArchiveTitleProps) => {
   return (
     <div className="w-full flex flex-col items-start gap-[20px]">
       {/* 덕질일기 헤더부분 */}
       <div className="w-full flex gap-[10px] justify-between">
-        {/* <p className="flex-1 typo-h1 text-color-highest">{title}</p> */}
-        <EditableTitle
-          value={title ?? ""}
-          onSave={(next) => {
-            console.log("title", next);
-          }}
-          placeholder={title ?? ""}
-          maxLength={50}
-        />
+        {isEditable ? (
+          <EditableTitle
+            value={title ?? ""}
+            onSave={(next) => {
+              console.log("title", next);
+            }}
+            placeholder={title ?? ""}
+            maxLength={50}
+          />
+        ) : (<p className="flex-1 typo-h1 text-color-highest">{title}</p>)}
+
         {isMore && (
           <button
             onClick={onClick}
