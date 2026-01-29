@@ -20,6 +20,7 @@ const ArchiveTitle = ({ title, onClick, isMore = true, isEditable = false }: Arc
             }}
             placeholder={title ?? ""}
             maxLength={50}
+            className="flex-1"
           />
         ) : (<p className="flex-1 typo-h1 text-color-highest">{title}</p>)}
 
