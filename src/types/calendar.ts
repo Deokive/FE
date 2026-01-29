@@ -75,3 +75,8 @@ export type StickerResponse= {
   date: string;
   stickerType: StickerType;
 }
+
+export type CreateStickerRequest = {
+  date: string;
+  stickerType: StickerType;
+}

@@ -23,7 +23,7 @@ import { useFileUpload } from "@/hooks/useFileUpload";
 import { MediaRole } from "@/enums/mediaRole";
 import { useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import { getMonthlyEvents } from "@/apis/queries/calendar/Calendar";
+import { getMonthlyEvents, getMonthlyStickers } from "@/apis/queries/calendar/Calendar";
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();
@@ -35,20 +35,29 @@ const ArchiveDetail = () => {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // ✅ 추가
 
+  // 월별 라벨 조회
   const { data: monthlyEvents } = useQuery({
     queryKey: ["monthlyEvents", archiveIdNum],
     queryFn: () => getMonthlyEvents(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),
   });
+  // 월별 스티커 조회
+  const { data: monthlyStickers } = useQuery({
+    queryKey: ["monthlyStickers", archiveIdNum],
+    queryFn: () => getMonthlyStickers(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),
+  });
+
 
   // ✅ 업로드 중복 실행 방지
   const uploadInProgressRef = useRef(false);
 
+  // 아카이브 상세 조회
   const { data: archive } = useQuery({
     queryKey: ["archive", archiveIdNum],
     queryFn: () => GetArchiveDetail(archiveIdNum),
     retry: false,              // ✅ 404 나도 재시도하지 않기
   });
 
+  // 아카이브 업데이트
   const updateArchiveMutation = useMutation({
     mutationFn: (data: UpdateArchiveRequest) => UpdateArchive(Number(archiveId), data),
     onSuccess: (updatedArchive) => {
@@ -62,6 +71,7 @@ const ArchiveDetail = () => {
     },
   });
 
+  // 아카이브 삭제
   const deleteArchiveMutation = useMutation({
     mutationFn: () => DeleteArchive(archiveIdNum),
     onSuccess: () => {
@@ -80,6 +90,7 @@ const ArchiveDetail = () => {
     },
   });
 
+  // 아카이브 좋아요
   const likeArchiveMutation = useMutation({
     mutationFn: () => LikeArchive(archiveIdNum),
     onSuccess: (likedArchive) => {
@@ -187,7 +198,7 @@ const ArchiveDetail = () => {
             archiveId={archiveIdNum}
             // labelData={labelDataMock as LabelData[]}
             labelData={monthlyEvents}
-            stickerData={stickerDataMock}
+            stickerData={monthlyStickers}
             mode="interactive"
           />
           <div className="flex flex-col items-start justify-between gap-[60px] my-[60px]">
