@@ -7,4 +7,12 @@ export const queryKeys = {
     all: ["ticketBook"] as const,
     detail: (ticketBookId: number) => ["ticketBook", ticketBookId] as const,
   },
+  diary: {
+    all: ["diary"] as const,
+    detail: (diaryId: number) => ["diary", diaryId] as const,
+  },
+  diaryBook: {
+    all: ["diaryBook"] as const,
+    detail: (archiveId: number) => ["diaryBook", archiveId] as const,
+  },
 } as const;

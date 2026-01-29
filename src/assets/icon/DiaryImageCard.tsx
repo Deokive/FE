@@ -4,6 +4,7 @@ type Props = {
   ariaLabel?: string;
   ariaHidden?: boolean;
   onClick?: () => void;
+  color?: string;
 };
 
 const DiaryImageCard = ({
@@ -12,6 +13,7 @@ const DiaryImageCard = ({
   ariaLabel,
   ariaHidden = true,
   onClick,
+  color = "#99CCFF",
 }: Props) => {
   const style =
     typeof size === "number"
@@ -36,11 +38,11 @@ const DiaryImageCard = ({
           <g filter="url(#filter0_di_1002_28689)">
             <path
               d="M182.843 10.8381C180.896 9.57297 178.386 9.57298 176.438 10.8381L-11.5607 132.947C-16.4701 136.135 -14.2119 143.758 -8.35779 143.758L367.639 143.758C373.493 143.758 375.751 136.135 370.842 132.947L182.843 10.8381Z"
-              fill="#99CCFF"
+              fill={color}
             />
           </g>
         </g>
-        <path d="M0 125.398H360V329.398H0V125.398Z" fill="#82BEF5" />
+        <path d="M0 125.398H360V329.398H0V125.398Z" fill={color} />
         <g filter="url(#filter1_dd_1002_28689)">
           <rect
             width="360"
@@ -58,13 +60,13 @@ const DiaryImageCard = ({
           <g filter="url(#filter2_di_1002_28689)">
             <path
               d="M180 227.398L0 331.321V123.475L180 227.398Z"
-              fill="#99CCFF"
+              fill={color}
             />
           </g>
           <g filter="url(#filter3_di_1002_28689)">
             <path
               d="M180 227.398L360 331.321V123.475L180 227.398Z"
-              fill="#99CCFF"
+              fill={color}
             />
           </g>
         </g>
@@ -72,7 +74,7 @@ const DiaryImageCard = ({
           <g filter="url(#filter4_di_1002_28689)">
             <path
               d="M177.157 197.08C179.104 195.815 181.614 195.815 183.562 197.08L371.561 319.189C376.47 322.378 374.212 330 368.358 330H-7.63906C-13.4932 330 -15.7514 322.378 -10.8419 319.189L177.157 197.08Z"
-              fill="#99CCFF"
+              fill={color}
             />
           </g>
         </g>
