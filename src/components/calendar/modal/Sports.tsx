@@ -131,7 +131,10 @@ const Sports = ({ onClose, startDate, editData, onSubmit }: SportsProps) => {
             placeholder="스코어"
             value={scoreData.score}
             onChange={(e) =>
-              setScoreData({ ...scoreData, score: parseInt(e.target.value) })
+              setScoreData({
+                ...scoreData,
+                score: parseInt(e.target.value, 10) || 0
+              })
             }
           />
           {/* : */}
@@ -143,7 +146,10 @@ const Sports = ({ onClose, startDate, editData, onSubmit }: SportsProps) => {
             placeholder="스코어"
             value={scoreData.score2}
             onChange={(e) =>
-              setScoreData({ ...scoreData, score2: parseInt(e.target.value) })
+              setScoreData({
+                ...scoreData,
+                score2: parseInt(e.target.value, 10) || 0
+              })
             }
           />
           {/* 팀이름 */}
