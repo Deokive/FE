@@ -86,7 +86,9 @@ const Sticker = ({ onClose, date, onSubmit, initialSticker }: StickerProps) => {
         {Object.values(StickerType).map((stickerType) => (
           <button
             key={stickerType}
-            onClick={() => setSelectedSticker(stickerType)}
+            onClick={() => setSelectedSticker(
+              selectedSticker === stickerType ? null : stickerType
+            )}
             className={`
               w-25 h-25 rounded-2xl flex items-center justify-center
               transition-all cursor-pointer p-4
@@ -109,11 +111,7 @@ const Sticker = ({ onClose, date, onSubmit, initialSticker }: StickerProps) => {
       <div className="w-full flex justify-end">
         <BtnBasic
           onClick={handleConfirm}
-          className={
-            selectedSticker
-              ? "bg-brand-blue-500 text-white"
-              : "bg-surface-container-30"
-          }
+          disabled={!selectedSticker}
         >
           확인
         </BtnBasic>
