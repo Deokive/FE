@@ -198,33 +198,13 @@ const ArchiveDetail = () => {
           {/* 아카이브 달력 */}
           <Calendar
             archiveId={archiveIdNum}
-            // labelData={labelDataMock as LabelData[]}
             labelData={monthlyEvents}
             stickerData={monthlyStickers}
             mode="interactive"
           />
           <div className="flex flex-col items-start justify-between gap-[60px] my-[60px]">
             {/* 덕질 일기 */}
-            <ArchiveTitle
-              title="덕질 일기"
-              onClick={() => {
-                if (!archiveId) return;
-                navigate(`/archive/${archiveId}/diary`);
-              }}
-              isMore={(archivedData?.Diary?.length ?? 0) > 0}
-              isEditable={archive?.isOwner}
-            />
-            {archivedData?.Diary?.length ?? 0 > 0 ? (
-              <DiaryList diary={archivedData?.Diary} limit={3} />
-            ) : (
-              <EmptyList
-                title="일기 추가"
-                description="아직 작성된 일기가 없어요."
-                onClick={() => {
-                  console.log("일기 추가 버튼 클릭");
-                }}
-              />
-            )}
+            <DiaryList archiveId={archiveId} limit={3} />
             {/* 덕질 갤러리 */}
             <ArchiveTitle
               title="덕질 갤러리"

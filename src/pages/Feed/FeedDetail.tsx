@@ -18,7 +18,7 @@ import EmptyFeedList from "@/components/feed/EmptyFeedList";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
 import { LikeArchive } from "@/apis/mutations/archive/archive";
-import { getMonthlyEvents } from "@/apis/queries/calendar/Calendar";
+import { getMonthlyEvents, getMonthlyStickers } from "@/apis/queries/calendar/Calendar";
 
 const FeedDetail = () => {
   const navigate = useNavigate();
@@ -31,6 +31,10 @@ const FeedDetail = () => {
     queryFn: () => getMonthlyEvents(Number(archiveId), new Date().getFullYear(), new Date().getMonth() + 1),
   });
 
+  const { data: monthlyStickers } = useQuery({
+    queryKey: ["monthlyStickers", Number(archiveId)],
+    queryFn: () => getMonthlyStickers(Number(archiveId), new Date().getFullYear(), new Date().getMonth() + 1),
+  });
   const { data: feed } = useQuery({
     queryKey: ["feed", archiveId],
     queryFn: () => GetArchiveDetail(Number(archiveId)),
@@ -78,7 +82,7 @@ const FeedDetail = () => {
         {/* 아카이브 달력 */}
         <Calendar
           labelData={monthlyEvents}
-          stickerData={stickerDataMock}
+          stickerData={monthlyStickers}
           mode="readonly"
         />
         {/* 덕질 일기 */}

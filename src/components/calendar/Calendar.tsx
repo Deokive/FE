@@ -131,7 +131,7 @@ const Calendar = ({
 
   const calendarRootRef = useRef<HTMLDivElement | null>(null); // ✅ 추가
 
-  // ✅ 달력 바깥 클릭 시 active 해제 + 우클릭 모달 닫기
+  // 달력 바깥 클릭 시 active 해제 + 우클릭 모달 닫기
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const root = calendarRootRef.current;
@@ -216,18 +216,16 @@ const Calendar = ({
           // 좌클릭 시 일정 보기 api 호출
           onClick={(e) => {
             e.stopPropagation();
-            // ✅ 좌클릭 액션
             if (isReadonly) return;
             onChange(date);
             setAdditionalPos(null);
             setIsAdditionalModalOpen(false);
-            // ✅ 스티커 옵션 모달 닫기
+            // 스티커 옵션 모달 닫기
             setStickerOptionModalOpen(false);
             setStickerOptionPos(null);
             setSelectedSticker(null);
-
+            // 클릭한 날짜 저장
             setClickDate(date);
-            // ✅ 해당 날짜의 이벤트 필터링하여 모달 열기
             const dateString = `${date.getFullYear()}-${String(
               date.getMonth() + 1
             ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -245,7 +243,7 @@ const Calendar = ({
             if (isReadonly) return;
             onChange(date);
 
-            // ✅ 스티커 옵션 모달 닫기
+            // 스티커 옵션 모달 닫기
             setStickerOptionModalOpen(false);
             setStickerOptionPos(null);
             setSelectedSticker(null);
@@ -257,7 +255,7 @@ const Calendar = ({
             const tileRect = (
               e.currentTarget as HTMLElement
             ).getBoundingClientRect();
-            // ✅ 달력 래퍼 기준으로 위치 계산 (타일 오른쪽/위쪽 근처에 띄우는 예시)
+            // 달력 래퍼 기준으로 위치 계산 (타일 오른쪽/위쪽 근처에 띄우는 예시)
             setAdditionalPos({
               x: tileRect.right - rootRect.left - 85,
               y: tileRect.top - rootRect.top + 52,
@@ -265,7 +263,6 @@ const Calendar = ({
 
             setIsAdditionalModalOpen(true);
             setClickDate(date);
-            // ✅ 우클릭 액션
             console.log(
               "우클릭:",
               String(date.getFullYear()) +
@@ -374,17 +371,6 @@ const Calendar = ({
     return null;
   };
 
-  //여기서 API 호출
-  // const handleClickDate = (date: Date) => {
-  //   console.log(
-  //     String(date.getFullYear()) +
-  //       "년 " +
-  //       String(date.getMonth() + 1).padStart(2, "0") +
-  //       "월 " +
-  //       String(date.getDate()).padStart(2, "0") +
-  //       "일에 일정 추가 api 호출"
-  //   );
-  // };
 
   return (
     <div
@@ -413,7 +399,7 @@ const Calendar = ({
       {/* 달력 */}
       <div className="calendar-container w-[1240px]">
         <ReactCalendar
-          tileDisabled={isReadonly ? () => true : undefined} // ✅ 타일 전부 클릭/포커스 불가
+          tileDisabled={isReadonly ? () => true : undefined}
           /** 날짜 클릭 시 실행되는 콜백 함수 */
           // onClickDay={handleClickDate}
           /** 선택된 날짜가 변경될 때 호출되는 콜백 함수 */
@@ -466,19 +452,19 @@ const Calendar = ({
             }}
             onEventModalOpen={() => {
               setIsAdditionalModalOpen(false);
-              setEditLabelData(null); // ✅ 초기화 추가
+              setEditLabelData(null);
               setEventModalType(false);
               setEventModalOpen(true);
             }}
             onStickerModalOpen={() => {
               setIsAdditionalModalOpen(false);
-              setEditLabelData(null); // ✅ 초기화 추가
+              setEditLabelData(null);
               setEventModalType(null);
               setEventModalOpen(true);
             }}
             onSportsModalOpen={() => {
               setIsAdditionalModalOpen(false);
-              setEditLabelData(null); // ✅ 초기화 추가
+              setEditLabelData(null);
               setEventModalType(true);
               setEventModalOpen(true);
             }}
@@ -499,12 +485,12 @@ const Calendar = ({
             open={eventModalOpen}
             onClose={() => {
               setEventModalOpen(false);
-              setEditStickerData(null); // ✅ 모달 닫을 때 초기화
+              setEditStickerData(null);
             }}
             type={eventModalType}
             startDate={clickDate}
             editData={editLabelData}
-            editStickerData={editStickerData} // ✅ 추가
+            editStickerData={editStickerData}
           />
         </div>
       )}
@@ -517,7 +503,7 @@ const Calendar = ({
           onDelete={handleDeleteEvents}
         />
       )}
-   // StickerOptionModal의 onEdit 핸들러 수정
+
       {stickerOptionModalOpen && stickerOptionPos && (
         <div
           style={{
