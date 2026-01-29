@@ -90,8 +90,8 @@ const FeedDetail = () => {
           }}
           isMore={(diary.length ?? 0) > 0}
         />
-        {diary.length ?? 0 > 0 ? (
-          <DiaryList diary={diary} limit={3} />
+        {(diary.length ?? 0 > 0) ? (
+          <DiaryList archiveId={archiveId} limit={3} />
         ) : (
           <EmptyFeedList description="아직 작성된 일기가 없어요." />
         )}
@@ -105,7 +105,7 @@ const FeedDetail = () => {
           isMore={(gallery.length ?? 0) > 0}
           isEditable={false}
         />
-        {gallery.length ?? 0 > 0 ? (
+        {(gallery.length ?? 0 > 0) ? (
           <GalleryList gallery={gallery} />
         ) : (
           <EmptyFeedList description="아직 작성된 갤러리가 없어요." />
@@ -120,7 +120,7 @@ const FeedDetail = () => {
           isMore={(ticket.length ?? 0) > 0}
           isEditable={false}
         />
-        {ticket.length ?? 0 > 0 ? (
+        {(ticket.length ?? 0 > 0) ? (
           <TicketList ticket={ticket} />
         ) : (
           <EmptyFeedList description="아직 작성된 티켓북이 없어요." />
@@ -135,7 +135,7 @@ const FeedDetail = () => {
           isMore={(repost.length ?? 0) > 0}
           isEditable={false}
         />
-        {repost.length ?? 0 > 0 ? (
+        {(repost.length ?? 0 > 0) ? (
           <RepostList repost={repost} />
         ) : (
           <EmptyFeedList description="아직 작성된 리포스트가 없어요." />

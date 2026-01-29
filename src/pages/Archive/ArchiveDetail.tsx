@@ -17,7 +17,11 @@ import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
-import { DeleteArchive, LikeArchive, UpdateArchive } from "@/apis/mutations/archive/archive";
+import {
+  DeleteArchive,
+  LikeArchive,
+  UpdateArchive,
+} from "@/apis/mutations/archive/archive";
 import { Visibility, type UpdateArchiveRequest } from "@/types/archive";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { MediaRole } from "@/enums/mediaRole";
@@ -31,11 +35,9 @@ const ArchiveDetail = () => {
   const urlParams = useParams();
   const archiveId = urlParams.archiveId;
   const archiveIdNum = Number(archiveId);
-  const queryClient = useQueryClient(); // ✅ 전역 인스턴스 가져오기
+  const queryClient = useQueryClient();
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // ✅ 추가
-
-  // 월별 라벨 조회
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // 월별 라벨 조회
   const { data: monthlyEvents } = useQuery({
     queryKey: ["monthlyEvents", archiveIdNum],
     queryFn: () => getMonthlyEvents(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),
@@ -47,27 +49,26 @@ const ArchiveDetail = () => {
   });
 
 
-  // ✅ 업로드 중복 실행 방지
   const uploadInProgressRef = useRef(false);
 
   // 아카이브 상세 조회
   const { data: archive } = useQuery({
     queryKey: ["archive", archiveIdNum],
     queryFn: () => GetArchiveDetail(archiveIdNum),
-    retry: false,              // ✅ 404 나도 재시도하지 않기
+    retry: false,
   });
 
   // 아카이브 업데이트
   const updateArchiveMutation = useMutation({
-    mutationFn: (data: UpdateArchiveRequest) => UpdateArchive(Number(archiveId), data),
+    mutationFn: (data: UpdateArchiveRequest) =>
+      UpdateArchive(Number(archiveId), data),
     onSuccess: (updatedArchive) => {
-      // ✅ 쿼리 캐시 업데이트
       queryClient.setQueryData(["archive", archiveIdNum], updatedArchive);
 
       uploadInProgressRef.current = false;
     },
     onError: () => {
-      uploadInProgressRef.current = false; // 업로드 실패 시 상태 초기화
+      uploadInProgressRef.current = false;
     },
   });
 
@@ -75,13 +76,9 @@ const ArchiveDetail = () => {
   const deleteArchiveMutation = useMutation({
     mutationFn: () => DeleteArchive(archiveIdNum),
     onSuccess: () => {
-      // ✅ 아카이브 상세 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: ["archive", archiveIdNum] });
-      // ✅ 아카이브 목록 쿼리 무효화 (페이지/유저 등 붙은 키까지 포함)
       queryClient.invalidateQueries({ queryKey: ["archives"], exact: false });
       queryClient.invalidateQueries({ queryKey: ["myArchives"], exact: false });
-
-      // ✅ 리스트 페이지로 이동
       navigate("/archive");
     },
     onError: (error) => {
@@ -102,10 +99,8 @@ const ArchiveDetail = () => {
     },
   });
 
-  // ✅ useFileUpload - onSuccess를 직접 정의
   const { upload } = useFileUpload({
     onSuccess: (response) => {
-      // ✅ 중복 실행 방지
       if (uploadInProgressRef.current || !response?.fileId) return;
 
       uploadInProgressRef.current = true;
@@ -121,13 +116,16 @@ const ArchiveDetail = () => {
       uploadInProgressRef.current = false;
     },
   });
-  // ✅ 아카이브명 저장 핸들러
   const handleTitleSave = (title: string) => {
-    updateArchiveMutation.mutate({ title: title ?? null, visibility: null, bannerImageId: null });
+    updateArchiveMutation.mutate({
+      title: title ?? null,
+      visibility: null,
+      bannerImageId: null,
+    });
   };
-  // ✅ 배너 저장 핸들러 (파일 업로드 시작)
+  // 배너 저장 핸들러 (파일 업로드 시작)
   const handleBannerSave = async (file: File) => {
-    // ✅ 이미 업로드 중이면 무시
+    // 이미 업로드 중이면 무시
     if (uploadInProgressRef.current) {
       console.log("이미 업로드 중입니다.");
       return;
@@ -142,9 +140,13 @@ const ArchiveDetail = () => {
       uploadInProgressRef.current = false;
     }
   };
-  // ✅ 공개 기준 저장 핸들러
+  // 공개 기준 저장 핸들러
   const handleVisibilitySave = (visibility: Visibility) => {
-    updateArchiveMutation.mutate({ visibility: visibility, bannerImageId: null, title: null });
+    updateArchiveMutation.mutate({
+      visibility: visibility,
+      bannerImageId: null,
+      title: null,
+    });
   };
 
   // 삭제버튼 클릭 시 모달 오픈
@@ -157,8 +159,7 @@ const ArchiveDetail = () => {
     setIsDeleteModalOpen(false);
   };
 
-
-  // ✅ 아카이브 삭제 핸들러
+  // 아카이브 삭제 핸들러
   const handleDeleteArchive = () => {
     deleteArchiveMutation.mutate();
   };
@@ -171,7 +172,8 @@ const ArchiveDetail = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <Banner image={archive?.bannerUrl}
+      <Banner
+        image={archive?.bannerUrl}
         isEdit={archive?.isOwner}
         onBannerSave={handleBannerSave}
       />
@@ -233,7 +235,7 @@ const ArchiveDetail = () => {
               isMore={(archivedData?.Gallery?.length ?? 0) > 0}
               isEditable={archive?.isOwner}
             />
-            {archivedData?.Gallery?.length ?? 0 > 0 ? (
+            {(archivedData?.Gallery?.length ?? 0 > 0) ? (
               <GalleryList gallery={archivedData?.Gallery} />
             ) : (
               <EmptyList
@@ -278,7 +280,7 @@ const ArchiveDetail = () => {
               isMore={(archivedData?.Repost?.length ?? 0) > 0}
               isEditable={archive?.isOwner}
             />
-            {archivedData?.Repost?.length ?? 0 > 0 ? (
+            {(archivedData?.Repost?.length ?? 0 > 0) ? (
               <RepostList repost={archivedData?.Repost} />
             ) : (
               <EmptyList

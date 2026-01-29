@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import TicketBook from "@/components/ticket/TicketBook";
 import type { Ticket } from "@/types/ticket";
@@ -8,10 +8,11 @@ import { useGetTicketBook } from "@/apis/queries/ticket/useGetTicket";
 import { useUpdateTicketBook } from "@/apis/mutations/ticket/usePatchTicket";
 import { useDeleteTicket } from "@/apis/mutations/ticket/useDeleteTicket";
 import { formatDateTime } from "@/utils/date";
+import TicketBookSkeleton from "@/components/ticket/TicketBookSkeleton";
 
 export default function TicketBookPage() {
-  const { id } = useParams<{ id: string }>();
-  const archiveId = Number(id);
+  const { archiveId: archiveIdParam } = useParams<{ archiveId: string }>();
+  const archiveId = Number(archiveIdParam);
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Pagination state
@@ -20,7 +21,10 @@ export default function TicketBookPage() {
 
   // 편집 모드 상태
   const [editMode, setEditMode] = useState(false);
-  const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
+  const [checkedMap, setCheckedMap] = useState<Record<number, boolean>>({});
+
+  // 티켓북 제목 상태 (첫 로드 시에만 API에서 가져옴)
+  const [ticketbookName, setTicketbookName] = useState<string | null>(null);
 
   // 티켓북 데이터 조회
   const { data, isLoading, isError } = useGetTicketBook({
@@ -35,8 +39,16 @@ export default function TicketBookPage() {
   // 티켓 삭제
   const { mutate: deleteTicket } = useDeleteTicket();
 
+  // 첫 로드 시에만 티켓북 제목 설정
+  useEffect(() => {
+    if (data?.title && ticketbookName === null) {
+      setTicketbookName(data.title);
+    }
+  }, [data?.title, ticketbookName]);
+
   // 티켓북 이름 저장
   const handleSaveName = (nextName: string) => {
+    setTicketbookName(nextName);
     updateTicketBookName({
       archiveId,
       title: nextName,
@@ -44,11 +56,11 @@ export default function TicketBookPage() {
   };
 
   // 티켓 삭제 처리
-  const handleDeleteMany = (ids: string[]) => {
+  const handleDeleteMany = (ids: number[]) => {
     if (!ids || ids.length === 0) return;
 
     ids.forEach((ticketId) => {
-      deleteTicket({ ticketId: Number(ticketId) });
+      deleteTicket({ ticketId });
     });
   };
 
@@ -57,31 +69,49 @@ export default function TicketBookPage() {
     setSearchParams({ page: String(newPage) });
   };
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center">
+        <div className="w-310">
+          <div className="my-15">
+            <div className="h-10 w-full bg-gray-200 rounded animate-pulse" />
+          </div>
+          <div className="mt-5 mb-15">
+            <TicketBookSkeleton />
+          </div>
+          <div className="flex justify-center mb-12">
+            <div className="h-10 w-64 bg-gray-200 rounded animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (isError) return <div>에러가 발생했습니다.</div>;
 
   // 데이터 변환: API 응답 → Ticket 타입
   const tickets: Ticket[] =
     data?.content?.map((item) => ({
-      id: String(item.id),
+      id: item.id,
+      archiveId: archiveId,
       eventName: item.title,
       imageUrl: item.thumbnail,
       dateTime: formatDateTime(item.date),
       seat: item.seat,
       place: item.location,
       casting: item.casting,
+      rating: item.score,
+      review: item.review,
       createdAt: item.createdAt,
     })) ?? [];
 
   const totalItems = data?.page?.totalElements ?? 0;
-  const ticketbookName = data?.title ?? "티켓북";
 
   return (
     <div className="flex flex-col items-center">
       <div className="w-310">
         <div className="my-15">
           <EditableTitle
-            value={ticketbookName}
+            value={ticketbookName ?? "티켓북"}
             onSave={handleSaveName}
             placeholder="티켓북명을 입력하세요."
             maxLength={50}

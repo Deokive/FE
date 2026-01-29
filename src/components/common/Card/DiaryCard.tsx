@@ -41,7 +41,7 @@ const DiaryCard = ({
   const isLoading = hasImage && !imageLoaded && !imageError;
   const showFallbackIcon = !hasImage || imageError;
 
-  // ✅ 체크박스 클릭 핸들러
+  // 체크박스 클릭 핸들러
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 카드 클릭 이벤트 방지
     onSelect?.();
@@ -56,9 +56,9 @@ const DiaryCard = ({
         isEditMode ? "" : "cursor-pointer"
       } relative`}
     >
-      {/* ✅ 이미지 영역 */}
+      {/*  이미지 영역 */}
       <div className="w-[321px] h-[179px] rounded-t-[10px] bg-white flex items-center justify-center overflow-hidden relative">
-        {/* ✅ CheckboxIcon (편집 모드일 때만) */}
+        {/*  CheckboxIcon (편집 모드일 때만) */}
         {isEditMode && (
           <div
             onClick={handleCheckboxClick}
@@ -68,9 +68,9 @@ const DiaryCard = ({
           </div>
         )}
 
-        {/* ✅ 선택되었을 때만 어두운 오버레이 */}
+        {/*  선택되었을 때만 어두운 오버레이 */}
         {isEditMode && isSelected && (
-          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-transparent rounded-t-[10px] pointer-events-none" />
+          <div className="absolute inset-0 bg-black/20 rounded-t-[10px] pointer-events-none" />
         )}
 
         {/* 1) 이미지가 있고, 로딩 성공 */}

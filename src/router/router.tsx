@@ -26,9 +26,9 @@ import MyArchivePage from "@/pages/MyPage/MyArchivePage";
 import PasswordFind from "@/pages/Auth/PasswordFind";
 import AuthLayout from "@/layouts/AuthLayout";
 import SocialCallback from "@/pages/Auth/socialCallback";
-import DiaryWritePage from "@/pages/Archive/diary/DiaryWritePage";
-import DiaryDetailPage from "@/pages/Archive/diary/DiaryDetailPage";
-import DiaryPage from "@/pages/Archive/diary/DiaryPage";
+import DiaryWritePage from "@/pages/Archive/Diary/DiaryWritePage";
+import DiaryDetailPage from "@/pages/Archive/Diary/DiaryDetailPage";
+import DiaryPage from "@/pages/Archive/Diary/DiaryPage";
 
 const router = createBrowserRouter([
   // 🔓 Public Routes (누구나 접근 가능)
