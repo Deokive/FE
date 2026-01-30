@@ -2,15 +2,22 @@ import { useNavigate } from "react-router-dom";
 import TicketCard from "@/components/common/Card/TicketCard";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import EmptyList from "@/components/archive/Empty/EmptyList";
+import EmptyFeedList from "@/components/feed/EmptyFeedList";
 import { useGetTicketBook } from "@/apis/queries/ticket/useGetTicket";
 
 interface TicketListProps {
   archiveId?: string;
   limit?: number;
   isOwner?: boolean;
+  emptyDescription?: string;
 }
 
-const TicketList = ({ archiveId, limit = 3, isOwner = false }: TicketListProps) => {
+const TicketList = ({
+  archiveId,
+  limit = 3,
+  isOwner = false,
+  emptyDescription = "새로운 티켓을 추가해보세요.",
+}: TicketListProps) => {
   const navigate = useNavigate();
 
   const { data } = useGetTicketBook({
@@ -49,12 +56,14 @@ const TicketList = ({ archiveId, limit = 3, isOwner = false }: TicketListProps) 
             ))}
           </div>
         </div>
-      ) : (
+      ) : isOwner ? (
         <EmptyList
           title="티켓 추가"
-          description="새로운 티켓을 추가해보세요."
+          description={emptyDescription}
           onClick={handleNavigateToTicketBook}
         />
+      ) : (
+        <EmptyFeedList description={emptyDescription} />
       )}
     </>
   );
