@@ -17,83 +17,90 @@ import type {
 
 export const useGetFriendList = (params: GetFriendListRequest) => {
   return useQuery<GetFriendListResponse>({
-    queryKey: queryKeys.friend.list(
-      params.lastFriendId,
-      params.lastAcceptedAt,
-      params.size
-    ),
+    queryKey: queryKeys.friend.list(),
     queryFn: () => getFriendList(params),
     retry: false,
   });
 };
 
-export const useGetStatusFriend = (params: GetStatusFriendRequest) => {
+export const useGetStatusFriend = (
+  params: GetStatusFriendRequest & { refetchInterval?: number }
+) => {
+  const { refetchInterval, ...queryParams } = params;
   return useQuery<GetStatusFriendResponse>({
-    queryKey: queryKeys.friend.status(params.friendId),
-    queryFn: () => getStatusFriend(params),
-    enabled: !!params.friendId,
+    queryKey: queryKeys.friend.status(queryParams.friendId),
+    queryFn: () => getStatusFriend(queryParams),
+    enabled: !!queryParams.friendId,
     retry: false,
+    refetchInterval,
   });
 };
 
 export const useGetSendFriendList = (params: GetSendFriendListRequest) => {
   return useQuery<GetSendFriendListResponse>({
-    queryKey: queryKeys.friend.sendList(
-      params.type,
-      params.lastId,
-      params.lastCreatedAt,
-      params.size
-    ),
+    queryKey: queryKeys.friend.sendList(params.type),
     queryFn: () => getSendFriendList(params),
     retry: false,
   });
 };
 
-export const useGetFriendListInfinite = (params: { size?: number }) => {
+export const useGetFriendListInfinite = (params: {
+  size?: number;
+  refetchInterval?: number;
+  enabled?: boolean;
+}) => {
+  const { refetchInterval, enabled = true, ...queryParams } = params;
   return useInfiniteQuery<GetFriendListResponse>({
-    queryKey: ["friend", "list", "infinite", params.size],
+    queryKey: ["friend", "list", "infinite"],
     queryFn: ({ pageParam }) => {
       const { lastFriendId, lastAcceptedAt } = pageParam as {
         lastFriendId?: number;
         lastAcceptedAt?: string;
       };
-      return getFriendList({ ...params, lastFriendId, lastAcceptedAt });
+      return getFriendList({ ...queryParams, lastFriendId, lastAcceptedAt });
     },
     initialPageParam: {},
     getNextPageParam: (lastPage) => {
-      if (!lastPage.hasNext || lastPage.friends.length === 0) return undefined;
-      const lastFriend = lastPage.friends[lastPage.friends.length - 1];
+      if (!lastPage.hasNext || lastPage.content.length === 0) return undefined;
+      const lastFriend = lastPage.content[lastPage.content.length - 1];
       return {
         lastFriendId: lastFriend.userId,
         lastAcceptedAt: lastFriend.acceptedAt,
       };
     },
     retry: false,
+    refetchInterval,
+    enabled,
   });
 };
 
 export const useGetSendFriendListInfinite = (params: {
   type: FriendRequestType;
   size?: number;
+  refetchInterval?: number;
+  enabled?: boolean;
 }) => {
+  const { refetchInterval, enabled = true, ...queryParams } = params;
   return useInfiniteQuery<GetSendFriendListResponse>({
-    queryKey: ["friend", "sendList", "infinite", params.type, params.size],
+    queryKey: ["friend", "sendList", "infinite", queryParams.type],
     queryFn: ({ pageParam }) => {
       const { lastId, lastCreatedAt } = pageParam as {
         lastId?: number;
         lastCreatedAt?: string;
       };
-      return getSendFriendList({ ...params, lastId, lastCreatedAt });
+      return getSendFriendList({ ...queryParams, lastId, lastCreatedAt });
     },
     initialPageParam: {},
     getNextPageParam: (lastPage) => {
-      if (!lastPage.hasNext || lastPage.friends.length === 0) return undefined;
-      const lastFriend = lastPage.friends[lastPage.friends.length - 1];
+      if (!lastPage.hasNext || lastPage.content.length === 0) return undefined;
+      const lastItem = lastPage.content[lastPage.content.length - 1];
       return {
-        lastId: lastFriend.userId,
-        lastCreatedAt: lastFriend.createdAt,
+        lastId: lastItem.requestId,
+        lastCreatedAt: lastItem.createdAt,
       };
     },
     retry: false,
+    refetchInterval,
+    enabled,
   });
 };

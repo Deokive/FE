@@ -72,7 +72,12 @@ export const usePostAcceptFriend = () => {
   });
 };
 
-export const usePostSendFriend = () => {
+type UsePostSendFriendOptions = {
+  onSuccess?: () => void;
+  onError?: (error: ApiError<ApiErrorBody>) => void;
+};
+
+export const usePostSendFriend = (options: UsePostSendFriendOptions = {}) => {
   const queryClient = useQueryClient();
 
   return useMutation<
@@ -83,9 +88,11 @@ export const usePostSendFriend = () => {
     mutationFn: (data) => postSendFriend(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.friend.all });
+      options.onSuccess?.();
     },
     onError: (error) => {
-      console.log(error);
+      console.error("친구 요청 실패:", error);
+      options.onError?.(error);
     },
   });
 };

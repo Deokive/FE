@@ -26,7 +26,7 @@ export type GetFriendListRequest = {
   size?: number;
 };
 export type GetFriendListResponse = {
-  friends: (DefaultContent & { acceptedAt: string })[];
+  content: (DefaultContent & { acceptedAt: string })[];
   hasNext: boolean;
   pageSize: number;
 };
@@ -41,7 +41,7 @@ export type GetSendFriendListRequest = {
   size?: number;
 };
 export type GetSendFriendListResponse = {
-  friends: (DefaultContent & { createdAt: string })[];
+  content: (DefaultContent & { requestId: number; createdAt: string })[];
   hasNext: boolean;
   pageSize: number;
 };
