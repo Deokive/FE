@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { diaryDataMock } from "@/mockData/diaryData";
 import { galleryDataMock } from "@/mockData/galleryData";
 import Banner from "@/components/community/Banner";
 import { useParams } from "react-router-dom";
@@ -48,10 +47,6 @@ const FeedDetail = () => {
       alert("좋아요에 실패했습니다. 다시 시도해주세요.");
     },
   });
-  // 덕질 일기 데이터 조회
-  const diary = diaryDataMock.filter(
-    (diary) => diary.archiveId === Number(archiveId)
-  );
   // 덕질 갤러리 데이터 조회
   const gallery = galleryDataMock.filter(
     (gallery) => gallery.archiveId === Number(archiveId)
@@ -80,19 +75,12 @@ const FeedDetail = () => {
           mode="readonly"
         />
         {/* 덕질 일기 */}
-        <ArchiveTitle
-          title="덕질 일기"
-          onClick={() => {
-            if (!archiveId) return;
-            navigate(`/archive/${archiveId}/diary`);
-          }}
-          isMore={(diary.length ?? 0) > 0}
+        <DiaryList
+          archiveId={archiveId}
+          limit={3}
+          isOwner={false}
+          emptyDescription="아직 작성된 일기가 없어요."
         />
-        {(diary.length ?? 0 > 0) ? (
-          <DiaryList archiveId={archiveId} limit={3} />
-        ) : (
-          <EmptyFeedList description="아직 작성된 일기가 없어요." />
-        )}
         {/* 덕질 갤러리 */}
         <ArchiveTitle
           title="덕질 갤러리"

@@ -199,7 +199,7 @@ const ArchiveDetail = () => {
           />
           <div className="flex flex-col items-start justify-between gap-[60px] my-[60px]">
             {/* 덕질 일기 */}
-            <DiaryList archiveId={archiveId} limit={3} />
+            <DiaryList archiveId={archiveId} limit={3} isOwner={archive?.isOwner} />
             {/* 덕질 갤러리 */}
             <ArchiveTitle
               title="덕질 갤러리"
