@@ -165,8 +165,6 @@ const ArchiveDetail = () => {
     (archived) => archived.archiveId === Number(archiveId)
   );
 
-  const hasTickets = (archivedData?.Ticket?.length ?? 0) > 0;
-
   return (
     <div className="flex flex-col items-center justify-center">
       <Banner
@@ -226,27 +224,11 @@ const ArchiveDetail = () => {
               />
             )}
             {/* 티켓북 */}
-            <ArchiveTitle
-              title="티켓북"
-              onClick={() => {
-                if (!archiveId) return;
-                navigate(`/archive/${archiveId}/ticket-book`);
-              }}
-              isMore={hasTickets}
-              isEditable={archive?.isOwner}
+            <TicketList
+              archiveId={archiveId}
+              limit={3}
+              isOwner={archive?.isOwner}
             />
-            {hasTickets ? (
-              <TicketList ticket={archivedData?.Ticket} />
-            ) : (
-              <EmptyList
-                title="티켓 추가"
-                description="새로운 티켓을 추가해보세요."
-                onClick={() => {
-                  if (!archiveId) return;
-                  navigate(`/archive/${archiveId}/ticket-book`);
-                }}
-              />
-            )}
             {/* 덕질 리포스트 */}
             <ArchiveTitle
               title="덕질 리포스트"
