@@ -9,6 +9,7 @@ import { useUpdateTicketBook } from "@/apis/mutations/ticket/usePatchTicket";
 import { useDeleteTicket } from "@/apis/mutations/ticket/useDeleteTicket";
 import { formatDateTime } from "@/utils/date";
 import TicketBookSkeleton from "@/components/ticket/TicketBookSkeleton";
+import { useGetArchive } from "@/apis/queries/archive/useGetArchive";
 
 export default function TicketBookPage() {
   const { archiveId: archiveIdParam } = useParams<{ archiveId: string }>();
@@ -25,6 +26,9 @@ export default function TicketBookPage() {
 
   // 티켓북 제목 상태 (첫 로드 시에만 API에서 가져옴)
   const [ticketbookName, setTicketbookName] = useState<string | null>(null);
+
+  // 아카이브 상세 조회 (소유자 여부 확인용)
+  const { data: archive } = useGetArchive({ archiveId });
 
   // 티켓북 데이터 조회
   const { data, isLoading, isError } = useGetTicketBook({
@@ -115,6 +119,7 @@ export default function TicketBookPage() {
             onSave={handleSaveName}
             placeholder="티켓북명을 입력하세요."
             maxLength={50}
+            editable={archive?.isOwner ?? false}
           />
         </div>
 
@@ -128,6 +133,7 @@ export default function TicketBookPage() {
             checkedMap={checkedMap}
             setCheckedMap={setCheckedMap}
             onDeleteMany={handleDeleteMany}
+            isOwner={archive?.isOwner ?? false}
           />
         </div>
         <div className="flex justify-center mb-12">

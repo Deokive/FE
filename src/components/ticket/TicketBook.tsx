@@ -16,6 +16,7 @@ type TicketBookProps = {
   checkedMap: Record<number, boolean>;
   setCheckedMap: Dispatch<SetStateAction<Record<number, boolean>>>;
   onDeleteMany?: (ids: number[]) => void;
+  isOwner?: boolean;
 };
 
 export default function TicketBook({
@@ -26,6 +27,7 @@ export default function TicketBook({
   checkedMap,
   setCheckedMap,
   onDeleteMany,
+  isOwner = false,
 }: TicketBookProps) {
   const navigate = useNavigate();
 
@@ -58,6 +60,19 @@ export default function TicketBook({
     setEditMode(!editMode);
     if (editMode) {
       setCheckedMap({});
+    }
+  };
+
+  const handleCreateTicket = () => {
+    navigate(`/archive/${archiveId}/ticket/create`);
+  };
+
+  const handleTicketCardClick = (ticket: Ticket) => {
+    if (!isOwner) return;
+    if (editMode) {
+      toggleCheck(ticket.id, !checkedMap[ticket.id]);
+    } else {
+      navigate(`/archive/${archiveId}/ticket/${ticket.id}/edit/`);
     }
   };
 
@@ -95,13 +110,13 @@ export default function TicketBook({
 
   return (
     <div className="w-full flex flex-col items-center gap-6">
-      {/* 툴바 */}
+      {/* 툴바 - 소유자만 편집 기능 표시 */}
       <div className="w-full max-w-[1240px] flex justify-end gap-5">
-        {hasTickets && (
+        {hasTickets && isOwner && (
           <>
             {!editMode && (
               <BtnIcon
-                onClick={() => navigate(`/archive/${archiveId}/ticket/create`)}
+                onClick={handleCreateTicket}
                 startIcon={<PlusIcon className="size-6 text-color-high" />}
               >
                 티켓 추가
@@ -144,14 +159,10 @@ export default function TicketBook({
             {placed.map((slotTicket, idx) => {
               const side = idx % 2 === 0 ? "left" : "right";
               if (allEmpty) {
-                if (idx === 0) {
+                if (idx === 0 && isOwner) {
                   return (
                     <div key={idx} className="w-[430px]">
-                      <TicketEmptyCard
-                        onCreate={() =>
-                          navigate(`/archive/${archiveId}/ticket/create`)
-                        }
-                      />
+                      <TicketEmptyCard onCreate={handleCreateTicket} />
                     </div>
                   );
                 }
@@ -164,17 +175,7 @@ export default function TicketBook({
                     <TicketCard
                       ticket={slotTicket}
                       side={side}
-                      onClick={() => {
-                        if (editMode)
-                          toggleCheck(
-                            slotTicket.id,
-                            !checkedMap[slotTicket.id]
-                          );
-                        else
-                          navigate(
-                            `/archive/${archiveId}/ticket/${slotTicket.id}/edit/`
-                          );
-                      }}
+                      onClick={() => handleTicketCardClick(slotTicket)}
                       selectable={editMode}
                       checked={!!checkedMap[slotTicket.id]}
                       onToggleCheck={toggleCheck}
