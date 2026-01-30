@@ -4,10 +4,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import type { Ticket, UpdateTicketRequest } from "@/types/ticket";
 import { useGetTicket } from "@/apis/queries/ticket/useGetTicket";
 import { useUpdateTicket } from "@/apis/mutations/ticket/usePatchTicket";
+import { useGetArchive } from "@/apis/queries/archive/useGetArchive";
 
 export default function EditTicketPage() {
-  const { ticketId } = useParams<{ ticketId: string }>();
+  const { archiveId, ticketId } = useParams<{ archiveId: string; ticketId: string }>();
   const navigate = useNavigate();
+
+  // 아카이브 상세 조회 (소유자 여부 확인용)
+  const { data: archive, isLoading: isArchiveLoading } = useGetArchive({
+    archiveId: Number(archiveId),
+  });
 
   const {
     data: ticketData,
@@ -34,10 +40,19 @@ export default function EditTicketPage() {
       }
     : undefined;
 
-  if (isLoading) {
+  if (isLoading || isArchiveLoading) {
     return (
       <div className="p-8">
         <TicketFormSkeleton />
+      </div>
+    );
+  }
+
+  // 소유자가 아니면 접근 차단
+  if (!archive?.isOwner) {
+    return (
+      <div className="p-8 text-center">
+        <p className="typo-body1 text-color-high">권한이 없습니다.</p>
       </div>
     );
   }

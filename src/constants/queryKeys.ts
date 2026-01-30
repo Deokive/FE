@@ -1,4 +1,8 @@
 export const queryKeys = {
+  archive: {
+    all: ["archive"] as const,
+    detail: (archiveId: number) => ["archive", archiveId] as const,
+  },
   ticket: {
     all: ["ticket"] as const,
     detail: (ticketId: number) => ["ticket", ticketId] as const,

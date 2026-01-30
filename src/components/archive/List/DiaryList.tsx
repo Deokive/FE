@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import DiaryCard from "@/components/common/Card/DiaryCard";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import EmptyList from "@/components/archive/Empty/EmptyList";
+import EmptyFeedList from "@/components/feed/EmptyFeedList";
 import { useGetDiaryBook } from "@/apis/queries/diary/useGetDiary";
 
 interface DiaryListProps {
@@ -10,6 +11,8 @@ interface DiaryListProps {
   isEditMode?: boolean;
   selectedIds?: number[];
   onSelect?: (diaryId: number) => void;
+  isOwner?: boolean;
+  emptyDescription?: string;
 }
 
 const DiaryList = ({
@@ -18,6 +21,8 @@ const DiaryList = ({
   isEditMode = false,
   selectedIds = [],
   onSelect,
+  isOwner = false,
+  emptyDescription = "아직 작성된 일기가 없어요.",
 }: DiaryListProps) => {
   const navigate = useNavigate();
 
@@ -30,16 +35,19 @@ const DiaryList = ({
   const diaryList = data?.content ?? [];
   const hasDiary = diaryList.length > 0;
 
+  const handleNavigateToDiary = () => {
+    if (!archiveId) return;
+    navigate(`/archive/${archiveId}/diary`);
+  };
+
   return (
     <>
       {/* 덕질 일기 */}
       <ArchiveTitle
         title="덕질 일기"
-        onClick={() => {
-          if (!archiveId) return;
-          navigate(`/archive/${archiveId}/diary`);
-        }}
+        onClick={handleNavigateToDiary}
         isMore={hasDiary}
+        isEditable={isOwner}
       />
       {hasDiary ? (
         <div className="w-full flex flex-col items-start gap-[60px]">
@@ -64,15 +72,14 @@ const DiaryList = ({
             ))}
           </div>
         </div>
-      ) : (
+      ) : isOwner ? (
         <EmptyList
           title="일기 추가"
-          description="아직 작성된 일기가 없어요."
-          onClick={() => {
-            if (!archiveId) return;
-            navigate(`/archive/${archiveId}/diary`);
-          }}
+          description={emptyDescription}
+          onClick={handleNavigateToDiary}
         />
+      ) : (
+        <EmptyFeedList description={emptyDescription} />
       )}
     </>
   );

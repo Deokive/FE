@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAddDiary } from "@/apis/mutations/diary/usePostDiary";
 import { useFileUpload } from "@/hooks/useFileUpload";
+import { useGetArchive } from "@/apis/queries/archive/useGetArchive";
 import { Visibility } from "@/enums/visibilty";
 import { MediaRole } from "@/enums/mediaRole";
 import { DEFAULT_DIARY_COLOR, getDiaryBgColor } from "@/constants/diaryColors";
@@ -22,6 +23,11 @@ type UploadedImage = {
 const DiaryWritePage = () => {
   const { archiveId } = useParams();
   const navigate = useNavigate();
+
+  // 아카이브 상세 조회 (소유자 여부 확인용)
+  const { data: archive, isLoading: isArchiveLoading } = useGetArchive({
+    archiveId: Number(archiveId),
+  });
 
   const { mutate: addDiary, isPending } = useAddDiary();
   const { uploadFiles, isUploading } = useFileUpload();
@@ -123,6 +129,19 @@ const DiaryWritePage = () => {
       }
     );
   };
+
+  // 소유자가 아니면 접근 차단
+  if (isArchiveLoading) {
+    return <div className="p-10">로딩 중...</div>;
+  }
+
+  if (!archive?.isOwner) {
+    return (
+      <div className="p-10 text-center">
+        <p className="typo-body1 text-color-high">권한이 없습니다.</p>
+      </div>
+    );
+  }
 
   return (
     <div

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import clsx from "clsx";
 
 type Props = {
   value: string;
@@ -8,6 +9,7 @@ type Props = {
   maxLength?: number;
   className?: string;
   autoFocus?: boolean;
+  editable?: boolean;
 };
 
 export default function EditableTitle({
@@ -16,6 +18,7 @@ export default function EditableTitle({
   placeholder = "티켓북명 (클릭하여 수정)",
   maxLength = 60,
   className,
+  editable = true,
 }: Props) {
   const [editing, setEditing] = useState<boolean>(false);
   const [text, setText] = useState<string>(value ?? "");
@@ -36,6 +39,7 @@ export default function EditableTitle({
   }, [editing]);
 
   const startEdit = () => {
+    if (!editable) return;
     setDraft(text);
     setEditing(true);
   };
@@ -90,7 +94,10 @@ export default function EditableTitle({
         <button
           type="button"
           onClick={() => startEdit()}
-          className="typo-h1 text-color-highest"
+          className={clsx(
+            "typo-h1 text-color-highest",
+            editable ? "cursor-pointer" : "cursor-default"
+          )}
           aria-label="수정"
         >
           {text && text.length > 0 ? (
