@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import FriendRow from "@/components/mypage/FriendRow";
 import footerImage from "../../assets/images/footer.png";
 import { TabContentWrapper } from "@/components/mypage/TabContentWrapper";
@@ -7,12 +7,23 @@ import { FriendTabId } from "@/enums/friendTabId";
 import { FRIEND_TABS } from "@/constants/friendTabs";
 import { useFriendsData } from "@/hooks/useFriendsData";
 
+const isValidTab = (tab: string | null): tab is FriendTabId => {
+  return Object.values(FriendTabId).includes(tab as FriendTabId);
+};
+
 export default function FriendsPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const observerRef = useRef<HTMLDivElement>(null);
-  const [activeTab, setActiveTab] = useState<FriendTabId>(FriendTabId.REQUESTS);
 
-  const { tabDataMap } = useFriendsData();
+  const tabParam = searchParams.get("tab");
+  const activeTab = isValidTab(tabParam) ? tabParam : FriendTabId.REQUESTS;
+
+  const setActiveTab = (tab: FriendTabId) => {
+    setSearchParams({ tab });
+  };
+
+  const { tabDataMap } = useFriendsData(activeTab);
   const currentTab = tabDataMap[activeTab];
 
   // 무한스크롤
@@ -79,12 +90,12 @@ export default function FriendsPage() {
             ) : (
               currentTab.data.map((item) => (
                 <FriendRow
-                  key={item.userId}
-                  id={String(item.userId)}
+                  key={item.id}
+                  id={String(item.id)}
                   avatarUrl={undefined}
                   displayName={item.nickname}
                   role={currentTab.role}
-                  onViewProfile={handleViewProfile}
+                  onViewProfile={() => handleViewProfile(String(item.userId))}
                   {...currentTab.handlers}
                 />
               ))

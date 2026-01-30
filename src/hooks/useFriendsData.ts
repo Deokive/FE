@@ -13,24 +13,30 @@ import {
 import { FriendRequestType } from "@/enums/friendRequestType";
 import { FriendTabId } from "@/enums/friendTabId";
 
-export const useFriendsData = () => {
-  const friendsQuery = useGetFriendListInfinite({});
+export const useFriendsData = (activeTab: FriendTabId) => {
+  const friendsQuery = useGetFriendListInfinite({
+    enabled: activeTab === FriendTabId.FRIENDS,
+  });
   const requestsQuery = useGetSendFriendListInfinite({
     type: FriendRequestType.RECEIVED,
+    enabled: activeTab === FriendTabId.REQUESTS,
   });
   const pendingQuery = useGetSendFriendListInfinite({
     type: FriendRequestType.SENT,
+    enabled: activeTab === FriendTabId.PENDING,
   });
 
   const { mutate: acceptFriend } = usePostAcceptFriend();
   const { mutate: rejectFriend } = usePostRejectFriend();
-  const { mutate: deleteFriend } = useDeleteSendFriend();
-  const { mutate: cancelFriend } = useDeleteCancelFriend();
+  const { mutate: cancelSendFriend } = useDeleteSendFriend();
+  const { mutate: deleteFriend } = useDeleteCancelFriend();
 
   const tabDataMap = {
     [FriendTabId.REQUESTS]: {
       data:
-        requestsQuery.data?.pages.flatMap((page) => page.friends ?? []) ?? [],
+        requestsQuery.data?.pages.flatMap((page) =>
+          (page.content ?? []).map((item) => ({ ...item, id: item.userId }))
+        ) ?? [],
       query: requestsQuery,
       role: "request" as const,
       handlers: {
@@ -40,7 +46,9 @@ export const useFriendsData = () => {
     },
     [FriendTabId.FRIENDS]: {
       data:
-        friendsQuery.data?.pages.flatMap((page) => page.friends ?? []) ?? [],
+        friendsQuery.data?.pages.flatMap((page) =>
+          (page.content ?? []).map((item) => ({ ...item, id: item.userId }))
+        ) ?? [],
       query: friendsQuery,
       role: "friend" as const,
       handlers: {
@@ -49,11 +57,13 @@ export const useFriendsData = () => {
     },
     [FriendTabId.PENDING]: {
       data:
-        pendingQuery.data?.pages.flatMap((page) => page.friends ?? []) ?? [],
+        pendingQuery.data?.pages.flatMap((page) =>
+          (page.content ?? []).map((item) => ({ ...item, id: item.userId }))
+        ) ?? [],
       query: pendingQuery,
       role: "pending" as const,
       handlers: {
-        onDecline: (id: string) => cancelFriend({ friendId: Number(id) }),
+        onDecline: (id: string) => cancelSendFriend({ friendId: Number(id) }),
       },
     },
   };
