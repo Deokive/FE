@@ -97,17 +97,17 @@ const DiaryPage = () => {
                 {isEditMode ? (
                   <>
                     <BtnIcon
-                      startIcon={<X className="w-6 h-6 text-color-high" />}
-                      onClick={handleCancel}
-                    >
-                      취소하기
-                    </BtnIcon>
-                    <BtnIcon
                       startIcon={<Trash2 className="w-6 h-6 text-color-high" />}
                       onClick={handleDelete}
                       disabled={selectedDiaryIds.length === 0}
                     >
                       삭제하기
+                    </BtnIcon>
+                    <BtnIcon
+                      startIcon={<X className="w-6 h-6 text-color-high" />}
+                      onClick={handleCancel}
+                    >
+                      취소하기
                     </BtnIcon>
                   </>
                 ) : (

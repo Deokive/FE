@@ -4,7 +4,7 @@ import TicketCard from "./TicketCard";
 import TicketEmptyCard from "./TicketEmptyCard";
 import { useNavigate } from "react-router-dom";
 import ticketbook from "@/assets/images/ticketbook.png";
-import { Pencil, PlusIcon, SquareX } from "lucide-react";
+import { Pencil, PlusIcon, X } from "lucide-react";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import TrashIcon from "@/assets/icon/TrashIcon";
 
@@ -119,7 +119,7 @@ export default function TicketBook({
               onClick={handleToggleEditMode}
               startIcon={
                 editMode ? (
-                  <SquareX className="size-6 text-color-high" />
+                  <X className="w-6 h-6 text-color-high" />
                 ) : (
                   <Pencil className="w-[16.5px] h-[17.5px] text-color-high" />
                 )
