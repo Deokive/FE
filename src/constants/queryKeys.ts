@@ -18,13 +18,12 @@ export const queryKeys = {
   friend: {
     all: ["friend"] as const,
     status: (friendId: number) => ["friend", "status", friendId] as const,
-    sendList: (
-      type: string,
-      lastId?: number,
-      lastCreatedAt?: string,
-      size?: number
-    ) => ["friend", "sendList", type, lastId, lastCreatedAt, size] as const,
-    list: (lastFriendId?: number, lastAcceptedAt?: string, size?: number) =>
-      ["friend", "list", lastFriendId, lastAcceptedAt, size] as const,
+    sendList: (type: string) => ["friend", "sendList", type] as const,
+    list: () => ["friend", "list"] as const,
+  },
+  user: {
+    all: ["user"] as const,
+    me: () => ["user", "me"] as const,
+    detail: (userId: number) => ["user", "detail", userId] as const,
   },
 } as const;
