@@ -19,4 +19,15 @@ export const queryKeys = {
     all: ["diaryBook"] as const,
     detail: (archiveId: number) => ["diaryBook", archiveId] as const,
   },
+  friend: {
+    all: ["friend"] as const,
+    status: (friendId: number) => ["friend", "status", friendId] as const,
+    sendList: (type: string) => ["friend", "sendList", type] as const,
+    list: () => ["friend", "list"] as const,
+  },
+  user: {
+    all: ["user"] as const,
+    me: () => ["user", "me"] as const,
+    detail: (userId: number) => ["user", "detail", userId] as const,
+  },
 } as const;
