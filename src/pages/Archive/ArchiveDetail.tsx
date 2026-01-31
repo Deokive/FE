@@ -193,11 +193,13 @@ const ArchiveDetail = () => {
             title={archive?.title}
             ownerNickname={archive?.ownerNickname}
             badge={archive?.badge}
-            createdAt={archive?.createdAt}
             isMenu={true}
             onVisibilitySave={handleVisibilitySave}
             visibility={archive?.visibility}
             onDeleteArchive={handleDeleteModalOpen}
+            onClickOwner={() => {
+              navigate(`/mypage`);
+            }}
           />
           {/* 아카이브 달력 */}
           <Calendar

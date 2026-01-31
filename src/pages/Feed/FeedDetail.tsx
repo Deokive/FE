@@ -74,8 +74,11 @@ const FeedDetail = () => {
           title={feed?.title}
           ownerNickname={feed?.ownerNickname}
           badge={feed?.badge}
-          createdAt={feed?.createdAt}
+          createdAt={feed?.createdBy}
           isFeed={true}
+          onClickOwner={() => {
+            navigate(`/profile/${feed?.createdBy}`);
+          }}
         />
         {/* 아카이브 달력 */}
         <Calendar
