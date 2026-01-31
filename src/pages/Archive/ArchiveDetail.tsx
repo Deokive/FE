@@ -208,7 +208,7 @@ const ArchiveDetail = () => {
           />
           <div className="flex flex-col items-start justify-between gap-[60px] my-[60px]">
             {/* 덕질 일기 */}
-            <DiaryList archiveId={archiveId} limit={3} isOwner={archive?.isOwner} />
+            <DiaryList archiveId={archiveId} limit={3} isOwner={false} />
             {/* 덕질 갤러리 */}
             <ArchiveTitle
               title="덕질 갤러리"
@@ -217,7 +217,7 @@ const ArchiveDetail = () => {
                 navigate(`/archive/${archiveId}/gallery`);
               }}
               isMore={(archivedData?.Gallery?.length ?? 0) > 0}
-              isEditable={archive?.isOwner}
+              isEditable={false}
             />
             {(archivedData?.Gallery?.length ?? 0 > 0) ? (
               <GalleryList gallery={archivedData?.Gallery} />
@@ -236,7 +236,7 @@ const ArchiveDetail = () => {
             <TicketList
               archiveId={archiveId}
               limit={3}
-              isOwner={archive?.isOwner}
+              isOwner={false}
             />
             {/* 덕질 리포스트 */}
             <ArchiveTitle
@@ -246,7 +246,7 @@ const ArchiveDetail = () => {
                 navigate(`/archive/${archiveId}/repost`);
               }}
               isMore={(archivedData?.Repost?.length ?? 0) > 0}
-              isEditable={archive?.isOwner}
+              isEditable={false}
             />
             {(archivedData?.Repost?.length ?? 0 > 0) ? (
               <RepostList repost={archivedData?.Repost} />
