@@ -19,7 +19,7 @@ import {
   LikeArchive,
   UpdateArchive,
 } from "@/apis/mutations/archive/archive";
-import { Visibility, type UpdateArchiveRequest } from "@/types/archive";
+import { Visibility, type ArchiveResponse, type UpdateArchiveRequest } from "@/types/archive";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { MediaRole } from "@/enums/mediaRole";
 import { useRef, useState } from "react";
@@ -88,7 +88,16 @@ const ArchiveDetail = () => {
   const likeArchiveMutation = useMutation({
     mutationFn: () => LikeArchive(archiveIdNum),
     onSuccess: (likedArchive) => {
-      queryClient.setQueryData(["archive", archiveIdNum], likedArchive);
+      // 기존 데이터를 가져와서 좋아요 정보만 업데이트
+      queryClient.setQueryData<ArchiveResponse>(["archive", archiveIdNum], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          likeCount: likedArchive.likeCount,
+          isLiked: likedArchive.isLiked ?? likedArchive.liked ?? false,
+          liked: likedArchive.liked ?? likedArchive.isLiked ?? false,
+        };
+      });
     },
     onError: (error) => {
       console.error("좋아요 실패:", error);

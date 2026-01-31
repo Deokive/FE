@@ -16,6 +16,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
 import { LikeArchive } from "@/apis/mutations/archive/archive";
 import { getMonthlyEvents, getMonthlyStickers } from "@/apis/queries/calendar/Calendar";
+import type { ArchiveResponse } from "@/types/archive";
 
 const FeedDetail = () => {
   const navigate = useNavigate();
@@ -40,7 +41,15 @@ const FeedDetail = () => {
   const likeArchiveMutation = useMutation({
     mutationFn: () => LikeArchive(Number(archiveId)),
     onSuccess: (likedArchive) => {
-      queryClient.setQueryData(["feed", archiveId], likedArchive);
+      queryClient.setQueryData<ArchiveResponse>(["feed", archiveId], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          likeCount: likedArchive.likeCount,
+          isLiked: likedArchive.isLiked ?? likedArchive.liked ?? false,
+          liked: likedArchive.liked ?? likedArchive.isLiked ?? false,
+        };
+      });
     },
     onError: (error) => {
       console.error("좋아요 실패:", error);
