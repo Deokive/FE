@@ -33,8 +33,8 @@ const ArchiveDetail = () => {
   const archiveId = urlParams.archiveId;
   const archiveIdNum = Number(archiveId);
   const queryClient = useQueryClient();
-
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // 월별 라벨 조회
+
   const { data: monthlyEvents } = useQuery({
     queryKey: ["monthlyEvents", archiveIdNum],
     queryFn: () => getMonthlyEvents(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),

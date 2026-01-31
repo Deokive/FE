@@ -204,12 +204,6 @@ const Calendar = ({
         date.getMonth() + 1
       ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
-      //라벨 더미 데이터 매칭
-      // const label = labelData?.find((label) => label.date === dateString);
-
-      //스티커 더미 데이터 매칭
-      // const sticker = stickerData?.find((sticker) => sticker.date === dateString);
-
       return (
         <div
           className="flex flex-col items-start justify-start w-full h-full gap-1"

@@ -77,7 +77,7 @@ const EventModal = ({
     mutationFn: (body: { date: string; stickerType: StickerType }) =>
       UpdateSticker(editStickerData?.id as number, body),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["monthlyEvents", archiveId] });
+      queryClient.invalidateQueries({ queryKey: ["monthlyStickers", archiveId] });
       onClose();
     },
     onError: (error) => {
