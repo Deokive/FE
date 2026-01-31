@@ -8,6 +8,7 @@ import FeedCard from "@/components/feed/FeedCard";
 import { Sort } from "@/enums/sort";
 import { archiveDataMock } from "@/mockData/archiveData";
 import { Visibility, type CreateArchiveRequest } from "@/types/archive";
+import { mapCategoryToLabel } from "@/utils/categoryMapper";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -152,7 +153,8 @@ const Home = () => {
                   key={hotCommunity.postId}
                   title={hotCommunity.title}
                   img={hotCommunity.thumbnailUrl ?? undefined}
-                  categoryLabel={hotCommunity.category}
+                  categoryLabel={mapCategoryToLabel(hotCommunity.category) ?? hotCommunity.category}
+                  categoryValue={hotCommunity.category}
                   content={hotCommunity.summary ?? "게시글 내용"}
                   onClick={() => {
                     navigate(`/community/${hotCommunity.postId}`);
