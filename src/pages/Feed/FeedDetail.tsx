@@ -17,12 +17,15 @@ import { GetArchiveDetail } from "@/apis/queries/archive/getArchive";
 import { LikeArchive } from "@/apis/mutations/archive/archive";
 import { getMonthlyEvents, getMonthlyStickers } from "@/apis/queries/calendar/Calendar";
 import type { ArchiveResponse } from "@/types/archive";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const FeedDetail = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const urlParams = useParams();
   const archiveId = urlParams.id;
+
+  const userId = useAuthStore((state) => state.user?.id);
 
   const { data: monthlyEvents } = useQuery({
     queryKey: ["monthlyEvents", Number(archiveId)],
@@ -74,10 +77,15 @@ const FeedDetail = () => {
           title={feed?.title}
           ownerNickname={feed?.ownerNickname}
           badge={feed?.badge}
-          createdAt={feed?.createdBy}
+          createdAt={feed?.createdAt}
           isFeed={true}
-          onClickOwner={() => {
+          onClickProfile={() => {
+            if (feed?.createdBy === userId) {
+              navigate(`/mypage`);
+              return;
+            }
             navigate(`/profile/${feed?.createdBy}`);
+            return;
           }}
         />
         {/* 아카이브 달력 */}

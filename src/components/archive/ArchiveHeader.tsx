@@ -24,7 +24,7 @@ interface ArchiveHeaderProps {
   onTitleSave?: (title: string) => void;
   onVisibilitySave?: (visibility: Visibility) => void;
   onDeleteArchive?: () => void;
-  onClickOwner?: () => void;
+  onClickProfile?: () => void;
 }
 
 const ArchiveHeader = ({
@@ -38,7 +38,7 @@ const ArchiveHeader = ({
   onTitleSave,
   onVisibilitySave,
   onDeleteArchive,
-  onClickOwner,
+  onClickProfile,
 }: ArchiveHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -119,7 +119,7 @@ const ArchiveHeader = ({
       <div className="w-full h-[51px] flex items-center justify-between gap-[20px]">
         {/* 아카이브 소유자 부분 */}
         <button
-          onClick={onClickOwner}
+          onClick={onClickProfile}
           className="flex gap-[10px] items-center cursor-pointer"
         >
           <img src={UserIcon} alt="user" className="w-[40px] h-[40px]" />

@@ -15,10 +15,7 @@ const FEED_OPTIONS: SelectBoxOption[] = [
 ];
 
 const Feed = () => {
-
   const [sort, setSort] = useState<Sort>(Sort.CREATED_AT);
-
-  // ✅ 페이지 상태 (1부터 시작)
   const [page, setPage] = useState(1);
   const pageSize = 9;
   // const navigate = useNavigate();

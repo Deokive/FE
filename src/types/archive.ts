@@ -33,9 +33,8 @@ export type ArchiveResponse = {
   viewCount: number;
   likeCount: number;
   ownerNickname: string;
-  createdBy: string;
-  owner: boolean;
-  liked: boolean;
+  createdBy: number;
+  createdAt: string;
   isLiked: boolean;
   isOwner: boolean;
 }
