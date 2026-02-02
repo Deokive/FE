@@ -135,6 +135,12 @@ const EventListModal = ({
                     {label.title}
                   </p>
                   <p className="typo-body2 text-color-mid">
+                    {label.startDate === label.endDate ?
+                      label.startDate :
+                      label.startDate + "~" + label.endDate
+                    }
+                  </p>
+                  <p className="typo-body2 text-color-mid">
                     {label.hasTime ? label.startTime + " - " + label.endTime : "하루 종일"}
                     {label.isSportType && label.sportInfo && (
                       <span className="ml-2">
