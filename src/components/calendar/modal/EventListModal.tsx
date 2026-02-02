@@ -135,7 +135,7 @@ const EventListModal = ({
                     {label.title}
                   </p>
                   <p className="typo-body2 text-color-mid">
-                    {label.hasTime ? label.time : "하루 종일"}
+                    {label.hasTime ? label.startTime + " - " + label.endTime : "하루 종일"}
                     {label.isSportType && label.sportInfo && (
                       <span className="ml-2">
                         {label.sportInfo.team1} {label.sportInfo.score1} :{" "}

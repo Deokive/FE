@@ -4,19 +4,23 @@ import CheckboxIcon from "@/assets/icon/CheckboxIcon";
 
 type CalendarDateProps = {
   startDateValue: Date | null;
+  endDateValue: Date | null;
   onDateChange?: (data: {
     startDate: Date | null;
     endDate: Date | null;
     isAllDay: boolean;
   }) => void;
   initialTime?: string;
+  initialEndTime?: string; // ✅ 종료 시간 prop 추가
   initialIsAllDay?: boolean;
 };
 
 const CalendarDate = ({
   startDateValue,
+  endDateValue,
   onDateChange,
   initialTime,
+  initialEndTime,
   initialIsAllDay,
 }: CalendarDateProps) => {
   // ✅ 날짜와 시간을 합쳐서 초기값 생성
@@ -34,7 +38,7 @@ const CalendarDate = ({
     getInitialDate(startDateValue, initialTime)
   );
   const [endDate, setEndDate] = useState<Date | null>(
-    getInitialDate(startDateValue, initialTime)
+    getInitialDate(endDateValue, initialEndTime)
   );
   const [isAllDay, setIsAllDay] = useState<boolean>(initialIsAllDay || false);
 

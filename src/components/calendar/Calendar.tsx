@@ -131,6 +131,7 @@ const Calendar = ({
 
   const calendarRootRef = useRef<HTMLDivElement | null>(null); // ✅ 추가
 
+
   // 달력 바깥 클릭 시 active 해제 + 우클릭 모달 닫기
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -224,7 +225,7 @@ const Calendar = ({
               date.getMonth() + 1
             ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
             const dayEvents =
-              labelData?.filter((l) => l.date === dateString) || [];
+              labelData?.filter((l) => l.startDate === dateString) || [];
             setSelectedDateEvents(dayEvents);
             setIsEventListModalOpen(true);
 
@@ -277,7 +278,7 @@ const Calendar = ({
           {/* 2. 라벨 영역 */}
           <div className="w-full flex flex-col items-start gap-[10px]">
             {labelData
-              ?.filter((l) => l.date === dateString) // ✅ 해당 날짜만 필터링
+              ?.filter((l) => l.startDate === dateString) // ✅ 해당 날짜만 필터링
               .map((label, idx) => (
                 <div
                   onClick={(e) => {
