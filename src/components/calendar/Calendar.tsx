@@ -509,6 +509,21 @@ const Calendar = ({
             onStickerModalOpen={() => {
               setIsAdditionalModalOpen(false);
               setEditLabelData(null);
+              // ✅ [수정] 선택한 날짜에 이미 스티커가 있는지 확인
+              if (clickDate && stickerData) {
+                const year = clickDate.getFullYear();
+                const month = String(clickDate.getMonth() + 1).padStart(2, "0");
+                const day = String(clickDate.getDate()).padStart(2, "0");
+                const dateStr = `${year}-${month}-${day}`;
+
+                // 해당 날짜의 스티커 찾기
+                const existingSticker = stickerData.find((s) => s.date === dateStr);
+
+                // 스티커가 있다면 수정 데이터로 설정 (수정 모드 진입), 없으면 null (생성 모드)
+                setEditStickerData(existingSticker || null);
+              } else {
+                setEditStickerData(null);
+              }
               setEventModalType(null);
               setEventModalOpen(true);
             }}
