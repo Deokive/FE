@@ -21,7 +21,7 @@ const Event = ({ onClose, startDate, editData, onSubmit }: EventProps) => {
   const [eventTitle, setEventTitle] = useState(editData?.title || "");
   const [dateData, setDateData] = useState<DateData>({
     startDate: editData ? new Date(editData.startDate) : startDate,
-    endDate: editData ? new Date(editData.endDate) : null,
+    endDate: editData ? new Date(editData.endDate) : startDate,
     isAllDay: editData ? !editData.hasTime : false,
   });
   const [tags, setTags] = useState<string[]>(editData?.hashtags || []);

@@ -42,7 +42,21 @@ const CalendarDate = ({
   );
   const [isAllDay, setIsAllDay] = useState<boolean>(initialIsAllDay || false);
 
-  // ✅ 값이 변경될 때마다 부모에게 알림
+  // [추가/수정] 날짜가 변경될 때 시작일/종료일이 다르면 '하루 종일' 강제 설정
+  useEffect(() => {
+    if (startDate && endDate) {
+      const isSameDate =
+        startDate.getFullYear() === endDate.getFullYear() &&
+        startDate.getMonth() === endDate.getMonth() &&
+        startDate.getDate() === endDate.getDate();
+
+      if (!isSameDate) {
+        setIsAllDay(true);
+      }
+    }
+  }, [startDate, endDate]);
+
+  // 값이 변경될 때마다 부모에게 알림
   useEffect(() => {
     onDateChange?.({ startDate, endDate, isAllDay });
   }, [startDate, endDate, isAllDay, onDateChange]);
