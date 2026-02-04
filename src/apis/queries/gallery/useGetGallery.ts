@@ -1,19 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
-import fetchGallery from "./getGallery";
-import type { GalleryListResponse, FetchGalleryParams } from "@/types/gallery";
+import { getGallery } from "./getGallery";
+import { queryKeys } from "@/constants/queryKeys";
+import type { GetGalleryRequest, GetGalleryResponse } from "@/types/gallery";
 
-export const useGetGallery = (params: FetchGalleryParams) => {
-  return useQuery<GalleryListResponse>({
+export const useGetGallery = (
+  params: GetGalleryRequest & { refetchInterval?: number | false }
+) => {
+  return useQuery<GetGalleryResponse>({
     queryKey: [
-      "gallery",
-      String(params.archiveId),
-      params.page ?? 0,
-      params.size ?? 9,
-      params.sort ?? "createdAt",
-      params.direction ?? "DESC",
+      ...queryKeys.gallery.list(Number(params.archiveId)),
+      params.page,
+      params.size,
+      params.sort,
+      params.direction,
     ],
-    queryFn: () => fetchGallery(params),
+    queryFn: () => getGallery(params),
     enabled: !!params.archiveId,
     retry: false,
+    refetchInterval: params.refetchInterval,
   });
 };
