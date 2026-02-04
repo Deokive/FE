@@ -1,11 +1,6 @@
 import type { DefaultPaginationResponse } from "@/types/pagination";
 
-export type DeleteGalleryRequest = {
-  galleryIds: number[];
-};
-
-export type DeleteGalleryResponse = void;
-
+// 갤러리 아이템
 export type GalleryItem = {
   id: number | string;
   thumbnailUrl?: string | null;
@@ -15,29 +10,44 @@ export type GalleryItem = {
   lastModifiedAt?: string;
 };
 
-export type GalleryListResponse = {
-  title?: string;
-  content: GalleryItem[];
-  page: DefaultPaginationResponse;
-};
-
-export type FetchGalleryParams = {
+// GET /api/v1/gallery/{archiveId}
+export type GetGalleryRequest = {
   archiveId: string | number;
-  page?: number; // 0-based
+  page?: number;
   size?: number;
   sort?: string;
   direction?: "ASC" | "DESC";
 };
 
-export type PostGalleryRequest = {
+export type GetGalleryResponse = {
+  title?: string;
+  content: GalleryItem[];
+  page: DefaultPaginationResponse;
+};
+
+// POST /api/v1/gallery/{archiveId}
+export type AddGalleryRequest = {
+  archiveId: string | number;
   fileIds: number[];
 };
 
-export type PostGalleryResponse = {
+export type AddGalleryResponse = {
   createdCount?: number;
   archiveId?: number;
 };
 
-export type PatchGalleryTitlePayload = {
+// PATCH /api/v1/gallery/{archiveId}
+export type UpdateGalleryRequest = {
+  archiveId: string | number;
   title: string;
 };
+
+export type UpdateGalleryResponse = void;
+
+// DELETE /api/v1/gallery/{archiveId}
+export type DeleteGalleryRequest = {
+  archiveId: string | number;
+  galleryIds: number[];
+};
+
+export type DeleteGalleryResponse = void;
