@@ -19,8 +19,9 @@ import {
   LikeArchive,
   UpdateArchive,
 } from "@/apis/mutations/archive/archive";
-import { Visibility, type UpdateArchiveRequest } from "@/types/archive";
+import { Visibility, type ArchiveResponse, type UpdateArchiveRequest } from "@/types/archive";
 import { useFileUpload } from "@/hooks/useFileUpload";
+import { useAuthStore } from "@/store/useAuthStore";
 import { MediaRole } from "@/enums/mediaRole";
 import { useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
@@ -28,13 +29,14 @@ import { getMonthlyEvents, getMonthlyStickers } from "@/apis/queries/calendar/Ca
 
 const ArchiveDetail = () => {
   const navigate = useNavigate();
+  const currentUser = useAuthStore((state) => state.user);
 
   const urlParams = useParams();
   const archiveId = urlParams.archiveId;
   const archiveIdNum = Number(archiveId);
   const queryClient = useQueryClient();
-
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // 월별 라벨 조회
+
   const { data: monthlyEvents } = useQuery({
     queryKey: ["monthlyEvents", archiveIdNum],
     queryFn: () => getMonthlyEvents(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),
@@ -88,7 +90,16 @@ const ArchiveDetail = () => {
   const likeArchiveMutation = useMutation({
     mutationFn: () => LikeArchive(archiveIdNum),
     onSuccess: (likedArchive) => {
-      queryClient.setQueryData(["archive", archiveIdNum], likedArchive);
+      // 기존 데이터를 가져와서 좋아요 정보만 업데이트
+      queryClient.setQueryData<ArchiveResponse>(["archive", archiveIdNum], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          likeCount: likedArchive.likeCount,
+          isLiked: likedArchive.isLiked ?? likedArchive.liked ?? false,
+          liked: likedArchive.liked ?? likedArchive.isLiked ?? false,
+        };
+      });
     },
     onError: (error) => {
       console.error("좋아요 실패:", error);
@@ -181,10 +192,10 @@ const ArchiveDetail = () => {
             onTitleSave={(title) => {
               handleTitleSave(title);
             }}
+            createdAt={archive?.createdAt}
             title={archive?.title}
             ownerNickname={archive?.ownerNickname}
             badge={archive?.badge}
-            createdAt={archive?.createdAt}
             isMenu={true}
             onVisibilitySave={handleVisibilitySave}
             visibility={archive?.visibility}
@@ -199,7 +210,7 @@ const ArchiveDetail = () => {
           />
           <div className="flex flex-col items-start justify-between gap-[60px] my-[60px]">
             {/* 덕질 일기 */}
-            <DiaryList archiveId={archiveId} limit={3} isOwner={archive?.isOwner} />
+            <DiaryList archiveId={archiveId} limit={3} isOwner={archive?.createdBy === currentUser?.id} />
             {/* 덕질 갤러리 */}
             <ArchiveTitle
               title="덕질 갤러리"
@@ -208,7 +219,7 @@ const ArchiveDetail = () => {
                 navigate(`/archive/${archiveId}/gallery`);
               }}
               isMore={(archivedData?.Gallery?.length ?? 0) > 0}
-              isEditable={archive?.isOwner}
+              isEditable={false}
             />
             {(archivedData?.Gallery?.length ?? 0 > 0) ? (
               <GalleryList gallery={archivedData?.Gallery} />
@@ -227,7 +238,7 @@ const ArchiveDetail = () => {
             <TicketList
               archiveId={archiveId}
               limit={3}
-              isOwner={archive?.isOwner}
+              isOwner={archive?.createdBy === currentUser?.id}
             />
             {/* 덕질 리포스트 */}
             <ArchiveTitle
@@ -237,7 +248,7 @@ const ArchiveDetail = () => {
                 navigate(`/archive/${archiveId}/repost`);
               }}
               isMore={(archivedData?.Repost?.length ?? 0) > 0}
-              isEditable={archive?.isOwner}
+              isEditable={false}
             />
             {(archivedData?.Repost?.length ?? 0 > 0) ? (
               <RepostList repost={archivedData?.Repost} />
