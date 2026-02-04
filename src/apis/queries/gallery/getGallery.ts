@@ -1,28 +1,6 @@
 import axiosInstance from "@/apis/axios";
-import type { DefaultPaginationResponse } from "@/types/pagination";
-
-export type GalleryItemDto = {
-  id: number | string;
-  thumbnailUrl?: string | null;
-  originalUrl?: string;
-  fileName?: string;
-  createdAt?: string;
-  lastModifiedAt?: string;
-};
-
-export type GalleryListResponse = {
-  title?: string;
-  content: GalleryItemDto[];
-  page: DefaultPaginationResponse;
-};
-
-export type FetchGalleryParams = {
-  archiveId: string | number;
-  page?: number; // 0-based
-  size?: number;
-  sort?: string;
-  direction?: "ASC" | "DESC";
-};
+import type { GalleryListResponse } from "@/types/gallery";
+import type { FetchGalleryParams } from "@/types/gallery";
 
 const DEFAULTS = {
   page: 0,
