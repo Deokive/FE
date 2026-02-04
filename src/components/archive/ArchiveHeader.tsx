@@ -24,7 +24,6 @@ interface ArchiveHeaderProps {
   onTitleSave?: (title: string) => void;
   onVisibilitySave?: (visibility: Visibility) => void;
   onDeleteArchive?: () => void;
-  onClickProfile?: () => void;
 }
 
 const ArchiveHeader = ({
@@ -38,7 +37,6 @@ const ArchiveHeader = ({
   onTitleSave,
   onVisibilitySave,
   onDeleteArchive,
-  onClickProfile,
 }: ArchiveHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -119,7 +117,9 @@ const ArchiveHeader = ({
       <div className="w-full h-[51px] flex items-center justify-between gap-[20px]">
         {/* 아카이브 소유자 부분 */}
         <button
-          onClick={onClickProfile}
+          onClick={() => {
+            console.log("프로필 페이지로 이동");
+          }}
           className="flex gap-[10px] items-center cursor-pointer"
         >
           <img src={UserIcon} alt="user" className="w-[40px] h-[40px]" />

@@ -15,7 +15,10 @@ const FEED_OPTIONS: SelectBoxOption[] = [
 ];
 
 const Feed = () => {
+
   const [sort, setSort] = useState<Sort>(Sort.CREATED_AT);
+
+  // ✅ 페이지 상태 (1부터 시작)
   const [page, setPage] = useState(1);
   const pageSize = 9;
   // const navigate = useNavigate();
@@ -32,6 +35,7 @@ const Feed = () => {
   });
 
   const feed = feedData?.content ?? [];
+  console.log(feed);
 
   const navigate = useNavigate();
   return (
@@ -43,8 +47,8 @@ const Feed = () => {
             options={FEED_OPTIONS}
             value={sort}
             onChange={(value: Sort) => {
-              setSort(value);
-              setPage(1);
+              setSort(value);           // ✅ 정렬 변경
+              setPage(1);               // 선택 사항: 정렬 바뀔 때 1페이지로 이동
             }}
           />
         </div>
@@ -58,6 +62,7 @@ const Feed = () => {
               title={feed.title}
               onClick={() => {
                 navigate(`/feed/${feed.archiveId}`);
+                console.log(feed.archiveId + "번 피드 클릭");
               }}
             />
           ))}
