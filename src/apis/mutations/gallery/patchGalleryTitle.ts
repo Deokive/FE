@@ -1,12 +1,9 @@
 import axiosInstance from "@/apis/axios";
+import type { PatchGalleryTitlePayload } from "@/types/gallery";
 
-export type UpdateGalleryTitlePayload = {
-  title: string;
-};
-
-export async function updateGalleryTitleApi(
+export async function patchGalleryTitleApi(
   archiveId: string | number,
-  payload: UpdateGalleryTitlePayload
+  payload: PatchGalleryTitlePayload
 ) {
   const id = String(archiveId);
   const url = `/api/v1/gallery/${id}`;
@@ -16,4 +13,4 @@ export async function updateGalleryTitleApi(
   return res.data;
 }
 
-export default updateGalleryTitleApi;
+export default patchGalleryTitleApi;
