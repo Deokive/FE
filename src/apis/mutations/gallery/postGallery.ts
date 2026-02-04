@@ -1,15 +1,13 @@
 import axiosInstance from "@/apis/axios";
-import type { PostGalleryRequest, PostGalleryResponse } from "@/types/gallery";
+import type { AddGalleryRequest, AddGalleryResponse } from "@/types/gallery";
 
-export async function postGalleryApi(
-  archiveId: string | number,
-  payload: PostGalleryRequest
-): Promise<PostGalleryResponse> {
-  const res = await axiosInstance.post<PostGalleryResponse>(
+export const addGallery = async (
+  data: AddGalleryRequest
+): Promise<AddGalleryResponse> => {
+  const { archiveId, fileIds } = data;
+  const response = await axiosInstance.post<AddGalleryResponse>(
     `/api/v1/gallery/${archiveId}`,
-    payload
+    { fileIds }
   );
-  return res.data;
-}
-
-export default postGalleryApi;
+  return response.data;
+};
