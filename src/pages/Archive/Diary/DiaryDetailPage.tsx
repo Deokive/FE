@@ -239,7 +239,7 @@ const DiaryDetailPage = () => {
 
   return (
     <div
-      className="w-full h-full"
+      className="w-full min-w-310 h-full"
       style={{ backgroundColor: getDiaryBgColor(displayColor) }}
     >
       <div className="flex flex-col items-center justify-center max-w-[1920px] mx-auto py-15 gap-15">
