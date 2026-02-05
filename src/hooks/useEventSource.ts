@@ -99,8 +99,7 @@ export const useEventSource = <T = unknown>(
     disconnectRef.current();
     setStatus(SseConnectionStatus.CONNECTING);
 
-    const { url, withCredentials, reconnectOnError, reconnectInterval, eventTypes } =
-      optionsRef.current;
+    const { url, withCredentials, eventTypes } = optionsRef.current;
 
     const eventSource = new EventSource(url, { withCredentials });
     eventSourceRef.current = eventSource;
@@ -134,7 +133,8 @@ export const useEventSource = <T = unknown>(
       setStatus(SseConnectionStatus.ERROR);
       optionsRef.current.onError?.(error);
 
-      const { reconnectOnError, reconnectInterval, maxRetries } = optionsRef.current;
+      const { reconnectOnError, reconnectInterval, maxRetries } =
+        optionsRef.current;
 
       if (reconnectOnError && retryCountRef.current < maxRetries) {
         retryCountRef.current += 1;
