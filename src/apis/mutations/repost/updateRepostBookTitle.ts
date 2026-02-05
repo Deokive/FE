@@ -1,8 +1,5 @@
 import axiosInstance from "@/apis/axios";
-
-export type UpdateRepostBookTitlePayload = {
-  title: string;
-};
+import type { UpdateRepostBookTitlePayload } from "@/types/repost";
 
 export async function updateRepostBookTitleApi(
   repostBookId: string | number,

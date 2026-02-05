@@ -1,9 +1,5 @@
 import axiosInstance from "@/apis/axios";
-
-export type CreateRepostTabPayload = {
-  title?: string;
-  // 서버 스펙에 따라 다른 필드가 있으면 추가
-};
+import type { CreateRepostTabPayload } from "@/types/repost";
 
 export async function createRepostTabApi(
   archiveId: string | number,

@@ -1,8 +1,5 @@
 import axiosInstance from "@/apis/axios";
-
-export type UpdateRepostTabTitlePayload = {
-  title: string;
-};
+import type { UpdateRepostTabTitlePayload } from "@/types/repost";
 
 export async function updateRepostTabTitleApi(
   tabId: string | number,
