@@ -37,15 +37,15 @@ const ArchiveDetail = () => {
   const queryClient = useQueryClient();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);  // 월별 라벨 조회
 
-  const { data: monthlyEvents } = useQuery({
-    queryKey: ["monthlyEvents", archiveIdNum],
-    queryFn: () => getMonthlyEvents(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),
-  });
-  // 월별 스티커 조회
-  const { data: monthlyStickers } = useQuery({
-    queryKey: ["monthlyStickers", archiveIdNum],
-    queryFn: () => getMonthlyStickers(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),
-  });
+  // const { data: monthlyEvents } = useQuery({
+  //   queryKey: ["monthlyEvents", archiveIdNum],
+  //   queryFn: () => getMonthlyEvents(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),
+  // });
+  // // 월별 스티커 조회
+  // const { data: monthlyStickers } = useQuery({
+  //   queryKey: ["monthlyStickers", archiveIdNum],
+  //   queryFn: () => getMonthlyStickers(archiveIdNum, new Date().getFullYear(), new Date().getMonth() + 1),
+  // });
 
 
   const uploadInProgressRef = useRef(false);
@@ -205,8 +205,8 @@ const ArchiveDetail = () => {
           {/* 아카이브 달력 */}
           <Calendar
             archiveId={archiveIdNum}
-            labelData={monthlyEvents}
-            stickerData={monthlyStickers}
+            // labelData={monthlyEvents}
+            // stickerData={monthlyStickers}
             mode="interactive"
           />
           <div className="flex flex-col items-start justify-between gap-[60px] my-[60px]">
