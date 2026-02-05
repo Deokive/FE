@@ -2,21 +2,18 @@ import { useNavigate } from "react-router-dom";
 import ArchiveHeader from "@/components/archive/ArchiveHeader";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import ButtonLike from "@/components/archive/ButtonLike";
-import DiaryList from "@/components/archive/List/DiaryList";
 import EmptyList from "@/components/archive/Empty/EmptyList";
 import GalleryList from "@/components/archive/List/GalleryList";
 import RepostList from "@/components/archive/List/RepostList";
-import TicketList from "@/components/archive/List/TicketList";
 import Calendar from "@/components/calendar/Calendar";
 import Banner from "@/components/community/Banner";
 import { archiveDataMock } from "@/mockData/archiveData";
 import { Camera, Link } from "lucide-react";
 import { useParams } from "react-router-dom";
-import { Visibility, Badge } from "@/types/archive";
+import { Visibility } from "@/types/archive";
 import { useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import DiaryCard from "@/components/common/Card/DiaryCard";
-import EmptyFeedList from "@/components/feed/EmptyFeedList";
 import TicketCard from "@/components/common/Card/TicketCard";
 
 const SampleArchiveDetail = () => {
@@ -46,14 +43,6 @@ const SampleArchiveDetail = () => {
     setArchive((prev) => prev ? { ...prev, title } : prev);
   };
 
-  const handleBannerSave = async (file: File) => {
-    // Mock에서는 실제 업로드 로직 생략하고 로그만 출력
-    console.log("Banner file selected:", file);
-    // 미리보기용 URL 생성 (실제로는 서버 응답 URL 사용)
-    const previewUrl = URL.createObjectURL(file);
-    setArchive((prev) => prev ? { ...prev, bannerUrl: previewUrl } : prev);
-  };
-
   const handleVisibilitySave = (visibility: Visibility) => {
     setArchive((prev) => prev ? { ...prev, visibility } : prev);
   };
@@ -69,7 +58,6 @@ const SampleArchiveDetail = () => {
   const handleDeleteArchive = () => {
     // API 호출 대신 알림 후 이동
     alert("아카이브가 삭제되었습니다. (Mock)");
-    navigate("/archive");
   };
 
   const handleLike = () => {
@@ -89,7 +77,7 @@ const SampleArchiveDetail = () => {
       <Banner
         image={archive.bannerUrl}
         isEdit={true} // 샘플 페이지이므로 항상 수정 가능하게 하거나, 필요시 조건 추가
-        onBannerSave={handleBannerSave}
+        onBannerSave={() => { }}
       />
       {/* 배너 밑부분 */}
       <div className="max-w-[1920px] mx-auto flex flex-col items-start mt-[60px] gap-[60px]">
@@ -115,12 +103,6 @@ const SampleArchiveDetail = () => {
             mode="interactive"
           />
           <div className="flex flex-col items-start justify-between gap-[60px] my-[60px]">
-            {/* 덕질 일기 */}
-            {/* <DiaryList
-              archiveId={String(archiveIdNum)}
-              limit={3}
-              isOwner={true} // 샘플 페이지용
-            /> */}
             {/* 덕질 일기 */}
             <ArchiveTitle
               title="덕질 일기"
@@ -174,11 +156,6 @@ const SampleArchiveDetail = () => {
               />
             )}
             {/* 티켓북 */}
-            {/* <TicketList
-              archiveId={String(archiveIdNum)}
-              limit={3}
-              isOwner={true}
-            /> */}
             <ArchiveTitle
               title="티켓북"
               onClick={() => {
