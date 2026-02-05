@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import ArchiveHeader from "@/components/archive/ArchiveHeader";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import ButtonLike from "@/components/archive/ButtonLike";
@@ -17,8 +16,6 @@ import DiaryCard from "@/components/common/Card/DiaryCard";
 import TicketCard from "@/components/common/Card/TicketCard";
 
 const SampleArchiveDetail = () => {
-  const navigate = useNavigate();
-
 
   const urlParams = useParams();
   const archiveId = urlParams.archiveId;
