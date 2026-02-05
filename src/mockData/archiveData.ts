@@ -1,4 +1,3 @@
-import banner from "@/assets/images/banner.png";
 import { diaryDataMock } from "./diaryData";
 import { galleryDataMock } from "./galleryData";
 import { ticketDataMock } from "./ticketData";
