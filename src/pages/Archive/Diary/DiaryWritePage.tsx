@@ -101,7 +101,7 @@ const DiaryWritePage = () => {
 
   // 저장
   const handleSave = () => {
-    if (!archiveId) return;
+    if (!archiveId || isPending) return;
 
     // 이미 업로드된 이미지의 fileId 사용
     const files = images
@@ -214,7 +214,7 @@ const DiaryWritePage = () => {
         onEdit={() => {}}
         onSave={handleSave}
         onCancel={() => navigate(-1)}
-        isDisabled={!isFormValid || isPending || isUploading}
+        isDisabled={!isFormValid || isUploading}
         color={color}
       />
     </div>
