@@ -12,6 +12,7 @@ import type {
 } from "@/apis/queries/community/getDetailPost";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { User } from "@/types/user";
+import CommunityDetailSkeleton from "@/components/community/CommunityDetailSkeleton";
 
 export default function CommunityDetail() {
   const rawUser = useAuthStore((s) => s.user);
@@ -95,11 +96,7 @@ export default function CommunityDetail() {
   }, [mediaItems]);
 
   if (loading) {
-    return (
-      <div className="flex justify-center p-8">
-        <div>로딩 중... (스켈레톤 컴포넌트로 교체 권장)</div>
-      </div>
-    );
+    return <CommunityDetailSkeleton />;
   }
 
   if (error) {

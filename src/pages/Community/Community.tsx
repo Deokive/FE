@@ -9,6 +9,7 @@ import { mapCategoryToLabel } from "@/utils/categoryMapper";
 import { Pencil } from "lucide-react";
 import CommunityTab from "@/components/community/CommunityTab";
 import CommunityCard from "@/components/community/CommunityCard";
+import CommunityListSkeleton from "@/components/community/CommunityListSkeleton";
 import Pagination from "@/components/common/Pagination";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import SelectBox from "@/components/common/Button/SelectBox";
@@ -136,9 +137,7 @@ const Community = () => {
           <div className="mt-5 mb-15">
             <div className="w-310">
               {loading ? (
-                <div className="min-h-[480px] flex items-center justify-center typo-h2 text-color-low">
-                  로딩 중...
-                </div>
+                <CommunityListSkeleton count={size} />
               ) : error ? (
                 <div className="min-h-[480px] flex items-center justify-center typo-h2 text-color-low">
                   게시물을 불러오지 못했습니다.
