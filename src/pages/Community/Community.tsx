@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   getPosts,
   // mapCategoryToServer,
@@ -12,22 +12,17 @@ import CommunityCard from "@/components/community/CommunityCard";
 import Pagination from "@/components/common/Pagination";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import SelectBox from "@/components/common/Button/SelectBox";
-import type { Sort } from "@/enums/sort";
-
-type ListOption = { label: string; value: string };
-
-const LIST_OPTIONS: ListOption[] = [
-  { label: "최신 순", value: "newest" },
-  { label: "조회수 순", value: "popular" },
-  { label: "좋아요 순", value: "like" },
-];
+import { SORT_OPTIONS } from "@/constants/community";
+import { CommunitySortBy } from "@/enums/communitySortBy";
 
 const Community = () => {
   const navigate = useNavigate();
-  const [category, setCategory] = useState<string | undefined>(undefined);
-  const [sortBy, setSortBy] = useState<"newest" | "popular" | "like">("newest");
-  const [page, setPage] = useState<number>(1);
-  const [size] = useState<number>(9);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const category = searchParams.get("category") || undefined;
+  const sortBy = (searchParams.get("sortBy") as CommunitySortBy) || CommunitySortBy.NEWEST;
+  const page = Number(searchParams.get("page")) || 1;
+  const size = 9;
 
   const [posts, setPosts] = useState<PostItem[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
@@ -35,9 +30,24 @@ const Community = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<any>(null);
 
+  const updateSearchParams = (updates: Record<string, string | undefined>) => {
+    const newParams = new URLSearchParams(searchParams);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === undefined || value === "") {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, value);
+      }
+    });
+    setSearchParams(newParams);
+  };
+
   const tabValueForUi = category ?? "ALL";
   const handleTabChange = (v: string) => {
-    setCategory(v === "ALL" ? undefined : v);
+    updateSearchParams({
+      category: v === "ALL" ? undefined : v,
+      page: "1",
+    });
   };
 
   const load = async () => {
@@ -57,17 +67,16 @@ const Community = () => {
   };
 
   useEffect(() => {
-    // category 또는 sortBy 변경 시 페이지는 1로 맞추고 로드
-    setPage(1);
-  }, [category, sortBy]);
-
-  useEffect(() => {
     load();
   }, [page, category, sortBy]);
 
   const handlePageChange = (p: number) => {
-    if (p <= 0) setPage(1);
-    else setPage(p);
+    const newPage = p <= 0 ? 1 : p;
+    updateSearchParams({ page: String(newPage) });
+  };
+
+  const handleSortChange = (v: CommunitySortBy) => {
+    updateSearchParams({ sortBy: v, page: "1" });
   };
 
   const handleShare = useCallback(async (postId: number | string) => {
@@ -119,9 +128,9 @@ const Community = () => {
               글쓰기
             </BtnIcon>
             <SelectBox
-              options={LIST_OPTIONS}
-              value={sortBy as Sort}
-              onChange={(v) => setSortBy(v as any)}
+              options={SORT_OPTIONS}
+              value={sortBy}
+              onChange={handleSortChange}
             />
           </div>
           <div className="mt-5 mb-15">
