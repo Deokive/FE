@@ -8,7 +8,7 @@ const SocialCallback = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const setUser = useAuthStore((state) => state.setUser);
+  const loginUser = useAuthStore((state) => state.login);
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
   // ✅ Writer Hooby : 로그아웃 콜백인지 확인 (경로 또는 URL 파라미터로 구분)
@@ -45,7 +45,7 @@ const SocialCallback = () => {
         localStorage.setItem("provider", provider);
         localStorage.setItem("loginType", "SOCIAL");
       }
-      setUser({
+      loginUser({
         id: data.user.id,
         email: data.user.email,
         nickname: data.user.nickname,
@@ -63,7 +63,7 @@ const SocialCallback = () => {
       navigate("/login", { replace: true });
     }
 
-  }, [isSuccess, isError, data, setUser, navigate, clearAuth, isLogoutCallback, searchParams, location]);
+  }, [isSuccess, isError, data, loginUser, navigate, clearAuth, isLogoutCallback, searchParams, location]);
   return <div>소셜 로그인 처리 중...</div>;
 };
 
