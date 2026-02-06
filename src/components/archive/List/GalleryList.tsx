@@ -4,7 +4,7 @@ import GalleryCard from "@/components/common/Card/GalleryCard";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import EmptyList from "@/components/archive/Empty/EmptyList";
 import EmptyFeedList from "@/components/feed/EmptyFeedList";
-import { archiveDataMock } from "@/mockData/archiveData";
+import { useGetGallery } from "@/apis/queries/gallery/useGetGallery";
 
 interface GalleryListProps {
   archiveId?: string;
@@ -21,11 +21,13 @@ const GalleryList = ({
 }: GalleryListProps) => {
   const navigate = useNavigate();
 
-  // TODO: API 연동 시 교체
-  const archivedData = archiveDataMock.find(
-    (archived) => archived.archiveId === Number(archiveId)
-  );
-  const galleryList = archivedData?.Gallery?.slice(0, limit) ?? [];
+  const { data } = useGetGallery({
+    archiveId: Number(archiveId),
+    page: 0,
+    size: limit,
+  });
+
+  const galleryList = data?.content ?? [];
   const hasGallery = galleryList.length > 0;
 
   const handleNavigateToGallery = () => {
@@ -47,12 +49,10 @@ const GalleryList = ({
             {galleryList.map((gallery) => (
               <GalleryCard
                 key={gallery.id}
-                id={gallery.id}
-                archiveId={gallery.archiveId}
-                image={gallery.image}
-                onClick={() => {
-                  console.log(gallery.id + "번 갤러리 클릭");
-                }}
+                id={Number(gallery.id)}
+                archiveId={Number(archiveId)}
+                image={gallery.thumbnailUrl ?? undefined}
+                onClick={handleNavigateToGallery}
               />
             ))}
           </div>

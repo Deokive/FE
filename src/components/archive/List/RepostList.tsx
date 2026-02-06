@@ -4,7 +4,7 @@ import RepostCard from "@/components/common/Card/RepostCard";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import EmptyList from "@/components/archive/Empty/EmptyList";
 import EmptyFeedList from "@/components/feed/EmptyFeedList";
-import { archiveDataMock } from "@/mockData/archiveData";
+import { useGetRepost } from "@/apis/queries/repost/useGetRepost";
 
 interface RepostListProps {
   archiveId?: string;
@@ -21,11 +21,13 @@ const RepostList = ({
 }: RepostListProps) => {
   const navigate = useNavigate();
 
-  // TODO: API 연동 시 교체
-  const archivedData = archiveDataMock.find(
-    (archived) => archived.archiveId === Number(archiveId)
-  );
-  const repostList = archivedData?.Repost?.slice(0, limit) ?? [];
+  const { data } = useGetRepost({
+    archiveId: Number(archiveId),
+    page: 0,
+    size: limit,
+  });
+
+  const repostList = data?.content ?? [];
   const hasRepost = repostList.length > 0;
 
   const handleNavigateToRepost = () => {
@@ -47,12 +49,12 @@ const RepostList = ({
             {repostList.map((repost) => (
               <RepostCard
                 key={repost.id}
-                archiveId={repost.archiveId}
+                id={repost.id}
+                archiveId={Number(archiveId)}
+                tabId={repost.repostTabId}
                 title={repost.title}
-                image={repost.image}
-                onClick={() => {
-                  console.log(repost.id + "번 덕질 리포스트 클릭");
-                }}
+                image={repost.thumbnailUrl ?? undefined}
+                onClick={handleNavigateToRepost}
               />
             ))}
           </div>
