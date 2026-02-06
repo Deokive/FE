@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetPosts } from "@/apis/queries/community/useGetPosts";
 import { mapCategoryToLabel } from "@/utils/categoryMapper";
@@ -10,7 +9,9 @@ import Pagination from "@/components/common/Pagination";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import SelectBox from "@/components/common/Button/SelectBox";
 import { SORT_OPTIONS } from "@/constants/community";
+import { SHARE_BASE_URL } from "@/constants/urls";
 import { CommunitySortBy } from "@/enums/communitySortBy";
+import { useClipboard } from "@/hooks/useClipboard";
 
 const Community = () => {
   const navigate = useNavigate();
@@ -55,37 +56,16 @@ const Community = () => {
     updateSearchParams({ sortBy: v, page: "1" });
   };
 
-  const handleShare = useCallback(async (postId: number | string) => {
-    const SHARE_BASE = "https://deokive.hooby-server.com/share/posts";
+  const { copy } = useClipboard({
+    successMessage: "공유 URL이 클립보드에 복사되었습니다.",
+    errorMessage: "URL 복사에 실패했습니다. 다시 시도해 주세요.",
+  });
+
+  const handleShare = (postId: number | string) => {
     const id = encodeURIComponent(String(postId));
-    const url = `${SHARE_BASE}/${id}`;
-
-    try {
-      // 클립보드 API 사용 시도
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(url);
-      } else {
-        // 폴백: textarea를 만들어 복사
-        const textarea = document.createElement("textarea");
-        textarea.value = url;
-        textarea.setAttribute("readonly", "");
-        textarea.style.position = "fixed";
-        textarea.style.left = "-9999px";
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
-          document.execCommand("copy");
-        } catch {}
-        document.body.removeChild(textarea);
-      }
-
-      // 기본 브라우저 알림 사용
-      window.alert("공유 URL이 클립보드에 복사되었습니다.");
-    } catch (err) {
-      console.error("복사 실패:", err);
-      window.alert("URL 복사에 실패했습니다. 다시 시도해 주세요.");
-    }
-  }, []);
+    const url = `${SHARE_BASE_URL}/${id}`;
+    copy(url);
+  };
 
   return (
     <div>
