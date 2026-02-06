@@ -117,7 +117,9 @@ const DiaryPage = () => {
                   {isEditMode ? (
                     <>
                       <BtnIcon
-                        startIcon={<Trash2 className="w-6 h-6 text-color-high" />}
+                        startIcon={
+                          <Trash2 className="w-6 h-6 text-color-high" />
+                        }
                         onClick={handleDelete}
                         disabled={selectedDiaryIds.length === 0}
                       >
@@ -141,7 +143,9 @@ const DiaryPage = () => {
                         일기 추가
                       </BtnIcon>
                       <BtnIcon
-                        startIcon={<Pencil className="w-6 h-6 text-color-high" />}
+                        startIcon={
+                          <Pencil className="w-6 h-6 text-color-high" />
+                        }
                         onClick={handleEditToggle}
                       >
                         편집 하기
@@ -152,8 +156,8 @@ const DiaryPage = () => {
               )}
 
               {/* DiaryCard 목록 */}
-              <div className="w-full flex flex-col items-start gap-[60px]">
-                <div className="flex flex-wrap items-start justify-between gap-[80px]">
+              <div className="w-full">
+                <div className="grid grid-cols-3 gap-20">
                   {diaryList.map((diary) => (
                     <DiaryCard
                       key={diary.diaryId}
@@ -174,7 +178,7 @@ const DiaryPage = () => {
               </div>
 
               {/* 페이지네이션 */}
-              {totalItems > pageSize && (
+              {totalItems && (
                 <div className="flex justify-center pt-5 pb-15">
                   <Pagination
                     totalItems={totalItems}
