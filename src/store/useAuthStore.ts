@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 // 사용자 정보 타입
-export type User = {
+type User = {
   id: number;
   email: string;
   nickname: string;

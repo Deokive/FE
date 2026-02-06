@@ -38,7 +38,7 @@ export default function MyInfoPage() {
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
 
-  const logoutUser = useAuthStore((state) => state.logout);
+  // const logoutUser = useAuthStore((state) => state.logout);
 
   // 로그아웃 뮤테이션
   // const logoutMutation = useMutation({
