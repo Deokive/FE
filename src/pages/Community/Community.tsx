@@ -1,10 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import {
-  getPosts,
-  // mapCategoryToServer,
-} from "@/apis/queries/community/getPost";
-import type { PostItem } from "@/apis/queries/community/getPost";
+import { useGetPosts } from "@/apis/queries/community/useGetPosts";
 import { mapCategoryToLabel } from "@/utils/categoryMapper";
 import { Pencil } from "lucide-react";
 import CommunityTab from "@/components/community/CommunityTab";
@@ -25,11 +21,10 @@ const Community = () => {
   const page = Number(searchParams.get("page")) || 1;
   const size = 9;
 
-  const [posts, setPosts] = useState<PostItem[]>([]);
-  const [totalItems, setTotalItems] = useState<number>(0);
-  const [, setTotalPages] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<any>(null);
+  const { data, isLoading, isError } = useGetPosts({ page, size, category, sortBy });
+
+  const posts = data?.content ?? [];
+  const totalItems = data?.page?.totalElements ?? 0;
 
   const updateSearchParams = (updates: Record<string, string | undefined>) => {
     const newParams = new URLSearchParams(searchParams);
@@ -50,26 +45,6 @@ const Community = () => {
       page: "1",
     });
   };
-
-  const load = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await getPosts({ page, size, category, sortBy });
-      setPosts(res.content ?? []);
-      setTotalPages(res.page?.totalPages ?? 1);
-      setTotalItems(res.page?.totalElements ?? res.content?.length ?? 0);
-    } catch (err) {
-      console.error("getPosts error", err);
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    load();
-  }, [page, category, sortBy]);
 
   const handlePageChange = (p: number) => {
     const newPage = p <= 0 ? 1 : p;
@@ -136,9 +111,9 @@ const Community = () => {
           </div>
           <div className="mt-5 mb-15">
             <div className="w-310">
-              {loading ? (
+              {isLoading ? (
                 <CommunityListSkeleton count={size} />
-              ) : error ? (
+              ) : isError ? (
                 <div className="min-h-[480px] flex items-center justify-center typo-h2 text-color-low">
                   게시물을 불러오지 못했습니다.
                 </div>

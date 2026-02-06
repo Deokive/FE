@@ -1,11 +1,12 @@
 import { CreateArchive } from "@/apis/mutations/archive/archive";
 import { GetArchiveFeed } from "@/apis/queries/archive/getArchive";
-import { getPosts } from "@/apis/queries/community/getPost";
+import { useGetPosts } from "@/apis/queries/community/useGetPosts";
 import ArchiveCard from "@/components/archive/ArchiveCard";
 import ArchiveTitle from "@/components/archive/ArchiveTitle";
 import CommunityCard from "@/components/community/CommunityCard";
 import FeedCard from "@/components/feed/FeedCard";
 import { Sort } from "@/enums/sort";
+import { CommunitySortBy } from "@/enums/communitySortBy";
 import { archiveDataMock } from "@/mockData/archiveData";
 import { Visibility, type CreateArchiveRequest } from "@/types/archive";
 import { mapCategoryToLabel } from "@/utils/categoryMapper";
@@ -47,15 +48,10 @@ const Home = () => {
         direction: "DESC",
       }),
   });
-  const { data: hotCommunityData } = useQuery({
-    queryKey: ["hotCommunity"],
-    queryFn: () =>
-      getPosts({
-        page: 0,
-        size: 3,
-        sortBy: "hotScore",
-        direction: "DESC",
-      }),
+  const { data: hotCommunityData } = useGetPosts({
+    page: 1,
+    size: 3,
+    sortBy: CommunitySortBy.HOT_SCORE,
   });
 
   const handleShare = useCallback(async (postId: number | string) => {
