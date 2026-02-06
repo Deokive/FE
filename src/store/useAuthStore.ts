@@ -23,7 +23,6 @@ type AuthState = {
   checkSessionExpiry: (expiryHours: number) => boolean; // ✅ 세션 만료 확인 함수
 };
 
-// src/store/useAuthStore.ts
 // export const SESSION_EXPIRY_HOURS = 0.001; // 약 3.6초 (테스트용)
 export const SESSION_EXPIRY_HOURS = 24 * 7; // 7일 (실제 사용)
 
