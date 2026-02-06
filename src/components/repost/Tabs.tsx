@@ -149,7 +149,7 @@ export default function Tabs({
                       isActive ? "text-color-highest" : "text-color-high"
                     }`}
                   >
-                    {it.title || "무제 탭"}
+                    {it.title}
                   </span>
                 )}
               </button>
@@ -159,7 +159,6 @@ export default function Tabs({
 
         {/* 삭제 버튼 */}
         {showRemoveButtons &&
-          items.length > 1 &&
           items.map((it, idx) => {
             const left = idx * (tabWidth - overlapOffset);
             return (
