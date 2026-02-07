@@ -92,15 +92,6 @@ const ArchiveDetail = () => {
     },
   });
 
-  const handleLike = () => {
-    if (archive?.createdBy === currentUser?.id) {
-      alert("본인의 아카이브에는 좋아요를 누를 수 없습니다.");
-      return;
-    }
-    likeArchiveMutation.mutate();
-    console.log("좋아요 클릭");
-  };
-
   const { upload } = useFileUpload({
     onSuccess: (response) => {
       if (uploadInProgressRef.current || !response?.fileId) return;
