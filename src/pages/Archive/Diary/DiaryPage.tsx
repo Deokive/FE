@@ -5,6 +5,7 @@ import DiaryCard from "@/components/common/Card/DiaryCard";
 import { BtnIcon } from "@/components/common/Button/Btn";
 import Pagination from "@/components/common/Pagination";
 import EditableTitle from "@/components/common/EditableTitle";
+import DiaryPageSkeleton from "@/components/diary/DiaryPageSkeleton";
 import { useGetDiaryBook } from "@/apis/queries/diary/useGetDiary";
 import { useUpdateDiaryBook } from "@/apis/mutations/diary/usePatchDiary";
 import { useDeleteDiary } from "@/apis/mutations/diary/useDeleteDiary";
@@ -28,7 +29,7 @@ const DiaryPage = () => {
   const { data: archive } = useGetArchive({ archiveId });
   const isOwner = archive?.isOwner ?? false;
 
-  const { data } = useGetDiaryBook({
+  const { data, isLoading } = useGetDiaryBook({
     archiveId,
     page: page - 1,
     size: pageSize,
@@ -96,6 +97,10 @@ const DiaryPage = () => {
       console.error("다이어리 삭제 실패:", error);
     }
   };
+
+  if (isLoading) {
+    return <DiaryPageSkeleton />;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center">
