@@ -107,6 +107,10 @@ const FeedDetail = () => {
           liked={feed?.isLiked}
           likeCount={feed?.likeCount ?? 0}
           onClick={() => {
+            if (feed?.createdBy === userId) {
+              alert("본인의 피드에는 좋아요를 누를 수 없습니다.");
+              return;
+            }
             likeArchiveMutation.mutate();
             console.log("좋아요 클릭");
           }}
