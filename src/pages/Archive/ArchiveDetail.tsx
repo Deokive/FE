@@ -181,6 +181,13 @@ const ArchiveDetail = () => {
             onVisibilitySave={handleVisibilitySave}
             visibility={archive?.visibility}
             onDeleteArchive={handleDeleteModalOpen}
+            onClickProfile={() => {
+              if (archive?.createdBy === currentUser?.id) {
+                navigate(`/mypage`);
+                return;
+              }
+              navigate(`/profile/${archive?.createdBy}`);
+            }}
           />
           {/* 아카이브 달력 */}
           <Calendar
@@ -216,9 +223,14 @@ const ArchiveDetail = () => {
             liked={archive?.isLiked}
             likeCount={archive?.likeCount}
             onClick={() => {
+              if (archive?.createdBy === currentUser?.id) {
+                alert("본인의 아카이브에는 좋아요를 누를 수 없습니다.");
+                return;
+              }
               likeArchiveMutation.mutate();
               console.log("좋아요 클릭");
             }}
+          // disabled={archive?.createdBy === currentUser?.id}
           />
         </div>
       </div>
