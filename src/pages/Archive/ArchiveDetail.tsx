@@ -181,6 +181,13 @@ const ArchiveDetail = () => {
             onVisibilitySave={handleVisibilitySave}
             visibility={archive?.visibility}
             onDeleteArchive={handleDeleteModalOpen}
+            onClickProfile={() => {
+              if (archive?.createdBy === currentUser?.id) {
+                navigate(`/mypage`);
+                return;
+              }
+              navigate(`/profile/${archive?.createdBy}`);
+            }}
           />
           {/* 아카이브 달력 */}
           <Calendar
