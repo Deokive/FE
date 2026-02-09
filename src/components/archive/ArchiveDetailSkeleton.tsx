@@ -4,7 +4,7 @@ const ArchiveDetailSkeleton = () => {
   return (
     <div className="flex flex-col items-center justify-center animate-pulse">
       {/* 배너 스켈레톤 */}
-      <div className="w-full h-[300px] bg-gray-200" />
+      <div className="w-full h-[200px] bg-gray-200" />
 
       <div className="max-w-[1920px] mx-auto flex flex-col items-start mt-[60px] gap-[60px]">
         <div className="w-310">
