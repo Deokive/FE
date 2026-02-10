@@ -7,7 +7,6 @@ import CommunityCard from "@/components/community/CommunityCard";
 import FeedCard from "@/components/feed/FeedCard";
 import { Sort } from "@/enums/sort";
 import { CommunitySortBy } from "@/enums/communitySortBy";
-import { archiveDataMock } from "@/mockData/archiveData";
 import { Visibility, type CreateArchiveRequest } from "@/types/archive";
 import { mapCategoryToLabel } from "@/utils/categoryMapper";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -19,8 +18,6 @@ import { useAuthStore } from "@/store/useAuthStore";
 const Home = () => {
   const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.user);
-
-  const sampleArchiveData = archiveDataMock.slice(0, 2);
 
   const createArchiveMutation = useMutation({
     mutationFn: (data: CreateArchiveRequest) => CreateArchive(data),
