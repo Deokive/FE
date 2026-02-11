@@ -74,6 +74,7 @@ export default function ProfileBadge({
     const nicknameRegex = /^[가-힣a-zA-Z0-9-_]{2,10}$/;
     if (!nicknameRegex.test(next)) {
       alert("2~10자 이내 한글, 영어, 숫자, -, _ 중에 작성해 주세요.");
+      cancelEdit();
       return;
     }
     try {
