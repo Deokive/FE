@@ -16,7 +16,6 @@ const SCALE_STEP = 0.25;
 export default function ImageModal({
   open,
   imageUrl,
-  fileName,
   alt = "image",
   onClose,
 }: ImageModalProps) {
