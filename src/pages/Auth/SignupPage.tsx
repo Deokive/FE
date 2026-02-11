@@ -12,6 +12,7 @@ import {
   registerUser,
   sendVerificationCode,
 } from "@/apis/mutations/auth/signup";
+import { AxiosError } from "axios";
 
 // Step 2 스키마 (이메일, 비밀번호, 닉네임)
 export const schema = z
@@ -68,6 +69,10 @@ const SignupPage = () => {
     },
     onError: (error) => {
       console.error("회원가입 실패:", error);
+      if (error instanceof AxiosError && error.response?.status === 429) {
+        alert("요청이 너무 많습니다. 잠시 후 다시 시도해주세요.");
+        return;
+      }
       alert("회원가입에 실패했습니다. 다시 시도해주세요.");
     },
   });
@@ -79,6 +84,9 @@ const SignupPage = () => {
     },
     onError: (error) => {
       console.error("인증번호 발송 실패:", error);
+      if (error instanceof AxiosError && error.response?.status === 429) {
+        alert("요청이 너무 많습니다. 잠시 후 다시 시도해주세요.");
+      }
     },
   });
 
@@ -196,8 +204,12 @@ const SignupPage = () => {
           },
           {
             onSuccess: () => setStep(3),
-            onError: () =>
-              alert("인증번호 발송에 실패했습니다. 다시 시도해주세요."),
+            onError: (error) => {
+              if (error instanceof AxiosError && error.response?.status === 429) {
+                return;
+              }
+              alert("인증번호 발송에 실패했습니다. 다시 시도해주세요.");
+            },
           }
         );
       }
